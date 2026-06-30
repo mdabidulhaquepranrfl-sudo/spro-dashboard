@@ -26,9 +26,9 @@ export default function DashboardLayout({ children }) {
       <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
       <link rel="stylesheet" href="/assets/vendor/libs/apex-charts/apex-charts.css" />
 
-      {/* Sneat Helpers & Config – must load before body */}
-      <Script src="/assets/vendor/js/helpers.js" strategy="beforeInteractive" />
-      <Script src="/assets/js/config.js" strategy="beforeInteractive" />
+      {/* Sneat Helpers & Config */}
+      <Script src="/assets/vendor/js/helpers.js" strategy="afterInteractive" />
+      <Script src="/assets/js/config.js" strategy="afterInteractive" />
 
       {/* Layout wrapper */}
       <div className="layout-wrapper layout-content-navbar">

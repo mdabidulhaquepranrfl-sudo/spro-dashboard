@@ -22,9 +22,9 @@ export default function AuthLayout({ children }) {
       <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
       <link rel="stylesheet" href="/assets/vendor/css/pages/page-auth.css" />
 
-      {/* Sneat Helpers & Config – must load before body content */}
-      <Script src="/assets/vendor/js/helpers.js" strategy="beforeInteractive" />
-      <Script src="/assets/js/config.js" strategy="beforeInteractive" />
+      {/* Sneat Helpers & Config */}
+      <Script src="/assets/vendor/js/helpers.js" strategy="afterInteractive" />
+      <Script src="/assets/js/config.js" strategy="afterInteractive" />
 
       <div className="layout-wide customizer-hide">
         {children}

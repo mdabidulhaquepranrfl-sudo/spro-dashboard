@@ -1,18 +1,19 @@
 /**
  * Sidebar navigation configuration.
- * Add new menu items here to scale the sidebar without touching the component.
+ * Configured with "Reports" as the header group,
+ * and "Amolnama" pointing to /amolnama.
  */
 export const SIDEBAR_NAV = [
   {
-    id: 'dashboards',
-    label: 'Dashboards',
+    id: 'reports',
+    label: 'Reports',
     icon: 'bx bx-home-smile',
     badge: null,
     children: [
       {
-        id: 'analytics',
-        label: 'Analytics',
-        href: '/dashboard',
+        id: 'amolnama',
+        label: 'Amolnama',
+        href: '/amolnama',
       },
     ],
   },
