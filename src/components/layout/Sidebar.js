@@ -83,7 +83,7 @@ export default function Sidebar() {
     >
       {/* Brand */}
       <div className="app-brand demo">
-        <Link href="/dashboard" className="app-brand-link">
+        <Link href="/home" className="app-brand-link">
           <BrandLogo />
           <span className="app-brand-text demo menu-text fw-bold ms-2">SPRO</span>
         </Link>

@@ -83,7 +83,7 @@ export default function LoginPage() {
               <h4 className="mb-1">Welcome back! 👋</h4>
               <p className="mb-6">Please sign-in to your account and start the adventure</p>
 
-              <form id="formAuthentication" className="mb-6" action="/dashboard" method="get">
+              <form id="formAuthentication" className="mb-6" action="/home" method="get">
                 <div className="mb-6">
                   <label htmlFor="email" className="form-label">
                     Email or Username

@@ -82,7 +82,7 @@ export default function RegisterPage() {
               <h4 className="mb-1">Adventure starts here 🚀</h4>
               <p className="mb-6">Make your app management easy and fun!</p>
 
-              <form id="formAuthentication" className="mb-6" action="/dashboard" method="get">
+              <form id="formAuthentication" className="mb-6" action="/home" method="get">
                 <div className="mb-6">
                   <label htmlFor="username" className="form-label">
                     Username
