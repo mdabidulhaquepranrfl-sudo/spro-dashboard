@@ -20,6 +20,16 @@ export const SIDEBAR_NAV = [
         label: 'Amolnama',
         href: '/report/amolnama',
       },
+      {
+        id: 'target-vs-achievement',
+        label: 'Target vs Achievement',
+        href: '/report/target-vs-achievement',
+      },
+      {
+        id: 'half-summery',
+        label: 'Half Summery',
+        href: '/report/half-summery',
+      },
     ],
   },
 ];

@@ -2,41 +2,13 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="content-footer footer bg-footer-theme">
-      <div className="container-xxl">
-        <div className="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-          <div className="mb-2 mb-md-0">
-            © {year}, made with ❤️ by{' '}
-            <a href="https://themeselection.com" target="_blank" rel="noreferrer" className="footer-link">
-              ThemeSelection
-            </a>
-          </div>
-          <div className="d-none d-lg-inline-block">
-            <a
-              href="https://themeselection.com/license/"
-              className="footer-link me-4"
-              target="_blank"
-              rel="noreferrer"
-            >
-              License
-            </a>
-            <a
-              href="https://demos.themeselection.com/sneat-bootstrap-html-admin-template/documentation/"
-              target="_blank"
-              rel="noreferrer"
-              className="footer-link me-4"
-            >
-              Documentation
-            </a>
-            <a
-              href="https://github.com/themeselection/sneat-bootstrap-html-admin-template-free/issues"
-              target="_blank"
-              rel="noreferrer"
-              className="footer-link"
-            >
-              Support
-            </a>
-          </div>
+    <footer className="border-t border-slate-200 bg-white/80 px-4 py-4 text-sm text-slate-500 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {year} SPRO Dashboard. Designed for field operations.</p>
+        <div className="flex flex-wrap gap-4">
+          <a href="#" className="hover:text-sky-600">Privacy</a>
+          <a href="#" className="hover:text-sky-600">Support</a>
+          <a href="#" className="hover:text-sky-600">Contact</a>
         </div>
       </div>
     </footer>
