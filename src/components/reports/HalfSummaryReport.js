@@ -204,11 +204,29 @@ const REPORT_DATA = {
         },
       ],
     },
+    total_metrics: {
+      cards: [
+        { label: 'Total SR', value: '18', value_color: '#4F46E5', underline_bar: { color: '#A5B4FC', height: '3px' } },
+        { label: 'Total Outlets', value: '1,862', value_color: '#059669', underline_bar: { color: '#6EE7B7', height: '3px' } },
+        { label: 'Total Visited', value: '724', value_color: '#EA580C', underline_bar: { color: '#FDBA74', height: '3px' } },
+        { label: 'Total Non-Visited', value: '1,138', value_color: '#DC2626', underline_bar: { color: '#FCA5A5', height: '3px' } },
+        { label: 'Success Rate', value: '38.88%', value_color: '#D97706', underline_bar: { color: '#FCD34D', height: '3px' } },
+        { label: 'AVG Step Count', value: '6177', value_color: '#0284C7', underline_bar: { color: '#7DD3FC', height: '3px' } },
+      ],
+      card_styling: {
+        bg_color: '#FFFFFF',
+        border_radius: '12px',
+        padding: '16px',
+        box_shadow: '0 1px 3px 0 rgba(0,0,0,0.05)',
+        label_style: { font_size: '11px', font_weight: 'bold', color: '#64748B' },
+        value_style: { font_size: '22px', font_weight: 'bold' },
+      },
+    }
   },
 };
 
 export default function HalfSummaryReport() {
-  const { header_section, sessions_grid } = REPORT_DATA.page_layout;
+  const { header_section, sessions_grid, total_metrics } = REPORT_DATA.page_layout;
 
   return (
     <div className="min-h-screen w-full bg-slate-50 px-3 py-3 sm:px-5 sm:py-4 lg:px-6 lg:py-5">
@@ -279,16 +297,16 @@ export default function HalfSummaryReport() {
                     </div>
                   </div>
 
-                    <div className="mt-3 flex items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50/80 px-2.5 py-2">
-                        <div className="text-center">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-600">
-                            {session.cards_layout.main_hero_card.right_aligned_trend.label} {session.cards_layout.main_hero_card.right_aligned_trend.percentage}
-                            </p>
-                        </div>
+                  <div className="mt-3 flex items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50/80 px-2.5 py-2">
+                    <div className="text-center">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-600">
+                        {session.cards_layout.main_hero_card.right_aligned_trend.label} {session.cards_layout.main_hero_card.right_aligned_trend.percentage}
+                      </p>
                     </div>
+                  </div>
                 </div>
 
-                <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
                   {session.cards_layout.sub_metrics_grid.cards.map((card, index) => (
                     <div
                       key={`${session.session_id}-${card.label}-${index}`}
@@ -312,6 +330,32 @@ export default function HalfSummaryReport() {
               </div>
             </article>
           ))}
+        </section>
+        <section className="grid w-full grid-cols-1">
+          <article className="rounded-[24px] border border-slate-200 bg-white p-3 shadow-sm sm:p-4 lg:p-5">
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-3 mb-3">
+              <span className="h-8 w-1 rounded-full" style={{ backgroundColor: '#4F46E5' }} />
+              <h3 className="text-lg font-semibold text-slate-900">Summary Statistics</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+              {total_metrics.cards.map((card, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center justify-center rounded-[14px] border border-slate-200 bg-slate-50/80 p-2.5 text-center shadow-sm"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">
+                    {card.label}
+                  </p>
+
+                  <div className="mt-1.5 flex items-center justify-center gap-1">
+                    <span className="text-lg font-black text-slate-900" style={{ color: card.value_color }}>
+                      {card.value}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </article>
         </section>
       </div>
     </div>

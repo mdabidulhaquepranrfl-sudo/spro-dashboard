@@ -141,7 +141,7 @@ const PERFORMANCE_VIEWS = {
         { id: 'avg_shop_visit_duration', label: 'AVG SHOP VISIT DURATION' },
         { id: 'number_of_days', label: 'NUMBER OF DAYS' },
       ],
-      rows:  [
+      rows: [
         {
           sl: 1,
           thana_name: 'Dhanmondi',
@@ -471,15 +471,15 @@ export default function AmolnamaPage() {
 
         <form className="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-[1.2fr_1fr_1fr_auto]" onSubmit={handleSearch}>
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Employee ID</label>
+            {/* <label className="mb-2 block text-sm font-medium text-slate-700">Employee ID</label> */}
             <input type="text" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={employeeId} onChange={(event) => setEmployeeId(event.target.value)} placeholder="Enter employee ID" />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Start date</label>
-            <input type="date" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
+            {/* <label className="mb-2 block text-sm font-medium text-slate-700">Start date</label> */}
+            <input type="date" placeholder="From Date" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">End date</label>
+            {/* <label className="mb-2 block text-sm font-medium text-slate-700">End date</label> */}
             <input type="date" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
           </div>
           <div className="flex items-end">
@@ -493,72 +493,72 @@ export default function AmolnamaPage() {
         <div className="w-full min-w-0 space-y-4">
 
           <div className="mt-4 grid gap-4 xl:grid-cols-[1.7fr_1fr]">
-          <div className="grid gap-4">
-            {DASHBOARD_LAYOUT.left_column.sections.map((section) => (
-              <section key={section.id} className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                <div className="border-b border-slate-200 px-3 py-2 sm:px-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-900">{section.title}</p>
+            <div className="grid gap-4">
+              {DASHBOARD_LAYOUT.left_column.sections.map((section) => (
+                <section key={section.id} className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                  <div className="border-b border-slate-200 px-3 py-2 sm:px-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-900">{section.title}</p>
+                      </div>
+                      <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600" style={{ backgroundColor: section.badge.bg_color, color: section.badge.text_color }}>
+                        {section.badge.label}
+                      </span>
                     </div>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600" style={{ backgroundColor: section.badge.bg_color, color: section.badge.text_color }}>
-                      {section.badge.label}
-                    </span>
                   </div>
-                </div>
-                <div className="p-2 sm:p-3">
-                  <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
-                    {section.metrics.map((metric) => (
-                      <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
-                            <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
-                            <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                  <div className="p-2 sm:p-3">
+                    <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+                      {section.metrics.map((metric) => (
+                        <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
+                              <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
+                              <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </section>
-            ))}
-          </div>
-
-          <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-600">{DASHBOARD_LAYOUT.right_column.sections[0].title}</p>
-                {/* <h3 className="mt-2 text-xl font-semibold text-slate-900">{DASHBOARD_LAYOUT.right_column.sections[0].title}</h3> */}
-              </div>
-              <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: DASHBOARD_LAYOUT.right_column.sections[0].badge.bg_color, color: DASHBOARD_LAYOUT.right_column.sections[0].badge.text_color }}>
-                {DASHBOARD_LAYOUT.right_column.sections[0].badge.label}
-              </span>
+                </section>
+              ))}
             </div>
-            <div className="mt-6 space-y-4">
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center justify-between text-sm text-slate-500">
-                  <span>Steps</span>
-                  <span>{DASHBOARD_LAYOUT.right_column.sections[0].y_axis.max}</span>
+
+            <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-600">{DASHBOARD_LAYOUT.right_column.sections[0].title}</p>
+                  {/* <h3 className="mt-2 text-xl font-semibold text-slate-900">{DASHBOARD_LAYOUT.right_column.sections[0].title}</h3> */}
                 </div>
-                <div className="mt-4 flex items-end gap-3 h-56">
-                  {DASHBOARD_LAYOUT.right_column.sections[0].x_axis_data.map((point) => {
-                    const height = Math.max((point.steps / DASHBOARD_LAYOUT.right_column.sections[0].y_axis.max) * 100, 4);
-                    return (
-                      <div key={point.date} className="flex-1 text-center">
-                        <div className="relative mx-auto h-48 w-full overflow-hidden rounded-3xl bg-slate-100">
-                          <div className="absolute bottom-0 left-0 right-0 rounded-b-3xl" style={{ height: `${height}%`, backgroundColor: point.bar_color }} />
-                        </div>
-                        <p className="mt-2 text-sm font-semibold text-slate-900">{point.date}</p>
-                        <p className="text-xs text-slate-500">{point.steps}</p>
-                      </div>
-                    );
-                  })}
-                </div>
+                <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: DASHBOARD_LAYOUT.right_column.sections[0].badge.bg_color, color: DASHBOARD_LAYOUT.right_column.sections[0].badge.text_color }}>
+                  {DASHBOARD_LAYOUT.right_column.sections[0].badge.label}
+                </span>
               </div>
-              {/* <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+              <div className="mt-6 space-y-4">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex items-center justify-between text-sm text-slate-500">
+                    <span>Steps</span>
+                    <span>{DASHBOARD_LAYOUT.right_column.sections[0].y_axis.max}</span>
+                  </div>
+                  <div className="mt-4 flex items-end gap-3 h-56">
+                    {DASHBOARD_LAYOUT.right_column.sections[0].x_axis_data.map((point) => {
+                      const height = Math.max((point.steps / DASHBOARD_LAYOUT.right_column.sections[0].y_axis.max) * 100, 4);
+                      return (
+                        <div key={point.date} className="flex-1 text-center">
+                          <div className="relative mx-auto h-48 w-full overflow-hidden rounded-3xl bg-slate-100">
+                            <div className="absolute bottom-0 left-0 right-0 rounded-b-3xl" style={{ height: `${height}%`, backgroundColor: point.bar_color }} />
+                          </div>
+                          <p className="mt-2 text-sm font-semibold text-slate-900">{point.date}</p>
+                          <p className="text-xs text-slate-500">{point.steps}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                {/* <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
                 <p className="font-semibold text-slate-900">YAxis scale</p>
                 <div className="mt-2 grid gap-2 text-xs sm:grid-cols-3">
                   {Array.from({ length: (DASHBOARD_LAYOUT.right_column.sections[0].y_axis.max / DASHBOARD_LAYOUT.right_column.sections[0].y_axis.step) + 1 }, (_, index) => (
@@ -568,9 +568,9 @@ export default function AmolnamaPage() {
                   ))}
                 </div>
               </div> */}
-            </div>
-          </section>
-        </div>
+              </div>
+            </section>
+          </div>
           <div className="grid w-full min-w-0 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
             <section className="w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-4 sm:px-6">
@@ -742,56 +742,56 @@ export default function AmolnamaPage() {
               </div>
             </section>
           </div>
-
-          <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900">{CO_WORK_REPORT.title}</h3>
-                <p className="mt-1 text-sm text-slate-500">Collaborative visit performance compared with last week.</p>
+          <div className="grid w-full min-w-0 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
+            <section className="w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">{CO_WORK_REPORT.title}</h3>
+                  <p className="mt-1 text-sm text-slate-500">Collaborative visit performance compared with last week.</p>
+                </div>
+                <span className="rounded-full px-3 py-1 text-sm font-semibold" style={{ backgroundColor: CO_WORK_REPORT.badge.bg_color, color: CO_WORK_REPORT.badge.text_color }}>
+                  {CO_WORK_REPORT.badge.label}
+                </span>
               </div>
-              <span className="rounded-full px-3 py-1 text-sm font-semibold" style={{ backgroundColor: CO_WORK_REPORT.badge.bg_color, color: CO_WORK_REPORT.badge.text_color }}>
-                {CO_WORK_REPORT.badge.label}
-              </span>
-            </div>
 
-            <div className="mt-4 overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-sm" style={{ borderColor: CO_WORK_REPORT.data_table.styling.border_color }}>
-                <thead className="bg-slate-50 text-left" style={{ color: CO_WORK_REPORT.data_table.styling.header_text_color, fontWeight: CO_WORK_REPORT.data_table.styling.header_font_weight === 'bold' ? 700 : 400 }}>
-                  <tr>
-                    {CO_WORK_REPORT.data_table.headers.map((header) => (
-                      <th key={header.id} className="px-3 py-3 align-top whitespace-pre-wrap">
-                        {header.label.split('\n').map((line, index) => (
-                          <span key={index} className="block leading-tight">
-                            {line}
-                          </span>
-                        ))}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 bg-white">
-                  {CO_WORK_REPORT.data_table.rows.length > 0 ? (
-                    CO_WORK_REPORT.data_table.rows.map((row) => (
-                      <tr key={row.sl} className="bg-slate-50/50">
-                        {CO_WORK_REPORT.data_table.headers.map((header) => (
-                          <td key={header.id} className="px-3 py-3 align-top text-slate-700">
-                            {row[header.id]}
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) : (
+              <div className="mt-4 overflow-x-auto">
+                <table className="min-w-full divide-y divide-slate-200 text-sm" style={{ borderColor: CO_WORK_REPORT.data_table.styling.border_color }}>
+                  <thead className="bg-slate-50 text-left" style={{ color: CO_WORK_REPORT.data_table.styling.header_text_color, fontWeight: CO_WORK_REPORT.data_table.styling.header_font_weight === 'bold' ? 700 : 400 }}>
                     <tr>
-                      <td colSpan={CO_WORK_REPORT.data_table.headers.length} className={`px-3 ${CO_WORK_REPORT.data_table.empty_state.padding} text-center`} style={{ color: CO_WORK_REPORT.data_table.empty_state.text_color }}>
-                        {CO_WORK_REPORT.data_table.empty_state.message}
-                      </td>
+                      {CO_WORK_REPORT.data_table.headers.map((header) => (
+                        <th key={header.id} className="px-3 py-3 align-top whitespace-pre-wrap">
+                          {header.label.split('\n').map((line, index) => (
+                            <span key={index} className="block leading-tight">
+                              {line}
+                            </span>
+                          ))}
+                        </th>
+                      ))}
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 bg-white">
+                    {CO_WORK_REPORT.data_table.rows.length > 0 ? (
+                      CO_WORK_REPORT.data_table.rows.map((row) => (
+                        <tr key={row.sl} className="bg-slate-50/50">
+                          {CO_WORK_REPORT.data_table.headers.map((header) => (
+                            <td key={header.id} className="px-3 py-3 align-top text-slate-700">
+                              {row[header.id]}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={CO_WORK_REPORT.data_table.headers.length} className={`px-3 ${CO_WORK_REPORT.data_table.empty_state.padding} text-center`} style={{ color: CO_WORK_REPORT.data_table.empty_state.text_color }}>
+                          {CO_WORK_REPORT.data_table.empty_state.message}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
           <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
