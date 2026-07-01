@@ -28,7 +28,7 @@ export const SIDEBAR_NAV = [
       {
         id: 'half-summery',
         label: 'Half Summery',
-        href: '/report/half-summery',
+        href: '/report/half-summery-report',
       },
     ],
   },

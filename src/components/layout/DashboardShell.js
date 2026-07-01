@@ -7,17 +7,16 @@ import Footer from '@/components/layout/Footer';
 
 export default function DashboardShell({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return window.localStorage.getItem('spro-sidebar-collapsed') !== 'false';
-  });
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('spro-sidebar-collapsed', String(sidebarCollapsed));
+    }
+  }, [sidebarCollapsed]);
 
   const handleToggleSidebar = () => {
-    setSidebarCollapsed((current) => {
-      const nextValue = !current;
-      window.localStorage.setItem('spro-sidebar-collapsed', String(nextValue));
-      return nextValue;
-    });
+    setSidebarCollapsed((current) => !current);
   };
 
   return (
