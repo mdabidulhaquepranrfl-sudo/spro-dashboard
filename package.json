@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.2",
-    "axios": "^1.18.1",
     "bootstrap": "^5.3.8",
     "next": "16.2.9",
     "postcss": "^8.5.16",
