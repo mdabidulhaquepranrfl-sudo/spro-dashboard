@@ -11,9 +11,7 @@
  *   const data = await getReportData('dailySummary', 'country_id=&staff_id=UAE2704&zone_id=&start_date=2026-06-01&end_date=2026-06-30');
  */
 export async function getReportData(endpoint, params = '') {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_REPORT_API_BASE_URL ||
-    'http://spro.prgfms.com/performance-ledger-report/';
+  const baseUrl = process.env.NEXT_PUBLIC_REPORT_API_BASE_URL;
 
   const url = params ? `${baseUrl}${endpoint}?${params}` : `${baseUrl}${endpoint}`;
 

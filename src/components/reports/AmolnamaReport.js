@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-// import { getReportData } from '@/lib/getReportData';
+import { getReportData } from '@/lib/getReportData';
 import StepCount from './amolnama/StepCount';
 import PerformanceAndKPI from './amolnama/PerformanceAndKPI';
 import CoWorkReport from './amolnama/CoWorkReport';
@@ -86,39 +86,44 @@ export default function AmolnamaPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [dashboardLayout, setDashboardLayout] = useState(DASHBOARD_LAYOUT);
+  const [searchParams, setSearchParams] = useState({
+    staffId: '',
+    startDate: '',
+    endDate: '',
+  });
 
   const formattedStartDate = formatDisplayDate(startDate);
   const formattedEndDate = formatDisplayDate(endDate);
   const selectedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
-  const reportHeading = `Insights for ${employeeId || '—'} - MIS-Dev-Shobuj Mia`;
+  const reportHeading = `Insights for ${searchParams.staffId || '—'} - MIS-Dev-Shobuj Mia`;
 
   useEffect(() => {
-    if (!hasSearched) return;
-
-    // API calls — uncomment when ready to integrate
+    if (!hasSearched || !searchParams.staffId) return;
 
     // Daily Summary
-    // async function fetchDailySummary() {
-    //   try {
-    //     const data = await getReportData('dailySummary', `country_id=&staff_id=${employeeId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
-    //     // TODO: set daily summary metrics from API response
-    //   } catch (error) {
-    //     console.error('Daily summary fetch error:', error);
-    //   }
-    // }
-    // fetchDailySummary();
+    async function fetchDailySummary() {
+      try {
+        const data = await getReportData('dailySummary', `country_id=&staff_id=${searchParams.staffId}&zone_id=&start_date=${searchParams.startDate}&end_date=${searchParams.endDate}`);
+        console.log('Daily summary data fetched:', data);
+        // TODO: set daily summary metrics from API response
+      } catch (error) {
+        console.error('Daily summary fetch error:', error);
+      }
+    }
+    fetchDailySummary();
 
     // Visited Summary
-    // async function fetchVisitedSummary() {
-    //   try {
-    //     const data = await getReportData('visitedSummary', `country_id=&staff_id=${employeeId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
-    //     // TODO: set visited summary metrics from API response
-    //   } catch (error) {
-    //     console.error('Visited summary fetch error:', error);
-    //   }
-    // }
-    // fetchVisitedSummary();
-  }, [hasSearched, employeeId, startDate, endDate]);
+    async function fetchVisitedSummary() {
+      try {
+        const data = await getReportData('visitedSummary', `country_id=&staff_id=${searchParams.staffId}&zone_id=&start_date=${searchParams.startDate}&end_date=${searchParams.endDate}`);
+        console.log('Visited summary data fetched:', data);
+        // TODO: set visited summary metrics from API response
+      } catch (error) {
+        console.error('Visited summary fetch error:', error);
+      }
+    }
+    fetchVisitedSummary();
+  }, [hasSearched, searchParams]);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -130,6 +135,11 @@ export default function AmolnamaPage() {
     }
 
     setSearchError('');
+    setSearchParams({
+      staffId: employeeId,
+      startDate: startDate,
+      endDate: endDate,
+    });
     setHasSearched(true);
   };
 
@@ -202,12 +212,12 @@ export default function AmolnamaPage() {
               ))}
             </div>
 
-            <StepCount />
+            <StepCount staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
           </div>
 
-          <PerformanceAndKPI />
-          <CoWorkReport />
-          <FieldOperationsSnapshot />
+          <PerformanceAndKPI staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
+          <CoWorkReport staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
+          <FieldOperationsSnapshot staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
         </div>
       ) : (
         <section className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">

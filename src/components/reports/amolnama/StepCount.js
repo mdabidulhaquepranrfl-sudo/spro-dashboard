@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-// import { getReportData } from '@/lib/getReportData';
+import { getReportData } from '@/lib/getReportData';
 
 const STEP_COUNT_CONFIG = {
   title: 'Step Count',
@@ -23,24 +23,26 @@ const DEFAULT_STEP_DATA = [
   { date: '07-01', steps: 0, bar_color: '#3498DB' },
 ];
 
-export default function StepCount() {
+export default function StepCount({ staffId, startDate, endDate }) {
   const [stepData, setStepData] = useState(DEFAULT_STEP_DATA);
   const [yAxisMax, setYAxisMax] = useState(STEP_COUNT_CONFIG.y_axis.max);
 
   useEffect(() => {
-    // API call — uncomment when ready to integrate
-    // async function fetchStepCount() {
-    //   try {
-    //     const data = await getReportData('step-count/summary', '');
-    //     // TODO: set stepData and yAxisMax from API response
-    //     // setStepData(data.x_axis_data);
-    //     // setYAxisMax(data.y_axis?.max || 3500);
-    //   } catch (error) {
-    //     console.error('Step count fetch error:', error);
-    //   }
-    // }
-    // fetchStepCount();
-  }, []);
+    if (!staffId) return;
+    // API call — uncommented as requested
+    async function fetchStepCount() {
+      try {
+        const data = await getReportData('step-count/summary', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
+        console.log('Step count data fetched:', data);
+        // TODO: set stepData and yAxisMax from API response
+        // setStepData(data.x_axis_data);
+        // setYAxisMax(data.y_axis?.max || 3500);
+      } catch (error) {
+        console.error('Step count fetch error:', error);
+      }
+    }
+    fetchStepCount();
+  }, [staffId, startDate, endDate]);
 
   return (
     <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">

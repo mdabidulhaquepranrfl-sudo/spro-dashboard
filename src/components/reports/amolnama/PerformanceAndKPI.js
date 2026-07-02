@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-// import { getReportData } from '@/lib/getReportData';
-import PerformanceSummaryTable from './PerformanceSummaryTable';
+import { getReportData } from '@/lib/getReportData';
+import PerformanceSummary from './PerformanceSummary';
 
 const PERFORMANCE_TABS = [
   { id: 'thana_wise', label: 'Thana Wise' },
@@ -188,7 +188,7 @@ const DEFAULT_OUTLET_ACTIVITY = [
   { label: 'DELETED', value: '0', bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-700' },
 ];
 
-export default function PerformanceAndKPI() {
+export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
   const [activeSubTab, setActiveSubTab] = useState('thana_wise');
   const [searchQuery, setSearchQuery] = useState('');
   const [ttsData, setTtsData] = useState(DEFAULT_TTS_DATA);
@@ -196,65 +196,71 @@ export default function PerformanceAndKPI() {
   const [performanceData, setPerformanceData] = useState(PERFORMANCE_VIEWS);
 
   useEffect(() => {
-    // API calls — uncomment when ready to integrate
+    if (!staffId) return;
+    // API calls — uncommented as requested
 
     // Thana Performance
-    // async function fetchThanaPerformance() {
-    //   try {
-    //     const data = await getReportData('thanaPerformance', 'country_id=&staff_id=UAE2704&zone_id=&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set thana performance data from API response
-    //   } catch (error) {
-    //     console.error('Thana performance fetch error:', error);
-    //   }
-    // }
-    // fetchThanaPerformance();
+    async function fetchThanaPerformance() {
+      try {
+        const data = await getReportData('thanaPerformance', `country_id=&staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
+        console.log('Thana performance fetched:', data);
+        // TODO: set thana performance data from API response
+      } catch (error) {
+        console.error('Thana performance fetch error:', error);
+      }
+    }
+    fetchThanaPerformance();
 
     // Zone Performance
-    // async function fetchZonePerformance() {
-    //   try {
-    //     const data = await getReportData('zonePerformance', 'country_id=&staff_id=UAE2704&zone_id=&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set zone performance data from API response
-    //   } catch (error) {
-    //     console.error('Zone performance fetch error:', error);
-    //   }
-    // }
-    // fetchZonePerformance();
+    async function fetchZonePerformance() {
+      try {
+        const data = await getReportData('zonePerformance', `country_id=&staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
+        console.log('Zone performance fetched:', data);
+        // TODO: set zone performance data from API response
+      } catch (error) {
+        console.error('Zone performance fetch error:', error);
+      }
+    }
+    fetchZonePerformance();
 
     // District Performance
-    // async function fetchDistrictPerformance() {
-    //   try {
-    //     const data = await getReportData('districtPerformance', 'country_id=&staff_id=UAE2704&zone_id=&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set district performance data from API response
-    //   } catch (error) {
-    //     console.error('District performance fetch error:', error);
-    //   }
-    // }
-    // fetchDistrictPerformance();
+    async function fetchDistrictPerformance() {
+      try {
+        const data = await getReportData('districtPerformance', `country_id=&staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
+        console.log('District performance fetched:', data);
+        // TODO: set district performance data from API response
+      } catch (error) {
+        console.error('District performance fetch error:', error);
+      }
+    }
+    fetchDistrictPerformance();
 
     // TTS KPI
-    // async function fetchTTSKPI() {
-    //   try {
-    //     const data = await getReportData('staff/visit-duration-bucket', 'staff_id=UAE2704&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set TTS KPI data from API response
-    //     // setTtsData(data);
-    //   } catch (error) {
-    //     console.error('TTS KPI fetch error:', error);
-    //   }
-    // }
-    // fetchTTSKPI();
+    async function fetchTTSKPI() {
+      try {
+        const data = await getReportData('staff/visit-duration-bucket', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
+        console.log('TTS KPI fetched:', data);
+        // TODO: set TTS KPI data from API response
+        // setTtsData(data);
+      } catch (error) {
+        console.error('TTS KPI fetch error:', error);
+      }
+    }
+    fetchTTSKPI();
 
     // Outlet Activity
-    // async function fetchOutletActivity() {
-    //   try {
-    //     const data = await getReportData('staff/outlet-activity', 'staff_id=UAE2704&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set outlet activity data from API response
-    //     // setOutletActivity(data);
-    //   } catch (error) {
-    //     console.error('Outlet activity fetch error:', error);
-    //   }
-    // }
-    // fetchOutletActivity();
-  }, []);
+    async function fetchOutletActivity() {
+      try {
+        const data = await getReportData('staff/outlet-activity', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
+        console.log('Outlet activity fetched:', data);
+        // TODO: set outlet activity data from API response
+        // setOutletActivity(data);
+      } catch (error) {
+        console.error('Outlet activity fetch error:', error);
+      }
+    }
+    fetchOutletActivity();
+  }, [staffId, startDate, endDate]);
 
   const currentView = performanceData[activeSubTab];
 
@@ -288,7 +294,7 @@ export default function PerformanceAndKPI() {
         </div>
 
         <div className="w-full min-w-0 p-4 sm:p-6">
-          <PerformanceSummaryTable
+          <PerformanceSummary
             title={currentView.title}
             summaryCards={currentView.summaryCards}
             headers={currentView.table.headers}

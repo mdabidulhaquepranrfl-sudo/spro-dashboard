@@ -24,7 +24,7 @@ const ICON_MAP = {
  * - emptyMessage: string (fallback message)
  * - rowRenderer: optional custom row renderer function(row, headers)
  */
-export default function PerformanceSummaryTable({
+export default function PerformanceSummary({
   title,
   summaryCards = [],
   headers = [],

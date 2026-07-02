@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-// import { getReportData } from '@/lib/getReportData';
+import { getReportData } from '@/lib/getReportData';
 
 const CO_WORK_CONFIG = {
   title: 'Co-Work Report',
@@ -69,22 +69,24 @@ const DEFAULT_ROWS = [
   },
 ];
 
-export default function CoWorkReport() {
+export default function CoWorkReport({ staffId, startDate, endDate }) {
   const [rows, setRows] = useState(DEFAULT_ROWS);
 
   useEffect(() => {
-    // API call — uncomment when ready to integrate
-    // async function fetchCoWorkReport() {
-    //   try {
-    //     const data = await getReportData('staff/co-work-report', 'staff_id=UAE2704&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set rows from API response
-    //     // setRows(data.rows || []);
-    //   } catch (error) {
-    //     console.error('Co-work report fetch error:', error);
-    //   }
-    // }
-    // fetchCoWorkReport();
-  }, []);
+    if (!staffId) return;
+    // API call — uncommented as requested
+    async function fetchCoWorkReport() {
+      try {
+        const data = await getReportData('staff/co-work-report', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
+        console.log('Co-work report fetched:', data);
+        // TODO: set rows from API response
+        // setRows(data.rows || []);
+      } catch (error) {
+        console.error('Co-work report fetch error:', error);
+      }
+    }
+    fetchCoWorkReport();
+  }, [staffId, startDate, endDate]);
 
   return (
     <div className="grid w-full min-w-0 gap-4">

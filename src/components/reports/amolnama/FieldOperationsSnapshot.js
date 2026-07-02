@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-// import { getReportData } from '@/lib/getReportData';
+import { getReportData } from '@/lib/getReportData';
 
 const DEFAULT_FIELD_PERFORMANCE = [
   {
@@ -35,22 +35,24 @@ const DEFAULT_FIELD_PERFORMANCE = [
   },
 ];
 
-export default function FieldOperationsSnapshot() {
+export default function FieldOperationsSnapshot({ staffId, startDate, endDate }) {
   const [fieldData, setFieldData] = useState(DEFAULT_FIELD_PERFORMANCE);
 
   useEffect(() => {
-    // API call — uncomment when ready to integrate
-    // async function fetchFieldOperations() {
-    //   try {
-    //     const data = await getReportData('field-oparation', 'staff_id=UAE2704&start_date=2026-06-01&end_date=2026-06-30');
-    //     // TODO: set fieldData from API response
-    //     // setFieldData(data);
-    //   } catch (error) {
-    //     console.error('Field operations fetch error:', error);
-    //   }
-    // }
-    // fetchFieldOperations();
-  }, []);
+    if (!staffId) return;
+    // API call — uncommented as requested
+    async function fetchFieldOperations() {
+      try {
+        const data = await getReportData('field-oparation', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
+        console.log('Field operations fetched:', data);
+        // TODO: set fieldData from API response
+        // setFieldData(data);
+      } catch (error) {
+        console.error('Field operations fetch error:', error);
+      }
+    }
+    fetchFieldOperations();
+  }, [staffId, startDate, endDate]);
 
   return (
     <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
