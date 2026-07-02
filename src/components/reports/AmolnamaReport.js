@@ -24,26 +24,26 @@ const SUMMARY_ICON_MAP = {
 };
 
 const DAILY_SUMMARY_METRICS = [
-  { key: 'activity_days', label: 'ACTIVITY DAY', value: '0', icon: 'calendar', theme: { icon_bg: '#EEF2FF', icon_color: '#3730A3', label_color: '#1E3A8A', value_color: '#1E40AF' } },
-  { key: 'avg_first_act', label: 'FIRST ACTIVITY', value: '—', icon: 'clock', theme: { icon_bg: '#FEF3C7', icon_color: '#B45309', label_color: '#92400E', value_color: '#7C2D12' } },
-  { key: 'avg_last_act', label: 'LAST ACTIVITY', value: '—', icon: 'clock', theme: { icon_bg: '#FEF3C7', icon_color: '#b44209', label_color: '#92400E', value_color: '#7C2D12' } },
-  { key: 'retail_activity', label: 'TOTAL RETAIL ACT', value: '0', icon: 'briefcase', theme: { icon_bg: '#ECFDF5', icon_color: '#059669', label_color: '#047857', value_color: '#065F46' } },
-  { key: 'average_activity', label: 'AVG RETAIL ACT', value: '0', icon: 'briefcase', theme: { icon_bg: '#FDE68A', icon_color: '#B45309', label_color: '#92400E', value_color: '#7C2D12' } },
-  { key: 'other_activities', label: 'OTHER ACTIVITIES', value: '0', icon: 'calendar_check', theme: { icon_bg: '#E0F2FE', icon_color: '#0369A1', label_color: '#075985', value_color: '#0C4A6E' } },
-  { key: 'avg_tts', label: 'AVG TTS', value: '00:00:00', icon: 'clock', theme: { icon_bg: '#FEE2E2', icon_color: '#DC2626', label_color: '#991B1B', value_color: '#7F1D1D' } },
-  { key: 'daily_tts', label: 'DAILY TTS', value: '00:00:00', icon: 'clock', theme: { icon_bg: '#EDE9FE', icon_color: '#7C3AED', label_color: '#5B21B6', value_color: '#4C1D95' } },
+  { key: 'activity_days', label: 'ACTIVITY DAY', value: '0', icon: 'calendar', theme: { icon_bg: '#E0E7FF', icon_color: '#312E81', label_color: '#1E3A8A', value_color: '#1E40AF' } },
+  { key: 'avg_first_act', label: 'FIRST ACTIVITY', value: '—', icon: 'clock', theme: { icon_bg: '#FDE68A', icon_color: '#9A2C00', label_color: '#92400E', value_color: '#7C2D12' } },
+  { key: 'avg_last_act', label: 'LAST ACTIVITY', value: '—', icon: 'clock', theme: { icon_bg: '#FDE68A', icon_color: '#9A2C00', label_color: '#92400E', value_color: '#7C2D12' } },
+  { key: 'retail_activity', label: 'TOTAL RETAIL ACT', value: '0', icon: 'briefcase', theme: { icon_bg: '#D1FAE5', icon_color: '#047857', label_color: '#047857', value_color: '#065F46' } },
+  { key: 'average_activity', label: 'AVG RETAIL ACT', value: '0', icon: 'briefcase', theme: { icon_bg: '#FDE68A', icon_color: '#9A2C00', label_color: '#92400E', value_color: '#7C2D12' } },
+  { key: 'other_activities', label: 'OTHER ACTIVITIES', value: '0', icon: 'calendar_check', theme: { icon_bg: '#BAE6FD', icon_color: '#075985', label_color: '#075985', value_color: '#0C4A6E' } },
+  { key: 'avg_tts', label: 'AVG TTS', value: '00:00:00', icon: 'clock', theme: { icon_bg: '#FECACA', icon_color: '#B91C1C', label_color: '#991B1B', value_color: '#7F1D1D' } },
+  { key: 'daily_tts', label: 'DAILY TTS', value: '00:00:00', icon: 'clock', theme: { icon_bg: '#DDD6FE', icon_color: '#6D28D9', label_color: '#5B21B6', value_color: '#4C1D95' } },
 ];
 
 const VISITED_SUMMARY_METRICS = [
-  { key: 'total_outlet', label: 'TOTAL OUTLETS', value: '0', icon: 'shopping_bag', theme: { icon_bg: '#F8FAFC', icon_color: '#0F172A', label_color: '#0F172A', value_color: '#0F172A' } },
-  { key: 'total_visits', label: 'TOTAL VISITS', value: '0', icon: 'person', theme: { icon_bg: '#ECFDF5', icon_color: '#15803D', label_color: '#166534', value_color: '#14532D' } },
-  { key: 'unique_visits', label: 'UNIQUE VISITS', value: '0', icon: 'location_pin', theme: { icon_bg: '#EFF6FF', icon_color: '#2563EB', label_color: '#1D4ED8', value_color: '#1E40AF' } },
-  { key: 'visit_coverage_pct', label: 'VISIT COVERAGE', value: '0', icon: 'map', theme: { icon_bg: '#FFF7ED', icon_color: '#C2410C', label_color: '#9A3412', value_color: '#7C2D12' } },
-  { key: 'total_order_count', label: 'NO. OF ORDERS', value: '0', icon: 'shopping_cart', theme: { icon_bg: '#FEE2E2', icon_color: '#BE123C', label_color: '#9F1239', value_color: '#881337' } },
-  { key: 'order_value_k', label: 'ORDER VALUE', value: '0', icon: 'dollar_sign', theme: { icon_bg: '#ECFDF5', icon_color: '#047857', label_color: '#065F46', value_color: '#064E3B' } },
-  { key: 'delivery_amount_k', label: 'DEL. AMOUNT', value: '0', icon: 'delivery_truck', theme: { icon_bg: '#E0F2FE', icon_color: '#0369A1', label_color: '#075985', value_color: '#0C4A6E' } },
-  { key: 'lpc', label: 'LPC', value: '0', icon: 'bar_chart', theme: { icon_bg: '#EDE9FE', icon_color: '#7C3AED', label_color: '#5B21B6', value_color: '#4C1D95' } },
-  { key: 'nd', label: 'ND', value: '0', icon: 'calendar_cross', theme: { icon_bg: '#FEE2E2', icon_color: '#DC2626', label_color: '#B91C1C', value_color: '#991B1B' } },
+  { key: 'total_outlet', label: 'TOTAL OUTLETS', value: '0', icon: 'shopping_bag', theme: { icon_bg: '#F8FAFC', icon_color: '#111827', label_color: '#0F172A', value_color: '#0F172A' } },
+  { key: 'total_visits', label: 'TOTAL VISITS', value: '0', icon: 'person', theme: { icon_bg: '#D1FAE5', icon_color: '#166534', label_color: '#166534', value_color: '#14532D' } },
+  { key: 'unique_visits', label: 'UNIQUE VISITS', value: '0', icon: 'location_pin', theme: { icon_bg: '#DBEAFE', icon_color: '#1D4ED8', label_color: '#1D4ED8', value_color: '#1E40AF' } },
+  { key: 'visit_coverage_pct', label: 'VISIT COVERAGE', value: '0', icon: 'map', theme: { icon_bg: '#FFEDD5', icon_color: '#9A2C00', label_color: '#9A3412', value_color: '#7C2D12' } },
+  { key: 'total_order_count', label: 'NO. OF ORDERS', value: '0', icon: 'shopping_cart', theme: { icon_bg: '#FECACA', icon_color: '#BE123C', label_color: '#9F1239', value_color: '#881337' } },
+  { key: 'order_value_k', label: 'ORDER VALUE', value: '0', icon: 'dollar_sign', theme: { icon_bg: '#D1FAE5', icon_color: '#065F46', label_color: '#065F46', value_color: '#064E3B' } },
+  { key: 'delivery_amount_k', label: 'DEL. AMOUNT', value: '0', icon: 'delivery_truck', theme: { icon_bg: '#BAE6FD', icon_color: '#075985', label_color: '#075985', value_color: '#0C4A6E' } },
+  { key: 'lpc', label: 'LPC', value: '0', icon: 'bar_chart', theme: { icon_bg: '#DDD6FE', icon_color: '#6D28D9', label_color: '#5B21B6', value_color: '#4C1D95' } },
+  { key: 'nd', label: 'ND', value: '0', icon: 'calendar_cross', theme: { icon_bg: '#FECACA', icon_color: '#B91C1C', label_color: '#B91C1C', value_color: '#991B1B' } },
 ];
 
 const formatDisplayDate = (value) => {
@@ -58,19 +58,21 @@ const formatDisplayDate = (value) => {
 };
 
 export default function AmolnamaPage() {
-  const [employeeId, setEmployeeId] = useState('397921');
+  const [employeeId, setEmployeeId] = useState('UAE2704');
   const [startDate, setStartDate] = useState('2026-06-01');
   const [endDate, setEndDate] = useState('2026-06-30');
   const [hasSearched, setHasSearched] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [dailyMetrics, setDailyMetrics] = useState(DAILY_SUMMARY_METRICS);
   const [visitedMetrics, setVisitedMetrics] = useState(VISITED_SUMMARY_METRICS);
+  const [isDailyLoading, setIsDailyLoading] = useState(false);
+  const [isVisitedLoading, setIsVisitedLoading] = useState(false);
   const [searchParams, setSearchParams] = useState({
     staffId: '',
     startDate: '',
     endDate: '',
   });
-
+  const [refreshKey, setRefreshKey] = useState(0);
   const formattedStartDate = formatDisplayDate(startDate);
   const formattedEndDate = formatDisplayDate(endDate);
   const selectedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
@@ -81,6 +83,7 @@ export default function AmolnamaPage() {
 
     // Daily Summary
     async function fetchDailySummary() {
+      setIsDailyLoading(true);
       try {
         const response = await getReportData('daily-summary', `staff_id=${searchParams.staffId}&zone_id=&start_date=${searchParams.startDate}&end_date=${searchParams.endDate}`);
         const data = response?.data || {};
@@ -91,13 +94,14 @@ export default function AmolnamaPage() {
             value: data[item.key] ?? '_',
           }))
         );
-        // TODO: set daily summary metrics from API response
       } catch (error) { }
+      finally { setIsDailyLoading(false); }
     }
     fetchDailySummary();
 
     // Visited Summary
     async function fetchVisitedSummary() {
+      setIsVisitedLoading(true);
       try {
         const response = await getReportData('visited-summary', `staff_id=${searchParams.staffId}&zone_id=&start_date=${searchParams.startDate}&end_date=${searchParams.endDate}`);
         const data = response?.data || {};
@@ -108,10 +112,10 @@ export default function AmolnamaPage() {
         );
       } catch (error) {
         console.error('Visited summary fetch error:', error);
-      }
+      } finally { setIsVisitedLoading(false); }
     }
     fetchVisitedSummary();
-  }, [hasSearched, searchParams]);
+  }, [hasSearched, searchParams, refreshKey]);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -129,6 +133,7 @@ export default function AmolnamaPage() {
       endDate: endDate,
     });
     setHasSearched(true);
+    setRefreshKey(prev => prev + 1);
   };
 
   return (
@@ -181,19 +186,32 @@ export default function AmolnamaPage() {
                 </div>
                 <div className="p-2 sm:p-3">
                   <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
-                    {dailyMetrics.map((metric) => (
-                      <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
-                            <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
+                    {isDailyLoading
+                      ? DAILY_SUMMARY_METRICS.map((_, i) => (
+                          <div key={i} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
+                            <div className="flex items-center gap-2">
+                              <div className="h-9 w-9 rounded-2xl bg-slate-200 flex-shrink-0" />
+                              <div className="min-w-0 flex-1 space-y-2">
+                                <div className="h-2.5 w-3/4 rounded-full bg-slate-200" />
+                                <div className="h-5 w-1/2 rounded-full bg-slate-200" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
-                            <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                        ))
+                      : dailyMetrics.map((metric) => (
+                          <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
+                                <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
+                                <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    ))}
+                        ))
+                    }
                   </div>
                 </div>
               </section>
@@ -212,30 +230,43 @@ export default function AmolnamaPage() {
                 </div>
                 <div className="p-2 sm:p-3">
                   <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
-                    {visitedMetrics.map((metric) => (
-                      <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
-                            <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
+                    {isVisitedLoading
+                      ? VISITED_SUMMARY_METRICS.map((_, i) => (
+                          <div key={i} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
+                            <div className="flex items-center gap-2">
+                              <div className="h-9 w-9 rounded-2xl bg-slate-200 flex-shrink-0" />
+                              <div className="min-w-0 flex-1 space-y-2">
+                                <div className="h-2.5 w-3/4 rounded-full bg-slate-200" />
+                                <div className="h-5 w-1/2 rounded-full bg-slate-200" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
-                            <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                        ))
+                      : visitedMetrics.map((metric) => (
+                          <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
+                                <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
+                                <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    ))}
+                        ))
+                    }
                   </div>
                 </div>
               </section>
             </div>
 
-            <StepCount staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
+            <StepCount key={`step-${refreshKey}`} staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
           </div>
 
-          <PerformanceAndKPI staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
-          <CoWorkReport staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
-          <FieldOperationsSnapshot staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
+          <PerformanceAndKPI key={`kpi-${refreshKey}`} staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
+          <CoWorkReport key={`cowork-${refreshKey}`} staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
+          <FieldOperationsSnapshot key={`field-${refreshKey}`} staffId={searchParams.staffId} startDate={searchParams.startDate} endDate={searchParams.endDate} />
         </div>
       ) : (
         <section className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
