@@ -589,13 +589,13 @@ export default function AmolnamaPage() {
                   <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                     <i className="bx bx-search text-base" />
                   </span>
-                  <input
+                  {/* <input
                     value={searchQuery}
                     onChange={(event) => setSearchQuery(event.target.value)}
                     type="text"
                     placeholder="Search table content"
                     className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-                  />
+                  /> */}
                 </label>
               </div>
 
@@ -651,41 +651,6 @@ export default function AmolnamaPage() {
                     </table>
                   </div>
                 </div>
-
-                {activeSubTab === 'district_wise' ? (
-                  <div className="mt-6 w-full max-w-full overflow-x-auto rounded-2xl border border-slate-200">
-                    <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-                      <h4 className="font-semibold text-slate-900">{PERFORMANCE_VIEWS.district_wise.coWorkReport.title}</h4>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-[620px] divide-y divide-slate-200 text-sm">
-                        <thead className="bg-slate-50 text-left text-slate-600">
-                          <tr>
-                            {PERFORMANCE_VIEWS.district_wise.coWorkReport.headers.map((header) => (
-                              <th key={header.id} className="px-4 py-3 font-semibold">{header.label}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 bg-white">
-                          {PERFORMANCE_VIEWS.district_wise.coWorkReport.rows.length > 0 ? (
-                            PERFORMANCE_VIEWS.district_wise.coWorkReport.rows.map((row) => (
-                              <tr key={row.sl}>
-                                <td className="px-4 py-3">{row.sl}</td>
-                                <td className="px-4 py-3">{row.date}</td>
-                                <td className="px-4 py-3">{row.co_worker_name}</td>
-                                <td className="px-4 py-3">{row.status}</td>
-                              </tr>
-                            ))
-                          ) : (
-                            <tr>
-                              <td colSpan={PERFORMANCE_VIEWS.district_wise.coWorkReport.headers.length} className="px-4 py-6 text-center text-slate-500">{PERFORMANCE_VIEWS.district_wise.coWorkReport.emptyState.message}</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ) : null}
               </div>
             </section>
 
@@ -742,8 +707,8 @@ export default function AmolnamaPage() {
               </div>
             </section>
           </div>
-          <div className="grid w-full min-w-0 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
-            <section className="w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="grid w-full min-w-0 gap-4">
+            <section className="w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900">{CO_WORK_REPORT.title}</h3>
