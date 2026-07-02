@@ -202,8 +202,7 @@ export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
     // Thana Performance
     async function fetchThanaPerformance() {
       try {
-        const data = await getReportData('thanaPerformance', `country_id=&staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
-        console.log('Thana performance fetched:', data);
+        const data = await getReportData('thana-performance', `staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set thana performance data from API response
       } catch (error) {
         console.error('Thana performance fetch error:', error);
@@ -214,8 +213,7 @@ export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
     // Zone Performance
     async function fetchZonePerformance() {
       try {
-        const data = await getReportData('zonePerformance', `country_id=&staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
-        console.log('Zone performance fetched:', data);
+        const data = await getReportData('zone-performance', `staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set zone performance data from API response
       } catch (error) {
         console.error('Zone performance fetch error:', error);
@@ -226,8 +224,7 @@ export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
     // District Performance
     async function fetchDistrictPerformance() {
       try {
-        const data = await getReportData('districtPerformance', `country_id=&staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
-        console.log('District performance fetched:', data);
+        const data = await getReportData('district-performance', `staff_id=${staffId}&zone_id=&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set district performance data from API response
       } catch (error) {
         console.error('District performance fetch error:', error);
@@ -238,8 +235,7 @@ export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
     // TTS KPI
     async function fetchTTSKPI() {
       try {
-        const data = await getReportData('staff/visit-duration-bucket', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
-        console.log('TTS KPI fetched:', data);
+        const data = await getReportData('visit-duration-bucket', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set TTS KPI data from API response
         // setTtsData(data);
       } catch (error) {
@@ -251,8 +247,7 @@ export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
     // Outlet Activity
     async function fetchOutletActivity() {
       try {
-        const data = await getReportData('staff/outlet-activity', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
-        console.log('Outlet activity fetched:', data);
+        const data = await getReportData('outlet-activity', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set outlet activity data from API response
         // setOutletActivity(data);
       } catch (error) {

@@ -32,8 +32,7 @@ export default function StepCount({ staffId, startDate, endDate }) {
     // API call — uncommented as requested
     async function fetchStepCount() {
       try {
-        const data = await getReportData('step-count/summary', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
-        console.log('Step count data fetched:', data);
+        const data = await getReportData('step-count-summary', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set stepData and yAxisMax from API response
         // setStepData(data.x_axis_data);
         // setYAxisMax(data.y_axis?.max || 3500);

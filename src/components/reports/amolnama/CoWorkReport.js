@@ -77,8 +77,7 @@ export default function CoWorkReport({ staffId, startDate, endDate }) {
     // API call — uncommented as requested
     async function fetchCoWorkReport() {
       try {
-        const data = await getReportData('staff/co-work-report', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
-        console.log('Co-work report fetched:', data);
+        const data = await getReportData('co-work-report', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
         // TODO: set rows from API response
         // setRows(data.rows || []);
       } catch (error) {

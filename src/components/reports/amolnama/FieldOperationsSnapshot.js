@@ -44,7 +44,6 @@ export default function FieldOperationsSnapshot({ staffId, startDate, endDate })
     async function fetchFieldOperations() {
       try {
         const data = await getReportData('field-oparation', `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`);
-        console.log('Field operations fetched:', data);
         // TODO: set fieldData from API response
         // setFieldData(data);
       } catch (error) {
