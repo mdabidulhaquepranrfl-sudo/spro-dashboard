@@ -216,7 +216,7 @@ export default function HalfSummaryReport() {
 
   return (
     <div className="min-h-screen w-full bg-slate-50">
-      <div className="mx-auto flex w-full max-w-8xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-8xl flex-col gap-4 px-2 py-2 sm:px-2 lg:px-2">
         <section className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
