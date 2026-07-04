@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
         </button>
       </div>
 
-      <nav className="mt-8 space-y-2">
+      <nav className="mt-8 space-y-2 overflow-hidden">
         {SIDEBAR_NAV.map((item) => {
           const hasChildren = item.children?.length;
           const isParentActive = hasChildren
