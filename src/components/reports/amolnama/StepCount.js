@@ -35,7 +35,7 @@ function getDateRange(startDate, endDate) {
 }
 
 function formatDateLabel(date) {
-  return new Intl.DateTimeFormat('en', { day: '2-digit', month: 'short' }).format(date);
+  return new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit' }).format(date);
 }
 
 export default function StepCount({ staffId, startDate, endDate }) {
@@ -51,27 +51,27 @@ export default function StepCount({ staffId, startDate, endDate }) {
       try {
         const response = await getReportData(
           'step-count-summary',
-          `staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`
+          `aemp_id=${staffId}&start_date=${startDate}&end_date=${endDate}`
         );
 
-        const summary = response?.data?.summary || {};
-        const totalSteps = Number(summary?.total_steps || 0);
-        const dates = getDateRange(startDate, endDate);
+        const items = Array.isArray(response?.data) ? response.data : [];
 
-        if (dates.length) {
-          const averageSteps = Math.max(1, Math.round(totalSteps / dates.length));
-          const normalized = dates.map((date, index) => {
-            const variation = [0.78, 0.92, 1.05, 1.18, 0.88, 1.1, 0.96, 1.24][index % 8];
+        if (items.length) {
+          const normalized = items.map((item, index) => {
+            const steps = Number(item?.total_steps || 0);
+            const date = item?.date ? new Date(item.date) : null;
+
             return {
-              label: formatDateLabel(date),
-              steps: Math.max(0, Math.round(averageSteps * variation)),
+              label: date && !Number.isNaN(date.getTime()) ? formatDateLabel(date) : 'N/A',
+              steps: Math.max(0, steps),
               bar_color: BAR_COLORS[index % BAR_COLORS.length],
+              date: item?.date || '',
             };
           });
 
           setStepData(normalized);
           const maxValue = Math.max(...normalized.map((item) => item.steps));
-          const roundedMax = Math.max(10000, Math.ceil(maxValue / 5000) * 5000);
+          const roundedMax = Math.max(1000, Math.ceil(maxValue / 1000) * 1000);
           setYAxisMax(roundedMax);
         } else {
           setStepData(DEFAULT_STEP_DATA);
@@ -107,18 +107,18 @@ export default function StepCount({ staffId, startDate, endDate }) {
       <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
         {isLoading ? (
           <div className="w-full overflow-x-auto pb-2">
-            <div className="flex min-w-[320px] h-[240px] sm:h-[280px] items-end gap-3 sm:gap-4">
-              <div className="flex h-full w-10 shrink-0 flex-col justify-between pr-2 sm:w-12">
+            <div className="flex h-[240px] min-w-[300px] items-end gap-2 sm:h-[280px] sm:gap-3">
+              <div className="flex h-full w-7 shrink-0 flex-col justify-between pr-1 text-[8px] text-slate-500 sm:w-8">
                 {yTicks.map((tick) => (
                   <div key={tick} className="h-3 w-full animate-pulse rounded-full bg-slate-200" />
                 ))}
               </div>
 
-              <div className="flex flex-1 items-end gap-1 border-l border-slate-200 pl-2 sm:gap-2 sm:pl-3">
+              <div className="flex flex-1 items-end gap-[2px] border-l border-slate-200 pl-1 sm:gap-1 sm:pl-2">
                 {Array.from({ length: 7 }).map((_, index) => (
-                  <div key={index} className="flex min-w-[35px] flex-1 flex-col items-center justify-end">
-                    <div className="relative flex h-44 w-full items-end justify-center rounded-2xl bg-white/70 px-1 py-2 shadow-inner sm:h-56 sm:px-2">
-                      <div className="h-[55%] w-[85%] animate-pulse rounded-xl bg-slate-300" />
+                  <div key={index} className="flex min-w-[20px] flex-1 flex-col items-center justify-end">
+                    <div className="relative flex h-44 w-full items-end justify-center rounded-none bg-white/70 px-0.5 py-1 shadow-inner sm:h-56 sm:px-1">
+                      <div className="h-[55%] w-[85%] animate-pulse bg-slate-300" />
                     </div>
                     <div className="mt-2 h-2.5 w-full animate-pulse rounded-full bg-slate-200" />
                   </div>
@@ -129,24 +129,28 @@ export default function StepCount({ staffId, startDate, endDate }) {
         ) : (
           <>
             <div className="w-full overflow-x-auto pb-2">
-              <div className="flex min-w-[320px] h-[240px] sm:h-[280px] items-end gap-3 sm:gap-4">
-                <div className="flex h-full w-10 shrink-0 flex-col justify-between pr-2 text-[10px] font-medium text-slate-500 sm:w-12">
+              <div className="flex h-[240px] min-w-[300px] items-end gap-2 sm:h-[280px] sm:gap-3">
+                <div className="flex h-full w-7 shrink-0 flex-col justify-between pr-1 text-[8px] font-medium text-slate-500 sm:w-8">
                   {yTicks.map((tick) => (
                     <span key={tick}>{tick.toLocaleString()}</span>
                   ))}
                 </div>
 
-                <div className="flex flex-1 items-end gap-1 border-l border-slate-200 pl-2 sm:gap-2 sm:pl-3">
+                <div className="flex flex-1 items-end gap-[2px] border-l border-slate-200 pl-1 sm:gap-1 sm:pl-2">
                   {stepData.map((point) => {
                     const height = point.steps === 0 ? 8 : Math.max((point.steps / yAxisMax) * 100, 10);
                     return (
-                      <div key={`${point.label}-${point.steps}`} className="flex min-w-[35px] flex-1 flex-col items-center justify-end">
-                        <div className="relative flex h-44 w-full items-end justify-center rounded-2xl bg-white/70 px-1 py-2 shadow-inner sm:h-56 sm:px-2">
-                          <div className="w-[85%] min-h-[8px] rounded-xl border border-white/40 shadow-sm transition-all duration-300"
+                      <div key={`${point.label}-${point.steps}`} className="group flex min-w-[20px] flex-1 flex-col items-center justify-end">
+                        <div className="relative flex h-44 w-full items-end justify-center rounded-none bg-white/70 px-0.5 py-1 shadow-inner sm:h-56 sm:px-1">
+                          <div className="pointer-events-none absolute -top-8 left-1/2 z-10 -translate-x-1/2 rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[10px] font-semibold text-white opacity-0 shadow-sm transition group-hover:opacity-100">
+                            {point.steps.toLocaleString()}
+                          </div>
+                          <div className="w-[85%] min-h-[8px] border border-white/40 shadow-sm transition-all duration-300"
                             style={{ height: `${height}%`, backgroundColor: point.bar_color }}
                           />
                         </div>
-                        <p className="mt-2 max-w-full break-words text-center text-[10px] font-semibold leading-tight text-slate-700 sm:text-[11px]">
+                        <p className="mt-1.5 flex h-8 items-center justify-center text-center text-[8px] font-semibold leading-none text-slate-600 sm:mt-2 sm:h-9 sm:text-[9px]"
+                          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
                           {point.label}
                         </p>
                       </div>
@@ -156,7 +160,7 @@ export default function StepCount({ staffId, startDate, endDate }) {
               </div>
             </div>
 
-            <div className="mt-3 ml-10 border-t border-slate-200 pt-2 text-center text-[11px] font-medium uppercase tracking-[0.25em] text-slate-400 sm:ml-14">
+            <div className="mt-2 ml-7 border-t border-slate-200 pt-2 text-center text-[9px] font-medium uppercase tracking-[0.25em] text-slate-400 sm:ml-8">
               Day / Month
             </div>
           </>

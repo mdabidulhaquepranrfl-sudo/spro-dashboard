@@ -77,7 +77,7 @@ export default function AmolnamaPage() {
   const formattedStartDate = formatDisplayDate(startDate);
   const formattedEndDate = formatDisplayDate(endDate);
   const selectedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
-  const reportHeading = `Insights for ${searchParams.staffId || '—'} (${employeeName})`;
+  const reportHeading = `Insights for ${searchParams.staffId || '—'} ${employeeName}`;
 
   useEffect(() => {
     if (!hasSearched || !searchParams.staffId) return;
