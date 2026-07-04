@@ -24,10 +24,6 @@ export default function Navbar({ onMenuClick, onToggleSidebar, isSidebarCollapse
           >
             {isSidebarCollapsed ? '➡' : '⬅'}
           </button>
-          <div className="hidden rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 md:flex md:items-center md:gap-2">
-            <span>🔎</span>
-            <input className="w-48 border-none bg-transparent outline-none" placeholder="Search" aria-label="Search" />
-          </div>
         </div>
 
         <div className="flex items-center gap-3">
