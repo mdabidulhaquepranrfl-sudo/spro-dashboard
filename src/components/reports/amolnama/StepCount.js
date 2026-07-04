@@ -41,11 +41,13 @@ function formatDateLabel(date) {
 export default function StepCount({ staffId, startDate, endDate }) {
   const [stepData, setStepData] = useState(DEFAULT_STEP_DATA);
   const [yAxisMax, setYAxisMax] = useState(20000);
+  const [isLoading, setIsLoading] = useState(Boolean(staffId && startDate && endDate));
 
   useEffect(() => {
     if (!staffId) return;
 
     async function fetchStepCount() {
+      setIsLoading(true);
       try {
         const response = await getReportData(
           'step-count-summary',
@@ -79,6 +81,8 @@ export default function StepCount({ staffId, startDate, endDate }) {
         console.error('Step count fetch error:', error);
         setStepData(DEFAULT_STEP_DATA);
         setYAxisMax(20000);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -101,37 +105,62 @@ export default function StepCount({ staffId, startDate, endDate }) {
       </div>
 
       <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <div className="w-full overflow-x-auto pb-2">
-          <div className="flex min-w-[320px] h-[240px] sm:h-[280px] items-end gap-3 sm:gap-4">
-            <div className="flex h-full w-10 shrink-0 flex-col justify-between pr-2 text-[10px] font-medium text-slate-500 sm:w-12">
-              {yTicks.map((tick) => (
-                <span key={tick}>{tick.toLocaleString()}</span>
-              ))}
-            </div>
+        {isLoading ? (
+          <div className="w-full overflow-x-auto pb-2">
+            <div className="flex min-w-[320px] h-[240px] sm:h-[280px] items-end gap-3 sm:gap-4">
+              <div className="flex h-full w-10 shrink-0 flex-col justify-between pr-2 sm:w-12">
+                {yTicks.map((tick) => (
+                  <div key={tick} className="h-3 w-full animate-pulse rounded-full bg-slate-200" />
+                ))}
+              </div>
 
-            <div className="flex flex-1 items-end gap-1 border-l border-slate-200 pl-2 sm:gap-2 sm:pl-3">
-              {stepData.map((point) => {
-                const height = point.steps === 0 ? 8 : Math.max((point.steps / yAxisMax) * 100, 10);
-                return (
-                  <div key={`${point.label}-${point.steps}`} className="flex min-w-[35px] flex-1 flex-col items-center justify-end">
+              <div className="flex flex-1 items-end gap-1 border-l border-slate-200 pl-2 sm:gap-2 sm:pl-3">
+                {Array.from({ length: 7 }).map((_, index) => (
+                  <div key={index} className="flex min-w-[35px] flex-1 flex-col items-center justify-end">
                     <div className="relative flex h-44 w-full items-end justify-center rounded-2xl bg-white/70 px-1 py-2 shadow-inner sm:h-56 sm:px-2">
-                      <div className="w-[85%] min-h-[8px] rounded-xl border border-white/40 shadow-sm transition-all duration-300"
-                        style={{ height: `${height}%`, backgroundColor: point.bar_color }}
-                      />
+                      <div className="h-[55%] w-[85%] animate-pulse rounded-xl bg-slate-300" />
                     </div>
-                    <p className="mt-2 max-w-full break-words text-center text-[10px] font-semibold leading-tight text-slate-700 sm:text-[11px]">
-                      {point.label}
-                    </p>
+                    <div className="mt-2 h-2.5 w-full animate-pulse rounded-full bg-slate-200" />
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="w-full overflow-x-auto pb-2">
+              <div className="flex min-w-[320px] h-[240px] sm:h-[280px] items-end gap-3 sm:gap-4">
+                <div className="flex h-full w-10 shrink-0 flex-col justify-between pr-2 text-[10px] font-medium text-slate-500 sm:w-12">
+                  {yTicks.map((tick) => (
+                    <span key={tick}>{tick.toLocaleString()}</span>
+                  ))}
+                </div>
 
-        <div className="mt-3 ml-10 border-t border-slate-200 pt-2 text-center text-[11px] font-medium uppercase tracking-[0.25em] text-slate-400 sm:ml-14">
-          Day / Month
-        </div>
+                <div className="flex flex-1 items-end gap-1 border-l border-slate-200 pl-2 sm:gap-2 sm:pl-3">
+                  {stepData.map((point) => {
+                    const height = point.steps === 0 ? 8 : Math.max((point.steps / yAxisMax) * 100, 10);
+                    return (
+                      <div key={`${point.label}-${point.steps}`} className="flex min-w-[35px] flex-1 flex-col items-center justify-end">
+                        <div className="relative flex h-44 w-full items-end justify-center rounded-2xl bg-white/70 px-1 py-2 shadow-inner sm:h-56 sm:px-2">
+                          <div className="w-[85%] min-h-[8px] rounded-xl border border-white/40 shadow-sm transition-all duration-300"
+                            style={{ height: `${height}%`, backgroundColor: point.bar_color }}
+                          />
+                        </div>
+                        <p className="mt-2 max-w-full break-words text-center text-[10px] font-semibold leading-tight text-slate-700 sm:text-[11px]">
+                          {point.label}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 ml-10 border-t border-slate-200 pt-2 text-center text-[11px] font-medium uppercase tracking-[0.25em] text-slate-400 sm:ml-14">
+              Day / Month
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

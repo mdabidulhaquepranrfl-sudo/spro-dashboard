@@ -58,9 +58,10 @@ const formatDisplayDate = (value) => {
 };
 
 export default function AmolnamaPage() {
-  const [employeeId, setEmployeeId] = useState('UAE2704');
-  const [startDate, setStartDate] = useState('2026-06-01');
-  const [endDate, setEndDate] = useState('2026-06-30');
+  const [employeeId, setEmployeeId] = useState('');
+  const [employeeName, setEmployeeName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [dailyMetrics, setDailyMetrics] = useState(DAILY_SUMMARY_METRICS);
@@ -76,7 +77,7 @@ export default function AmolnamaPage() {
   const formattedStartDate = formatDisplayDate(startDate);
   const formattedEndDate = formatDisplayDate(endDate);
   const selectedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
-  const reportHeading = `Insights for ${searchParams.staffId || '—'} - MIS-Dev-Shobuj Mia`;
+  const reportHeading = `Insights for ${searchParams.staffId || '—'} (${employeeName})`;
 
   useEffect(() => {
     if (!hasSearched || !searchParams.staffId) return;
@@ -87,6 +88,7 @@ export default function AmolnamaPage() {
       try {
         const response = await getReportData('daily-summary', `staff_id=${searchParams.staffId}&zone_id=&start_date=${searchParams.startDate}&end_date=${searchParams.endDate}`);
         const data = response?.data || {};
+        setEmployeeName(data?.stuff_name || '');
 
         setDailyMetrics(
           DAILY_SUMMARY_METRICS.map((item) => ({

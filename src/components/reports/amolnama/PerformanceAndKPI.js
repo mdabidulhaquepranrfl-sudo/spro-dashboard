@@ -593,19 +593,19 @@ export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
               <h3 className="text-lg font-semibold text-slate-900">Outlet Activity</h3>
             </div>
           </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div className="mt-5 grid gap-4 sm:grid-cols-3">
             {isOutletActivityLoading ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
                   <div className="h-3 w-20 animate-pulse rounded-full bg-slate-200" />
-                  <div className="mt-4 h-8 w-16 animate-pulse rounded-full bg-slate-200" />
+                  <div className="mt-2 h-8 w-16 animate-pulse rounded-full bg-slate-200" />
                 </div>
               ))
             ) : (
               outletActivity.map((item) => (
                 <div key={item.label} className={`rounded-3xl border ${item.border} ${item.bg} p-5 shadow-sm`}>
                   <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${item.text}`}>{item.label}</p>
-                  <p className={`mt-4 text-3xl font-extrabold ${item.text}`}>{item.value}</p>
+                  <p className={`mt-2 text-3xl font-extrabold ${item.text}`}>{item.value}</p>
                 </div>
               ))
             )}
