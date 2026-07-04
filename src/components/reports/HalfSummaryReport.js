@@ -229,8 +229,8 @@ export default function HalfSummaryReport() {
   const { header_section, sessions_grid, total_metrics } = REPORT_DATA.page_layout;
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 px-3 py-3 sm:px-5 sm:py-4 lg:px-6 lg:py-5">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
+    <div className="min-h-screen w-full bg-slate-50">
+      <div className="mx-auto flex w-full max-w-8xl flex-col gap-4">
         <section className="rounded-[24px] border border-slate-200 bg-white p-3 shadow-sm sm:p-5 lg:p-6">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>

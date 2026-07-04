@@ -32,7 +32,7 @@ export default function DashboardShell({ children }) {
         <div className={`flex min-h-screen flex-1 flex-col ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-72'}`}>
           <Navbar onMenuClick={() => setMobileOpen(true)} onToggleSidebar={handleToggleSidebar} isSidebarCollapsed={sidebarCollapsed} />
           <main className="flex-1 px-2 py-2 sm:px-2 lg:px-2">
-            <div className="mx-auto max-w-7xl">{children}</div>
+            <div className="mx-auto max-w-8xl">{children}</div>
           </main>
           <Footer />
         </div>
