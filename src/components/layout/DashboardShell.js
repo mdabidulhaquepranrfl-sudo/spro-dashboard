@@ -5,6 +5,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { CountryProvider } from '@/context/CountryContext';
+import { AuthProvider } from '@/context/AuthContext';
 
 export default function DashboardShell({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,10 +22,11 @@ export default function DashboardShell({ children }) {
   };
 
   return (
-    <CountryProvider>
-      <div className="min-h-screen bg-slate-100 text-slate-900">
-        <div className="flex min-h-screen">
-          <Sidebar isOpen={mobileOpen} collapsed={sidebarCollapsed} onClose={() => setMobileOpen(false)} />
+    <AuthProvider>
+      <CountryProvider>
+        <div className="min-h-screen bg-slate-100 text-slate-900">
+          <div className="flex min-h-screen">
+            <Sidebar isOpen={mobileOpen} collapsed={sidebarCollapsed} onClose={() => setMobileOpen(false)} />
 
           <div
             className={`fixed inset-0 z-20 bg-slate-950/40 transition md:hidden ${mobileOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
@@ -41,5 +43,6 @@ export default function DashboardShell({ children }) {
         </div>
       </div>
     </CountryProvider>
+  </AuthProvider>
   );
 }
