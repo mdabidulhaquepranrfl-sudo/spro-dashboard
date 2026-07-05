@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-slate-500">
           Already registered?{' '}
-          <Link href="/login" className="font-semibold text-sky-600 hover:text-sky-700">
+          <Link href="/reportList" className="font-semibold text-sky-600 hover:text-sky-700">
             Sign in instead
           </Link>
         </p>

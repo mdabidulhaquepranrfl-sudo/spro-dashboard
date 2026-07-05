@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SearchableCountrySelect from '@/components/profile/SearchableCountrySelect';
 import { useCountry } from '@/context/CountryContext';
+import { useAuth } from '@/context/AuthContext';
 import { getCountries } from '@/lib/getCountries';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { logout } = useAuth();
   const { country, saveCountry } = useCountry();
   const [countries, setCountries] = useState([]);
   const [selectedCountryId, setSelectedCountryId] = useState(null);
@@ -92,11 +94,21 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {country?.countryName ? (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-              Current country: <span className="font-semibold">{country.countryName}</span>
-            </div>
-          ) : null}
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            {country?.countryName ? (
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                Current country: <span className="font-semibold">{country.countryName}</span>
+              </div>
+            ) : null}
+
+            <button
+              type="button"
+              onClick={logout}
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSave} className="mt-8 max-w-xl space-y-4">
