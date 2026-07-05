@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getCountries } from '@/lib/getCountries';
 import { loginUser } from '@/lib/loginClient';
@@ -9,7 +9,7 @@ import { saveAuth } from '@/lib/authStorage';
 import { saveCountryPreference } from '@/lib/countryStorage';
 import SearchableCountrySelect from '@/components/profile/SearchableCountrySelect';
 
-export default function LoginForm() {
+function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [staffId, setStaffId] = useState('');
@@ -232,5 +232,21 @@ export default function LoginForm() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginForm() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-white">
+          <div className="text-sm text-slate-500">
+            Loading...
+          </div>
+        </main>
+      }
+    >
+      <LoginFormContent />
+    </Suspense>
   );
 }
