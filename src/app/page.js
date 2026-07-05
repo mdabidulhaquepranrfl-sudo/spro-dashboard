@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import ReportListPage from './reportList/page';
 
 export default function RootPage() {
-  redirect('/reportList');
+  return <ReportListPage />;
 }
