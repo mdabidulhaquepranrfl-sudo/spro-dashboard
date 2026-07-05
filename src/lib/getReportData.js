@@ -1,3 +1,11 @@
+import { getCountryId } from '@/lib/countryStorage';
+
+function buildQueryString(params, countryId) {
+  const searchParams = new URLSearchParams(params);
+  searchParams.set('country_id', String(countryId));
+  return searchParams.toString();
+}
+
 /**
  * Global API utility for fetching report data.
  * Can be called from any component.
@@ -8,12 +16,17 @@
  *
  * Usage:
  *   import { getReportData } from '@/lib/getReportData';
- *   const data = await getReportData('daily-summary', 'country_id=&staff_id=UAE2704&zone_id=&start_date=2026-06-01&end_date=2026-06-30');
+ *   const data = await getReportData('daily-summary', 'staff_id=UAE2704&zone_id=&start_date=2026-06-01&end_date=2026-06-30');
  */
 export async function getReportData(endpoint, params = '') {
-  const countryId = 3;
+  const countryId = getCountryId();
+
+  if (!countryId) {
+    throw new Error('Country ID is required. Please select a country in your profile.');
+  }
+
   const localUrl = `/api/report/${endpoint}`;
-  const queryString = params ? `${params}&country_id=${countryId}` : `country_id=${countryId}`;
+  const queryString = buildQueryString(params, countryId);
   const url = `${localUrl}?${queryString}`;
 
   const response = await fetch(url, {

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SIDEBAR_NAV } from '@/lib/constants/navigation';
+import { useCountry } from '@/context/CountryContext';
 
 const BrandMark = () => (
   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-600 to-indigo-600 text-lg font-semibold text-white shadow-lg shadow-sky-200">
@@ -13,6 +14,7 @@ const BrandMark = () => (
 export default function Sidebar({ isOpen, onClose, collapsed }) {
   const pathname = usePathname();
   const isExpanded = !collapsed || isOpen;
+  const { country } = useCountry();
 
   return (
     <aside
@@ -23,7 +25,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
           <BrandMark />
           <div className={collapsed && !isOpen ? 'block md:hidden' : 'block'}>
             <p className="text-lg font-semibold tracking-wide text-slate-900">SPRO</p>
-            <p className="text-sm text-slate-500">Performance portal</p>
+            <p className="text-sm text-slate-500">{country?.countryName ?? 'Performance portal'}</p>
           </div>
         </Link>
         <button type="button" className="rounded-full p-2 text-slate-500 hover:bg-slate-100 md:hidden" onClick={onClose} aria-label="Close menu">

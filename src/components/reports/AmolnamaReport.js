@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getReportData } from '@/lib/getReportData';
+import SearchableStaffInput from '@/components/profile/SearchableStaffInput';
 import StepCount from './amolnama/StepCount';
 import PerformanceAndKPI from './amolnama/PerformanceAndKPI';
 import CoWorkReport from './amolnama/CoWorkReport';
@@ -140,7 +141,7 @@ export default function AmolnamaPage() {
 
   return (
     <div className="w-full max-w-full overflow-hidden space-y-4">
-      <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section className="w-full max-w-full overflow-visible rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             {/* <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">Amolnama Report</p> */}
@@ -152,7 +153,12 @@ export default function AmolnamaPage() {
         <form className="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-[1.2fr_1fr_1fr_auto]" onSubmit={handleSearch}>
           <div>
             {/* <label className="mb-2 block text-sm font-medium text-slate-700">Employee ID</label> */}
-            <input type="text" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={employeeId} onChange={(event) => setEmployeeId(event.target.value)} placeholder="Enter employee ID" />
+            <SearchableStaffInput
+              value={employeeId}
+              onChange={setEmployeeId}
+              placeholder="Enter employee ID"
+              disabled={false}
+            />
           </div>
           <div>
             {/* <label className="mb-2 block text-sm font-medium text-slate-700">Start date</label> */}

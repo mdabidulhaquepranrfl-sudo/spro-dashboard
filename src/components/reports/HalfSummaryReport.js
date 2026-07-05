@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { getReportData } from '@/lib/getReportData';
+import SearchableStaffInput from '@/components/profile/SearchableStaffInput';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -265,12 +266,14 @@ export default function HalfSummaryReport() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <input
-                value={staffId}
-                onChange={(event) => setStaffId(event.target.value)}
-                placeholder="Staff ID"
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white sm:w-[220px]"
-              />
+              <div className="w-full sm:w-[220px]">
+                <SearchableStaffInput
+                  value={staffId}
+                  onChange={setStaffId}
+                  placeholder="Staff ID"
+                  disabled={false}
+                />
+              </div>
 
               <input
                 type="date"
