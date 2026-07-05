@@ -1,9 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { getReportData } from '@/lib/getReportData';
 
 const TODAY = new Date().toISOString().slice(0, 10);
+
+const TEAM_CARD_COLORS = ['#2563EB', '#059669', '#7C3AED', '#DC2626', '#EA580C'];
 
 const SESSION_CONFIG = [
   {
@@ -30,62 +33,62 @@ const SESSION_METRICS = [
   {
     label: 'ORDER COUNT',
     key: 'order_count',
-    valueColor: '#0F172A',
+    valueColor: '#1E3A8A', // deep blue
     changeKey: 'order_count_change',
     showChange: true,
   },
   {
     label: 'VISIT COUNT',
     key: 'visit_count',
-    valueColor: '#16A34A',
+    valueColor: '#15803D', // deep green
     changeKey: 'visit_count_change',
     showChange: true,
   },
   {
     label: 'TARGET AMOUNT',
     key: 'target_amount',
-    valueColor: '#0F172A',
+    valueColor: '#7C3AED', // deep violet
     formatAs: 'currency',
   },
   {
     label: 'TARGET ACHIEVEMENT',
     key: 'target_achievement',
-    valueColor: '#0F172A',
+    valueColor: '#0F766E', // deep teal
     suffix: '%',
   },
   {
     label: 'PRODUCTIVE OUTLETS',
     key: 'productive_outlets',
-    valueColor: '#0F172A',
+    valueColor: '#166534', // emerald green
   },
   {
     label: 'NON-PRODUCTIVE OUTLETS',
     key: 'non_productive_outlets',
-    valueColor: '#DC2626',
+    valueColor: '#B91C1C', // deep red
   },
   {
     label: 'PRODUCTIVITY',
     key: 'productivity',
-    valueColor: '#0F172A',
+    valueColor: '#1D4ED8', // royal blue
     suffix: '%',
     secondaryKey: 'productivity_status',
   },
   {
     label: 'STRIKE RATE',
     key: 'strike_rate',
-    valueColor: '#16A34A',
+    valueColor: '#047857', // deep emerald
     suffix: '%',
     secondaryKey: 'strike_rate_status',
   },
   {
     label: 'LPC',
     key: 'lpc',
-    valueColor: '#0F172A',
+    valueColor: '#9333EA', // purple
   },
   {
     label: 'LINE COUNT',
     key: 'line_count',
-    valueColor: '#0F172A',
+    valueColor: '#C2410C', // deep orange
   },
 ];
 
@@ -162,13 +165,23 @@ const formatMetaValue = (value, { isPercent = false } = {}) => {
   return formatNumber(value);
 };
 
+const getAvatarInitials = (member) => {
+  const source = member?.sr_name || member?.sr_id || member?.emp_id || '';
+  const words = String(source).split(/[^A-Za-z0-9]+/).filter(Boolean);
+  if (!words.length) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return `${words[0][0]}${words[1][0]}`.toUpperCase();
+};
+
 export default function HalfSummaryReport() {
   const [staffId, setStaffId] = useState('');
   const [date, setDate] = useState(TODAY);
+  const [reportType, setReportType] = useState('team_wise');
   const [reportData, setReportData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [expandedMemberId, setExpandedMemberId] = useState(null);
 
   const sessionRows = useMemo(
     () =>
@@ -183,6 +196,22 @@ export default function HalfSummaryReport() {
     [reportData]
   );
 
+  const handleReportTypeChange = (event) => {
+    const nextType = event.target.value;
+    setReportType(nextType);
+    setExpandedMemberId(null);
+
+    if (nextType !== 'team_wise') {
+      return;
+    }
+
+    if (!reportData?.team_wise?.length) {
+      return;
+    }
+
+    setExpandedMemberId(reportData.team_wise[0]?.emp_id ?? null);
+  };
+
   const handleSearch = async (event) => {
     event.preventDefault();
 
@@ -195,14 +224,20 @@ export default function HalfSummaryReport() {
     setHasSearched(true);
     setIsLoading(true);
     setReportData(null);
+    setExpandedMemberId(null);
 
     try {
       const response = await getReportData(
         'half-summary-report',
-        `staff_id=${encodeURIComponent(staffId.trim())}&date=${encodeURIComponent(date)}&report_type=overall`
+        `staff_id=${encodeURIComponent(staffId.trim())}&date=${encodeURIComponent(date)}&report_type=${encodeURIComponent(reportType)}`
       );
       const receiveData = response?.receive_data || null;
       setReportData(receiveData);
+      if (reportType === 'team_wise' && receiveData?.team_wise?.length) {
+        setExpandedMemberId(receiveData.team_wise[0]?.emp_id ?? null);
+      } else {
+        setExpandedMemberId(null);
+      }
       if (!receiveData) {
         setErrorMessage('No report data returned for the selected staff and date.');
       }
@@ -245,11 +280,14 @@ export default function HalfSummaryReport() {
                 className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white"
               />
 
-              <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                <span className="font-medium uppercase tracking-[0.12em] text-slate-500">
-                  Overall
-                </span>
-              </div>
+              <select
+                value={reportType}
+                onChange={handleReportTypeChange}
+                className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white"
+              >
+                <option value="team_wise">Team Wise</option>
+                <option value="overall">Overall</option>
+              </select>
 
               <button
                 type="button"
@@ -269,118 +307,208 @@ export default function HalfSummaryReport() {
         </section>
 
         {hasSearched ? (
-          <section className="grid w-full gap-4 xl:grid-cols-2">
-            {sessionRows.map((session) => (
-              <article key={session.sessionId} className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-                <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="h-8 w-1 rounded-full" style={{ backgroundColor: session.indicatorColor }} />
-                    <div>
-                      <h2 className="text-lg font-semibold text-slate-900">{session.title}</h2>
-                    </div>
+          reportType === 'team_wise' ? (
+            <div className="mx-auto flex w-full max-w-8xl flex-col gap-4">
+              <section className="w-full space-y-2">
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="rounded-[24px] border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
+                    <div className="h-3 w-36 rounded-full bg-slate-200" />
+                    <div className="mt-3 h-8 w-48 rounded-full bg-slate-200" />
                   </div>
-                  <span
-                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em]"
-                    style={{ backgroundColor: session.badgeBg, color: session.badgeText }}
-                  >
-                    {session.badgeLabel}
-                  </span>
-                </div>
+                ))
+              ) : reportData?.team_wise?.length ? (
+                reportData.team_wise.map((member, index) => {
+                  const memberKey = String(member.emp_id ?? member.sr_id ?? `${member.sr_name || 'member'}-${member.sr_mobile || 'unknown'}`);
+                  const isExpanded = expandedMemberId === memberKey;
+                  const accentColor = TEAM_CARD_COLORS[index % TEAM_CARD_COLORS.length];
 
-                <div className="mt-4 space-y-3">
-                  <div className="rounded-[18px] border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-600">ORDER AMOUNT</p>
-                        <div className="mt-2 flex items-end gap-2">
-                          <span className="text-3xl font-black text-sky-700 sm:text-4xl">
-                            {isLoading ? '—' : formatAmount(session.summary?.order_amount, reportData?.meta?.currency_symbol || '৳')}
+                  return (
+                    <article key={memberKey} className="rounded-[24px] border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedMemberId((current) => (current === memberKey ? null : memberKey))}
+                        className="flex w-full flex-wrap items-center justify-between gap-3 rounded-[12px] bg-slate-50/80 px-3 py-3 text-left"
+                      >
+                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                          <div
+                            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
+                            style={{ backgroundColor: accentColor }}
+                          >
+                            {getAvatarInitials(member)}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-slate-900" style={{ color: accentColor }}>
+                              {member.sr_name || member.sr_id || 'Team Member'}
+                            </p>
+                            <p className="mt-1 break-words text-xs text-slate-500">
+                              {member.sr_id || '—'}
+                              {member.sr_mobile ? ` • ${member.sr_mobile}` : ''}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-shrink-0 items-center gap-2" style={{ color: accentColor }}>
+                          <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+                            {isExpanded ? 'Collapse' : 'Expand'}
                           </span>
+                          {isExpanded ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                          CHANGE
-                        </p>
+                      </button>
 
-                        <p className="mt-1 text-xl font-extrabold text-slate-700">
-                          {isLoading ? '0%' : formatChange(session.summary?.order_amount_change)}
-                        </p>
+                      {isExpanded ? (
+                        <div className="mt-4 grid gap-4 xl:grid-cols-2">
+                          {SESSION_CONFIG.map((session) => {
+                            const summary = member?.[session.sessionKey] || null;
+
+                            return (
+                              <div key={session.sessionId} className="rounded-[18px] border border-slate-200 bg-slate-50/80 p-2 shadow-sm">
+                                <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                                  <div className="flex items-center gap-3">
+                                    <span className="h-8 w-1 rounded-full" style={{ backgroundColor: accentColor }} />
+                                    <div>
+                                      <h3 className="text-base font-semibold text-slate-900">{session.title}</h3>
+                                    </div>
+                                  </div>
+                                  <span
+                                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em]"
+                                    style={{ backgroundColor: session.badgeBg, color: session.badgeText }}
+                                  >
+                                    {session.badgeLabel}
+                                  </span>
+                                </div>
+
+                                <div className="mt-4 space-y-3">
+                                  <div className="rounded-[16px] border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-600">ORDER AMOUNT</p>
+                                        <div className="mt-2 flex items-end gap-2">
+                                          <span className="text-2xl font-black sm:text-3xl" style={{ color: accentColor }}>
+                                            {formatAmount(summary?.order_amount, reportData?.meta?.currency_symbol || '৳')}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">CHANGE</p>
+                                        <p className="mt-1 text-xl font-extrabold text-slate-700">
+                                          {formatChange(summary?.order_amount_change)}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
+                                    {buildSessionCards(summary, reportData?.meta?.currency_symbol).map((card) => (
+                                      <div key={card.label} className="rounded-[14px] border border-slate-200 bg-white/80 p-3 shadow-sm">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600" style={{ color: card.valueColor }}>{card.label}</p>
+                                        <div className="mt-1.5 flex items-end gap-1">
+                                          <span className="text-lg font-black" style={{ color: card.valueColor }}>
+                                            {card.value}
+                                          </span>
+                                        </div>
+                                        {card.secondaryText ? (
+                                          <p className="mt-2 text-xs uppercase tracking-[0.16em] text-slate-500">{card.secondaryText}</p>
+                                        ) : null}
+                                        {card.changeText ? (
+                                          <p className="mt-2 text-xs font-semibold text-slate-500">{card.changeText}</p>
+                                        ) : null}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : null}
+                    </article>
+                  );
+                })
+              ) : (
+                <div className="rounded-[24px] border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
+                  No team members found for this selection.
+                </div>
+              )}
+              </section>
+            </div>
+          ) : (
+            <section className="grid w-full gap-4 xl:grid-cols-2">
+              {sessionRows.map((session) => (
+                <article key={session.sessionId} className="rounded-[24px] border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
+                  <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="h-8 w-1 rounded-full" style={{ backgroundColor: session.indicatorColor }} />
+                      <div>
+                        <h2 className="text-lg font-semibold text-slate-900">{session.title}</h2>
                       </div>
                     </div>
+                    <span
+                      className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em]"
+                      style={{ backgroundColor: session.badgeBg, color: session.badgeText }}
+                    >
+                      {session.badgeLabel}
+                    </span>
                   </div>
 
-                  {isLoading ? (
-                    <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
-                      {Array.from({ length: 9 }).map((_, index) => (
-                        <div key={index} className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
-                          <div className="h-3 w-24 rounded-full bg-slate-200" />
-                          <div className="mt-3 h-7 w-16 rounded-full bg-slate-200" />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
-                      {session.cards.map((card) => (
-                        <div key={card.label} className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-3 shadow-sm">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">{card.label}</p>
-                          <div className="mt-1.5 flex items-end gap-1">
-                            <span className="text-lg font-black" style={{ color: card.valueColor }}>
-                              {card.value}
+                  <div className="mt-4 space-y-3">
+                    <div className="rounded-[18px] border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-600">ORDER AMOUNT</p>
+                          <div className="mt-2 flex items-end gap-2">
+                            <span className="text-3xl font-black text-sky-700 sm:text-4xl">
+                              {isLoading ? '—' : formatAmount(session.summary?.order_amount, reportData?.meta?.currency_symbol || '৳')}
                             </span>
                           </div>
-                          {card.secondaryText ? (
-                            <p className="mt-2 text-xs uppercase tracking-[0.16em] text-slate-500">{card.secondaryText}</p>
-                          ) : null}
-                          {card.changeText ? (
-                            <p className="mt-2 text-xs font-semibold text-slate-500">{card.changeText}</p>
-                          ) : null}
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </article>
-            ))}
-          </section>
-        ) : null}
+                        <div className="text-right">
+                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                            CHANGE
+                          </p>
 
-          {hasSearched ? (
-            <section className="grid w-full grid-cols-1">
-              <article className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-                <div className="flex items-center gap-3 border-b border-slate-100 pb-3 mb-3">
-                  <span className="h-8 w-1 rounded-full" style={{ backgroundColor: '#4F46E5' }} />
-                  <h3 className="text-lg font-semibold text-slate-900">Summary Statistics</h3>
-                </div>
-                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
-                  <div className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 text-center shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">TOTAL SR</p>
-                    <p className="mt-3 text-lg font-black text-indigo-600">{formatMetaValue(reportData?.meta?.total_sr)}</p>
+                          <p className="mt-1 text-xl font-extrabold text-slate-700">
+                            {isLoading ? '0%' : formatChange(session.summary?.order_amount_change)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {isLoading ? (
+                      <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
+                        {Array.from({ length: 9 }).map((_, index) => (
+                          <div key={index} className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
+                            <div className="h-3 w-24 rounded-full bg-slate-200" />
+                            <div className="mt-3 h-7 w-16 rounded-full bg-slate-200" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
+                        {session.cards.map((card) => (
+                          <div key={card.label} className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-3 shadow-sm">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600" style={{ color: card.valueColor }}>{card.label}</p>
+                            <div className="mt-1.5 flex items-end gap-1">
+                              <span className="text-lg font-black" style={{ color: card.valueColor }}>
+                                {card.value}
+                              </span>
+                            </div>
+                            {card.secondaryText ? (
+                              <p className="mt-2 text-xs uppercase tracking-[0.16em] text-slate-500">{card.secondaryText}</p>
+                            ) : null}
+                            {card.changeText ? (
+                              <p className="mt-2 text-xs font-semibold text-slate-500">{card.changeText}</p>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 text-center shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">TOTAL OUTLETS</p>
-                    <p className="mt-3 text-lg font-black text-emerald-600">{formatMetaValue(reportData?.meta?.total_outlet)}</p>
-                  </div>
-                  <div className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 text-center shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">TOTAL VISITED</p>
-                    <p className="mt-3 text-lg font-black text-orange-600">{formatMetaValue(reportData?.meta?.total_visited)}</p>
-                  </div>
-                  <div className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 text-center shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">TOTAL NON-VISITED</p>
-                    <p className="mt-3 text-lg font-black text-red-600">{formatMetaValue(reportData?.meta?.total_nonvisited)}</p>
-                  </div>
-                  <div className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 text-center shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">SUCCESS RATE</p>
-                    <p className="mt-3 text-lg font-black text-amber-700">{formatMetaValue(reportData?.meta?.success_rate, { isPercent: true })}</p>
-                  </div>
-                  <div className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-4 text-center shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">AVG STEP COUNT</p>
-                    <p className="mt-3 text-lg font-black text-sky-700">{formatMetaValue(reportData?.meta?.avg_step_count)}</p>
-                  </div>
-                </div>
-              </article>
+                </article>
+              ))}
             </section>
-          ) : null}
+          )
+        ) : null}
         </div>
       </div>
     );
