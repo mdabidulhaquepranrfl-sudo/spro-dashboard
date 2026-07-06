@@ -10,7 +10,8 @@ const DEFAULT_LOCATIONS = [
 
 const DEFAULT_LAST_GEO = { lat: '', lon: '', addr: '', };
 
-export default function FieldOperationsSnapshot({ staffId, startDate, endDate }) {
+export default function FieldOperationsSnapshot({ searchParams }) {
+  const { staffId, startDate, endDate } = searchParams;
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
   const [lastGeo, setLastGeo] = useState(DEFAULT_LAST_GEO);
   const [isLoading, setIsLoading] = useState(Boolean(staffId && startDate && endDate));
