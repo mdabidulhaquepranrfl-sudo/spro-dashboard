@@ -6,7 +6,9 @@ import SearchableStaffInput from '@/components/profile/SearchableStaffInput';
 import DailySummary from './amolnama/DailySummary';
 import VisitedSummary from './amolnama/VisitedSummary';
 import StepCount from './amolnama/StepCount';
-import PerformanceAndKPI from './amolnama/PerformanceAndKPI';
+import PerformanceSummary from './amolnama/PerformanceSummary';
+import TtsKpi from './amolnama/TtsKpi';
+import OutletActivity from './amolnama/OutletActivity';
 import CoWorkReport from './amolnama/CoWorkReport';
 import FieldOperationsSnapshot from './amolnama/FieldOperationsSnapshot';
 
@@ -109,7 +111,13 @@ export default function AmolnamaPage() {
             <StepCount key={`step-${refreshKey}`} searchParams={searchParams} />
           </div>
 
-          <PerformanceAndKPI key={`kpi-${refreshKey}`} searchParams={searchParams} />
+          <div className="grid w-full min-w-0 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
+            <PerformanceSummary key={`performance-${refreshKey}`} searchParams={searchParams} />
+            <div className="w-full min-w-0 space-y-4">
+              <TtsKpi key={`tts-${refreshKey}`} searchParams={searchParams} />
+              <OutletActivity key={`outlet-${refreshKey}`} searchParams={searchParams} />
+            </div>
+          </div>
           <CoWorkReport key={`cowork-${refreshKey}`} searchParams={searchParams} />
           <FieldOperationsSnapshot key={`field-${refreshKey}`} searchParams={searchParams} />
         </div>
