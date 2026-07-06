@@ -71,7 +71,8 @@ const DEFAULT_ROWS = [
   },
 ];
 
-export default function CoWorkReport({ staffId, startDate, endDate }) {
+export default function CoWorkReport({ searchParams }) {
+  const { staffId, startDate, endDate } = searchParams;
   const [rows, setRows] = useState(DEFAULT_ROWS);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });
