@@ -145,7 +145,8 @@ function SkeletonTableRows({ colCount = 6, rowCount = 6 }) {
   );
 }
 
-export default function PerformanceAndKPI({ staffId, startDate, endDate }) {
+export default function PerformanceAndKPI({ searchParams }) {
+  const { staffId, startDate, endDate } = searchParams;
   const [activeSubTab, setActiveSubTab] = useState('thana_wise');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });

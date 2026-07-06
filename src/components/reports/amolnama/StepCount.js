@@ -38,7 +38,8 @@ function formatDateLabel(date) {
   return new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit' }).format(date);
 }
 
-export default function StepCount({ staffId, startDate, endDate }) {
+export default function StepCount({ searchParams }) {
+  const { staffId, startDate, endDate } = searchParams;
   const [stepData, setStepData] = useState(DEFAULT_STEP_DATA);
   const [yAxisMax, setYAxisMax] = useState(20000);
   const [isLoading, setIsLoading] = useState(Boolean(staffId && startDate && endDate));
