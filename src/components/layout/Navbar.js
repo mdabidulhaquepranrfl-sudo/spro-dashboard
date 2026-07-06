@@ -12,7 +12,7 @@ export default function Navbar({ onMenuClick, onToggleSidebar, isSidebarCollapse
   const userRole = user?.role || '';
 
   return (
-    <nav className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-2 py-2 backdrop-blur sm:px-2 lg:px-2">
       <div className="mx-auto flex max-w-8xl items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <button

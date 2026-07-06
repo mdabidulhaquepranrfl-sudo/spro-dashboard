@@ -65,8 +65,8 @@ export default function AmolnamaPage() {
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden space-y-4">
-      <section className="w-full max-w-full overflow-visible rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div className="w-full max-w-full overflow-hidden space-y-1">
+      <section className="w-full max-w-full overflow-visible rounded-3xl border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             {/* <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">Amolnama Report</p> */}
@@ -101,25 +101,24 @@ export default function AmolnamaPage() {
       </section>
 
       {hasSearched ? (
-        <div className="w-full min-w-0 space-y-4">
+        <div className="w-full min-w-0 space-y-1">
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-[1.7fr_1fr]">
-            <div className="grid gap-4">
+          <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.3fr_0.7fr] 2xl:grid-cols-[1.45fr_0.55fr]">
+            <div className="w-full min-w-0 space-y-1">
               <DailySummary key={`daily-${refreshKey}`} searchParams={searchParams} />
               <VisitedSummary key={`visited-${refreshKey}`} searchParams={searchParams} />
+              <PerformanceSummary key={`performance-${refreshKey}`} searchParams={searchParams} />
+              <CoWorkReport key={`cowork-${refreshKey}`} searchParams={searchParams} />
+              <FieldOperationsSnapshot key={`field-${refreshKey}`} searchParams={searchParams} />
             </div>
-            <StepCount key={`step-${refreshKey}`} searchParams={searchParams} />
-          </div>
 
-          <div className="grid w-full min-w-0 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
-            <PerformanceSummary key={`performance-${refreshKey}`} searchParams={searchParams} />
-            <div className="w-full min-w-0 space-y-4">
+            <div className="w-full min-w-0 space-y-1 self-start">
+              <StepCount key={`step-${refreshKey}`} searchParams={searchParams} />
               <TtsKpi key={`tts-${refreshKey}`} searchParams={searchParams} />
               <OutletActivity key={`outlet-${refreshKey}`} searchParams={searchParams} />
             </div>
+            
           </div>
-          <CoWorkReport key={`cowork-${refreshKey}`} searchParams={searchParams} />
-          <FieldOperationsSnapshot key={`field-${refreshKey}`} searchParams={searchParams} />
         </div>
       ) : (
         <section className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">

@@ -8,7 +8,7 @@ const PAGE_SIZE = 15;
 const CO_WORK_CONFIG = {
   title: 'Co-Work Report',
   badge: {
-    label: 'TEAM COLLABORATION',
+    // label: 'TEAM COLLABORATION',
     bg_color: '#EFF6FF',
     text_color: '#3B82F6',
   },
@@ -167,13 +167,7 @@ export default function CoWorkReport({ searchParams }) {
           <span className="rounded-full px-3 py-1 text-sm font-semibold" style={{ backgroundColor: CO_WORK_CONFIG.badge.bg_color, color: CO_WORK_CONFIG.badge.text_color }}>
             {CO_WORK_CONFIG.badge.label}
           </span>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="text-sm text-slate-500">
-            {sortedRows.length > 0 ? `Showing ${Math.min((currentPage - 1) * PAGE_SIZE + 1, sortedRows.length)}-${Math.min(currentPage * PAGE_SIZE, sortedRows.length)} of ${sortedRows.length}` : 'No data'}
-          </div>
-          <div className="relative w-full sm:w-64">
+                    <div className="relative w-full sm:w-64">
             <i className="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400" />
             <input
               value={searchQuery}
@@ -181,6 +175,12 @@ export default function CoWorkReport({ searchParams }) {
               placeholder="Search table"
               className="w-full rounded-full border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-sky-500"
             />
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="text-sm text-slate-500">
+            {sortedRows.length > 0 ? `Showing ${Math.min((currentPage - 1) * PAGE_SIZE + 1, sortedRows.length)}-${Math.min(currentPage * PAGE_SIZE, sortedRows.length)} of ${sortedRows.length}` : ''}
           </div>
         </div>
 

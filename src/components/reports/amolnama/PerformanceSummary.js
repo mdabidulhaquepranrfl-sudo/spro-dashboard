@@ -12,21 +12,21 @@ const PERFORMANCE_TABS = [
 const PAGE_SIZE = 15;
 
 const THANA_SUMMARY_TEMPLATE = [
-  { id: 'total_thanas', label: 'TOTAL THANAS', value: '0', icon: 'location_pin', theme: { icon_bg: '#DBEAFE', icon_color: '#1D4ED8', text_color: '#1E3A8A' } },
-  { id: 'visited_thanas', label: 'VISITED THANAS', value: '0', icon: 'check_circle', theme: { icon_bg: '#DCFCE7', icon_color: '#15803D', text_color: '#166534' } },
-  { id: 'pending_thanas', label: 'PENDING THANAS', value: '0', icon: 'warning_triangle', theme: { icon_bg: '#FEE2E2', icon_color: '#DC2626', text_color: '#B91C1C' } },
+  { id: 'total_thanas', label: 'TOTAL THANAS', value: '0', icon: 'location_pin', theme: { icon_bg: '#F3F4F6', icon_color: '#111827', text_color: '#111827' } },
+  { id: 'visited_thanas', label: 'VISITED THANAS', value: '0', icon: 'check_circle', theme: { icon_bg: '#DCFCE7', icon_color: '#047857', text_color: '#166534' } },
+  { id: 'pending_thanas', label: 'PENDING THANAS', value: '0', icon: 'warning_triangle', theme: { icon_bg: '#FEE2E2', icon_color: '#B91C1C', text_color: '#B91C1C' } },
 ];
 
 const ZONE_SUMMARY_TEMPLATE = [
-  { id: 'total_zones', label: 'TOTAL ZONES', value: '0', icon: 'location_pin', theme: { icon_bg: '#DBEAFE', icon_color: '#1D4ED8', text_color: '#1E3A8A' } },
-  { id: 'visited_zones', label: 'VISITED ZONES', value: '0', icon: 'check_circle', theme: { icon_bg: '#DCFCE7', icon_color: '#15803D', text_color: '#166534' } },
-  { id: 'pending_zones', label: 'PENDING ZONES', value: '0', icon: 'warning_triangle', theme: { icon_bg: '#FEE2E2', icon_color: '#DC2626', text_color: '#B91C1C' } },
+  { id: 'total_zones', label: 'TOTAL ZONES', value: '0', icon: 'location_pin', theme: { icon_bg: '#F3F4F6', icon_color: '#111827', text_color: '#111827' } },
+  { id: 'visited_zones', label: 'VISITED ZONES', value: '0', icon: 'check_circle', theme: { icon_bg: '#DCFCE7', icon_color: '#047857', text_color: '#166534' } },
+  { id: 'pending_zones', label: 'PENDING ZONES', value: '0', icon: 'warning_triangle', theme: { icon_bg: '#FEE2E2', icon_color: '#B91C1C', text_color: '#B91C1C' } },
 ];
 
 const DISTRICT_SUMMARY_TEMPLATE = [
-  { id: 'total_districts', label: 'TOTAL DISTRICTS', value: '0', icon: 'map_icon', theme: { icon_bg: '#DBEAFE', icon_color: '#1D4ED8', text_color: '#1E3A8A' } },
-  { id: 'visited_districts', label: 'VISITED DISTRICTS', value: '0', icon: 'check_circle', theme: { icon_bg: '#DCFCE7', icon_color: '#15803D', text_color: '#166534' } },
-  { id: 'pending_districts', label: 'PENDING DISTRICTS', value: '0', icon: 'warning_triangle', theme: { icon_bg: '#FEE2E2', icon_color: '#DC2626', text_color: '#B91C1C' } },
+  { id: 'total_districts', label: 'TOTAL DISTRICTS', value: '0', icon: 'map_icon', theme: { icon_bg: '#F3F4F6', icon_color: '#111827', text_color: '#111827' } },
+  { id: 'visited_districts', label: 'VISITED DISTRICTS', value: '0', icon: 'check_circle', theme: { icon_bg: '#DCFCE7', icon_color: '#047857', text_color: '#166534' } },
+  { id: 'pending_districts', label: 'PENDING DISTRICTS', value: '0', icon: 'warning_triangle', theme: { icon_bg: '#FEE2E2', icon_color: '#B91C1C', text_color: '#B91C1C' } },
 ];
 
 const ICON_MAP = {
@@ -135,6 +135,7 @@ export default function PerformanceSummary({ searchParams }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedCard, setExpandedCard] = useState(null);
 
   const [thanaRows, setThanaRows] = useState([]);
   const [thanaSummary, setThanaSummary] = useState(THANA_SUMMARY_TEMPLATE);
@@ -336,6 +337,29 @@ export default function PerformanceSummary({ searchParams }) {
     }));
   };
 
+  const handleCardToggle = (cardId) => {
+    setCurrentPage(1);
+    setExpandedCard((current) => (current === cardId ? null : cardId));
+  };
+
+  // When a summary card is expanded, derive filtered rows for that card.
+  const cardFilteredRows = useMemo(() => {
+    if (!expandedCard) return [];
+    const predicate = (row) => {
+      const visited = Number(row.visited_shops ?? row.shops_visited ?? 0);
+      if (expandedCard.includes('visited')) return visited > 0;
+      if (expandedCard.includes('pending')) return visited === 0;
+      return true; // total
+    };
+    return sortedRows.filter(predicate);
+  }, [expandedCard, sortedRows]);
+
+  const cardTotalPages = Math.max(1, Math.ceil(cardFilteredRows.length / PAGE_SIZE));
+  const paginatedCardRows = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return cardFilteredRows.slice(start, start + PAGE_SIZE);
+  }, [cardFilteredRows, currentPage]);
+
   const totalPages = Math.max(1, Math.ceil(sortedRows.length / PAGE_SIZE));
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
@@ -344,6 +368,7 @@ export default function PerformanceSummary({ searchParams }) {
 
   useEffect(() => {
     setCurrentPage(1);
+    setExpandedCard(null);
   }, [activeSubTab, searchQuery, sortConfig.key, sortConfig.direction]);
 
   useEffect(() => {
@@ -354,7 +379,7 @@ export default function PerformanceSummary({ searchParams }) {
 
   return (
     <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-4 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-2 sm:px-6">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">Performance Summary</h3>
         </div>
@@ -376,123 +401,139 @@ export default function PerformanceSummary({ searchParams }) {
         </div>
       </div>
 
-      <div className="w-full min-w-0 p-4 sm:p-6">
+      <div className="w-full min-w-0 p-2 sm:p-2">
         {currentConfig.isLoading ? (
           <SkeletonSummaryCards count={3} />
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {currentConfig.summaryCards.map((card) => (
-              <div key={card.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <div className="flex items-center gap-3">
+              <div
+                key={card.id}
+                onClick={() => handleCardToggle(card.id)}
+                className={`relative cursor-pointer rounded-2xl border border-slate-200 bg-white p-3 shadow-sm ${expandedCard === card.id ? 'ring-2 ring-sky-200' : ''}`}
+              >
+                <div className="flex items-center gap-2">
                   <div
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl shadow-sm"
                     style={{ backgroundColor: card.theme.icon_bg, color: card.theme.icon_color }}
                   >
-                    <i className={`bx ${ICON_MAP[card.icon] ?? 'bx-help-circle'}`} />
+                    <i className={`bx ${ICON_MAP[card.icon] ?? 'bx-help-circle'} text-lg`} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: card.theme.text_color }}>{card.label}</p>
-                    <p className="mt-1 text-2xl font-bold leading-tight" style={{ color: card.theme.text_color }}>{card.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: card.theme.text_color }}>{card.label}</p>
+                    <p className="mt-0.5 text-xl font-bold leading-tight" style={{ color: card.theme.text_color }}>{card.value}</p>
                   </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleCardToggle(card.id); }}
+                  aria-pressed={expandedCard === card.id}
+                  className="absolute right-2 top-2 rounded-full p-0.5 text-slate-500 hover:text-slate-700"
+                >
+                  <i className={`bx ${expandedCard === card.id ? 'bx-chevron-up' : 'bx-chevron-down'}`} />
+                </button>
               </div>
             ))}
           </div>
         )}
 
-        <div className="mt-6 w-full max-w-full overflow-x-auto rounded-2xl border border-slate-200">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
-            <h4 className="text-lg font-semibold text-slate-900">{currentConfig.title}</h4>
-            <div className="relative w-full sm:w-64">
-              <i className="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400" />
-              <input
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search table"
-                className="w-full rounded-full border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-sky-500"
-              />
-            </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50 text-left text-slate-600">
-                <tr>
-                  {currentConfig.headers.map((header) => (
-                    <th key={header.id} className="whitespace-nowrap px-4 py-3 font-semibold">
-                      <button
-                        type="button"
-                        onClick={() => handleSort(header.id)}
-                        className="flex items-center gap-1 text-left text-slate-600 transition hover:text-slate-900"
-                      >
-                        <span>{header.label}</span>
-                        <i className={`bx ${sortConfig?.key === header.id ? (sortConfig.direction === 'asc' ? 'bx-sort-up' : 'bx-sort-down') : 'bx-sort'}`} />
-                      </button>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
-                {currentConfig.isLoading ? (
-                  <SkeletonTableRows colCount={currentConfig.headers.length} rowCount={6} />
-                ) : paginatedRows.length > 0 ? (
-                  paginatedRows.map((row) => (
-                    <tr key={row.sl} className="bg-slate-50/50 transition-colors hover:bg-slate-50">
+        <div className="mt-2 w-full max-w-full overflow-x-auto rounded-2xl border border-slate-200">
+          {expandedCard ? (
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
+                <h4 className="text-lg font-semibold text-slate-900">{currentConfig.title}</h4>
+                <div className="relative w-full sm:w-64">
+                  <i className="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400" />
+                  <input
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search table"
+                    className="w-full rounded-full border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-sky-500"
+                  />
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-slate-200 text-sm">
+                  <thead className="bg-slate-50 text-left text-slate-600">
+                    <tr>
                       {currentConfig.headers.map((header) => (
-                        <td key={header.id} className="whitespace-nowrap px-4 py-3">
-                          {header.id === currentConfig.nameKey ? (
-                            <div className="flex flex-col gap-0.5">
-                              <span className="font-medium text-slate-800">{row[currentConfig.nameKey]}</span>
-                              {row.is_assigned === 0 && (
-                                <span className="inline-block w-fit rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600">
-                                  Unassigned
-                                </span>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-slate-700">{row[header.id]}</span>
-                          )}
-                        </td>
+                        <th key={header.id} className="whitespace-nowrap px-4 py-3 font-semibold">
+                          <button
+                            type="button"
+                            onClick={() => handleSort(header.id)}
+                            className="flex items-center gap-1 text-left text-slate-600 transition hover:text-slate-900"
+                          >
+                            <span>{header.label}</span>
+                            <i className={`bx ${sortConfig?.key === header.id ? (sortConfig.direction === 'asc' ? 'bx-sort-up' : 'bx-sort-down') : 'bx-sort'}`} />
+                          </button>
+                        </th>
                       ))}
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={currentConfig.headers.length} className="px-4 py-6 text-center text-slate-500">
-                      {currentConfig.emptyMessage}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {totalPages > 1 && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3">
-              <p className="text-sm text-slate-600">
-                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, sortedRows.length)} of {sortedRows.length}
-              </p>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                  disabled={currentPage === 1}
-                  className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-                  disabled={currentPage === totalPages}
-                  className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Next
-                </button>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white">
+                    {cardFilteredRows.length === 0 ? (
+                      <tr>
+                        <td colSpan={currentConfig.headers.length} className="px-4 py-6 text-center text-slate-500">
+                          No rows for this selection
+                        </td>
+                      </tr>
+                    ) : (
+                      paginatedCardRows.map((row) => (
+                        <tr key={row.sl} className="bg-slate-50/50 transition-colors hover:bg-slate-50">
+                          {currentConfig.headers.map((header) => (
+                            <td key={header.id} className="whitespace-nowrap px-4 py-3">
+                              {header.id === currentConfig.nameKey ? (
+                                <div className="flex flex-col gap-0.5">
+                                  <span className="font-medium text-slate-800">{row[currentConfig.nameKey]}</span>
+                                  {row.is_assigned === 0 && (
+                                    <span className="inline-block w-fit rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600">
+                                      Unassigned
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-slate-700">{row[header.id]}</span>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
-            </div>
+
+              {cardTotalPages > 1 && (
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3">
+                  <p className="text-sm text-slate-600">
+                    Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, cardFilteredRows.length)} of {cardFilteredRows.length}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                      disabled={currentPage === 1}
+                      className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Previous
+                    </button>
+                    <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700">
+                      Page {currentPage} of {cardTotalPages}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((page) => Math.min(cardTotalPages, page + 1))}
+                      disabled={currentPage === cardTotalPages}
+                      className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div></div>
           )}
         </div>
       </div>

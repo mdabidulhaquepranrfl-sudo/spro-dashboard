@@ -57,10 +57,10 @@ export default function TtsKpi({ searchParams }) {
             {isLoading ? (
               Array.from({ length: DEFAULT_TTS_DATA.length }).map((_, index) => (
                 <tr key={index} className="border-t border-slate-100">
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-1">
                     <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200" />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-1">
                     <div className="h-4 w-16 animate-pulse rounded-full bg-slate-200" />
                   </td>
                 </tr>
@@ -68,8 +68,8 @@ export default function TtsKpi({ searchParams }) {
             ) : (
               ttsData.map((row) => (
                 <tr key={row.key} className="border-t border-slate-100">
-                  <td className="px-4 py-3 text-slate-700">{row.label}</td>
-                  <td className="px-4 py-3 font-semibold text-slate-900">{row.value}</td>
+                  <td className="px-4 py-1 text-slate-700">{row.label}</td>
+                  <td className="px-4 py-1 font-semibold text-slate-900">{row.value}</td>
                 </tr>
               ))
             )}

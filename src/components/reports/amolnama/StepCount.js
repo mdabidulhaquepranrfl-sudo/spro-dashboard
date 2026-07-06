@@ -8,12 +8,12 @@ const STEP_COUNT_CONFIG = {
   badge: {
     label: 'STEP PERFORMANCE',
     bg_color: '#FCE7F3',
-    text_color: '#DB2777',
+    text_color: '#000000',
   },
 };
 
-const DEFAULT_STEP_DATA = [{ label: 'No Data', steps: 0, bar_color: '#0F766E' }];
-const BAR_COLORS = ['#2563EB', '#0F766E', '#7C3AED', '#DB2777', '#EA580C'];
+const DEFAULT_STEP_DATA = [{ label: 'No Data', steps: 0, bar_color: '#2563EB' }];
+const BAR_COLORS = ['#2563EB', '#2563EB', '#2563EB', '#2563EB', '#2563EB'];
 
 function getDateRange(startDate, endDate) {
   if (!startDate || !endDate) return [];
@@ -95,7 +95,7 @@ export default function StepCount({ searchParams }) {
   }, [yAxisMax]);
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+    <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-2 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-600">{STEP_COUNT_CONFIG.title}</p>
@@ -105,7 +105,7 @@ export default function StepCount({ searchParams }) {
         </span>
       </div>
 
-      <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+      <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-1">
         {isLoading ? (
           <div className="w-full overflow-x-auto pb-2">
             <div className="flex h-[240px] min-w-[300px] items-end gap-2 sm:h-[280px] sm:gap-3">

@@ -18,15 +18,62 @@ const SUMMARY_ICON_MAP = {
   calendar_cross: 'bx-calendar-x',
 };
 const DAILY_SUMMARY_METRICS = [
-  { key: 'activity_days', label: 'ACTIVITY DAY', value: '0', icon: 'calendar', theme: { icon_bg: '#E0E7FF', icon_color: '#312E81', label_color: '#1E3A8A', value_color: '#1E40AF' } },
-  { key: 'avg_first_act', label: 'FIRST ACTIVITY', value: '—', icon: 'clock', theme: { icon_bg: '#FDE68A', icon_color: '#9A2C00', label_color: '#92400E', value_color: '#7C2D12' } },
-  { key: 'avg_last_act', label: 'LAST ACTIVITY', value: '—', icon: 'clock', theme: { icon_bg: '#FDE68A', icon_color: '#9A2C00', label_color: '#92400E', value_color: '#7C2D12' } },
-  { key: 'retail_activity', label: 'TOTAL RETAIL ACT', value: '0', icon: 'briefcase', theme: { icon_bg: '#D1FAE5', icon_color: '#047857', label_color: '#047857', value_color: '#065F46' } },
-  { key: 'average_activity', label: 'AVG RETAIL ACT', value: '0', icon: 'briefcase', theme: { icon_bg: '#FDE68A', icon_color: '#9A2C00', label_color: '#92400E', value_color: '#7C2D12' } },
-  { key: 'other_activities', label: 'OTHER ACTIVITIES', value: '0', icon: 'calendar_check', theme: { icon_bg: '#BAE6FD', icon_color: '#075985', label_color: '#075985', value_color: '#0C4A6E' } },
-  { key: 'avg_tts', label: 'AVG TTS', value: '00:00:00', icon: 'clock', theme: { icon_bg: '#FECACA', icon_color: '#B91C1C', label_color: '#991B1B', value_color: '#7F1D1D' } },
-  { key: 'daily_tts', label: 'DAILY TTS', value: '00:00:00', icon: 'clock', theme: { icon_bg: '#DDD6FE', icon_color: '#6D28D9', label_color: '#5B21B6', value_color: '#4C1D95' } },
+  { key: 'activity_days', label: 'ACTIVITY DAY', value: '0', icon: 'calendar', theme: {} },
+  { key: 'avg_first_act', label: 'FIRST ACTIVITY', value: '—', icon: 'clock', theme: {} },
+  { key: 'avg_last_act', label: 'LAST ACTIVITY', value: '—', icon: 'clock', theme: {} },
+  { key: 'retail_activity', label: 'TOTAL RETAIL ACT', value: '0', icon: 'briefcase', theme: {} },
+  { key: 'average_activity', label: 'AVG RETAIL ACT', value: '0', icon: 'briefcase', theme: {} },
+  { key: 'other_activities', label: 'OTHER ACTIVITIES', value: '0', icon: 'calendar_check', theme: {} },
+  { key: 'avg_tts', label: 'AVG TTS', value: '00:00:00', icon: 'clock', theme: {} },
+  { key: 'daily_tts', label: 'DAILY TTS', value: '00:00:00', icon: 'clock', theme: {} },
 ];
+
+const DEFAULT_CARD_THEME = {
+  icon_bg: '#F8FAFC',
+  icon_color: '#0F172A',
+  label_color: '#0F172A',
+  value_color: '#0F172A',
+};
+
+const SUCCESS_CARD_THEME = {
+  icon_bg: '#DCFCE7',
+  icon_color: '#15803D',
+  label_color: '#166534',
+  value_color: '#14532D',
+};
+
+const DANGER_CARD_THEME = {
+  icon_bg: '#FEE2E2',
+  icon_color: '#B91C1C',
+  label_color: '#991B1B',
+  value_color: '#7F1D1D',
+};
+
+function parseTimeToMinutes(value) {
+  if (!value || typeof value !== 'string') return NaN;
+  const parts = value.split(':').map(Number);
+  if (parts.length !== 3 || parts.some(Number.isNaN)) return NaN;
+  return parts[0] * 60 + parts[1] + parts[2] / 60;
+}
+
+function getDailyMetricTheme(metric) {
+  const value = String(metric.value ?? '').trim();
+  const numericValue = Number(value.replace(/[^0-9.]/g, ''));
+
+  if (metric.key === 'avg_tts') {
+    const minutes = parseTimeToMinutes(value);
+    if (!Number.isNaN(minutes)) {
+      return minutes > 0 && minutes < 5 ? DANGER_CARD_THEME : SUCCESS_CARD_THEME;
+    }
+    return DEFAULT_CARD_THEME;
+  }
+
+  if (['retail_activity', 'average_activity'].includes(metric.key)) {
+    return Number.isNaN(numericValue) ? DEFAULT_CARD_THEME : numericValue > 0 ? SUCCESS_CARD_THEME : DEFAULT_CARD_THEME;
+  }
+
+  return DEFAULT_CARD_THEME;
+}
 
 export default function DailySummary({ searchParams }) {
   const [isDailyLoading, setIsDailyLoading] = useState(true);
@@ -64,10 +111,10 @@ export default function DailySummary({ searchParams }) {
         </div>
       </div>
       <div className="p-2 sm:p-3">
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+        <div className="flex flex-wrap gap-2">
           {isDailyLoading
             ? DAILY_SUMMARY_METRICS.map((_, i) => (
-              <div key={i} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
+              <div key={i} className="min-w-[180px] flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
                 <div className="flex items-center gap-2">
                   <div className="h-9 w-9 rounded-2xl bg-slate-200 flex-shrink-0" />
                   <div className="min-w-0 flex-1 space-y-2">
@@ -78,14 +125,39 @@ export default function DailySummary({ searchParams }) {
               </div>
             ))
             : dailyMetrics.map((metric) => (
-              <div key={metric.label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <div key={metric.label} className="min-w-[170px] lg:min-w-[140px] xl:min-w-[150px] w-fit flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-2xl" style={{ backgroundColor: metric.theme?.icon_bg ?? '#F8FAFC', color: metric.theme?.icon_color ?? '#0F172A' }}>
-                    <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
-                  </div>
+                  {(() => {
+                    const theme = getDailyMetricTheme(metric);
+                    return (
+                      <div
+                        className="flex h-9 w-9 items-center justify-center rounded-2xl flex-shrink-0"
+                        style={{ backgroundColor: theme.icon_bg, color: theme.icon_color }}
+                      >
+                        <i className={`bx ${SUMMARY_ICON_MAP[metric.icon] ?? 'bx-stats'} text-base`} />
+                      </div>
+                    );
+                  })()}
                   <div className="min-w-0">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.22em]" style={{ color: metric.theme?.label_color ?? '#475569' }}>{metric.label}</p>
-                    <p className="mt-1 text-lg font-extrabold break-words" style={{ color: metric.theme?.value_color ?? '#0f172a' }}>{metric.value}</p>
+                    {(() => {
+                      const theme = getDailyMetricTheme(metric);
+                      return (
+                        <>
+                          <p
+                            className="text-[9px] font-semibold uppercase tracking-[0.22em] whitespace-nowrap"
+                            style={{ color: theme.label_color }}
+                          >
+                            {metric.label}
+                          </p>
+
+                          <p className="mt-1 text-lg font-extrabold break-words"
+                            style={{ color: theme.value_color }}
+                          >
+                            {metric.value}
+                          </p>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>

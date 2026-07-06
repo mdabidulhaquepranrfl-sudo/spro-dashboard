@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { getReportData } from '@/lib/getReportData';
 
 const DEFAULT_OUTLET_ACTIVITY = [
-  { label: 'CREATED', value: '0', bg: 'bg-sky-100', border: 'border-sky-300', text: 'text-sky-800' },
-  { label: 'UPDATED', value: '0', bg: 'bg-emerald-100', border: 'border-emerald-300', text: 'text-emerald-800' },
+  { label: 'CREATED', value: '0', bg: 'bg-emerald-100', border: 'border-emerald-300', text: 'text-emerald-800' },
+  { label: 'UPDATED', value: '0', bg: 'bg-slate-100', border: 'border-slate-300', text: 'text-slate-900' },
   { label: 'DELETED', value: '0', bg: 'bg-rose-100', border: 'border-rose-300', text: 'text-rose-800' },
 ];
 
@@ -38,25 +38,26 @@ export default function OutletActivity({ searchParams }) {
   }, [staffId, startDate, endDate]);
 
   return (
-    <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
+    <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-3 shadow-sm">
+      <div className="flex items-start justify-between gap-2">
         <div>
-          <h3 className="text-lg font-semibold text-slate-900">Outlet Activity</h3>
+          <h3 className="text-sm font-semibold text-slate-900">Outlet Activity</h3>
         </div>
       </div>
-      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-3">
         {isLoading ? (
           Array.from({ length: DEFAULT_OUTLET_ACTIVITY.length }).map((_, index) => (
-            <div key={index} className="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
-              <div className="h-3 w-20 animate-pulse rounded-full bg-slate-200" />
-              <div className="mt-2 h-8 w-16 animate-pulse rounded-full bg-slate-200" />
+            <div key={index} className="rounded-2xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+              <div className="h-2.5 w-16 animate-pulse rounded-full bg-slate-200" />
+              <div className="mt-2 h-6 w-12 animate-pulse rounded-full bg-slate-200" />
             </div>
           ))
         ) : (
           outletActivity.map((item) => (
-            <div key={item.label} className={`rounded-3xl border ${item.border} ${item.bg} p-5 shadow-sm`}>
-              <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${item.text}`}>{item.label}</p>
-              <p className={`mt-2 text-3xl font-extrabold ${item.text}`}>{item.value}</p>
+            <div key={item.label} className={`rounded-2xl border ${item.border} ${item.bg} p-3 shadow-sm`}>
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${item.text}`}>{item.label}</p>
+              <p className={`mt-1 text-2xl font-extrabold leading-none ${item.text}`}>{item.value}</p>
             </div>
           ))
         )}

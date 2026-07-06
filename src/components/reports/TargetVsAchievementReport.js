@@ -271,7 +271,7 @@ export default function TargetVsAchievementReport() {
               </label>
             </div>
 
-            <div className="grid w-full min-w-0 gap-4 xl:grid-cols-[1.3fr_0.7fr]">
+            <div className="grid w-full min-w-0 gap-1 xl:grid-cols-[1.3fr_0.7fr]">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-200 text-sm">
                   <thead className="bg-slate-50 text-left text-slate-600">
