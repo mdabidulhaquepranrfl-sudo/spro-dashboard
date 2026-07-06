@@ -94,6 +94,8 @@ function LoginFormContent() {
           user_id: userData.user_id,
           username: userData.username,
           name: userData.name,
+          profile_pic: userData.profile_pic || '',
+          role: userData.role || '',
         },
         country,
       });

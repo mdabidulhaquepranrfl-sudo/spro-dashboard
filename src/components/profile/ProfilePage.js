@@ -7,17 +7,30 @@ import SearchableCountrySelect from '@/components/profile/SearchableCountrySelec
 import { useCountry } from '@/context/CountryContext';
 import { useAuth } from '@/context/AuthContext';
 import { getCountries } from '@/lib/getCountries';
+import { saveAuth } from '@/lib/authStorage';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { auth, logout } = useAuth();
   const { country, saveCountry } = useCountry();
+  
+  const user = auth?.user || {};
+  
   const [countries, setCountries] = useState([]);
   const [selectedCountryId, setSelectedCountryId] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+  const [profilePic, setProfilePic] = useState('');
+  const [isLoadingCountries, setIsLoadingCountries] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    if (user.name) setUserName(user.name);
+    if (user.role) setUserRole(user.role);
+    if (user.profile_pic) setProfilePic(user.profile_pic);
+  }, [user]);
 
   useEffect(() => {
     if (country?.countryId) {
@@ -27,7 +40,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function loadCountries() {
-      setIsLoading(true);
+      setIsLoadingCountries(true);
       setErrorMessage('');
 
       try {
@@ -37,7 +50,7 @@ export default function ProfilePage() {
         console.error('Countries fetch error:', error);
         setErrorMessage('Unable to load countries. Please try again.');
       } finally {
-        setIsLoading(false);
+        setIsLoadingCountries(false);
       }
     }
 
@@ -47,6 +60,7 @@ export default function ProfilePage() {
   const handleSave = async (event) => {
     event.preventDefault();
     setSuccessMessage('');
+    setErrorMessage('');
 
     if (!selectedCountryId) {
       setErrorMessage('Please select a country before saving.');
@@ -60,20 +74,40 @@ export default function ProfilePage() {
       return;
     }
 
+    if (!userName.trim()) {
+      setErrorMessage('Name cannot be empty.');
+      return;
+    }
+
     setIsSaving(true);
-    setErrorMessage('');
 
     try {
+      // Update country preference
       saveCountry(selectedCountry);
-      setSuccessMessage('Country saved successfully.');
+
+      // Update user profile information
+      const updatedAuth = {
+        ...auth,
+        user: {
+          ...user,
+          name: userName.trim(),
+          role: userRole.trim(),
+          profile_pic: profilePic.trim() || '/assets/img/avatars/profile.png',
+        },
+      };
+      saveAuth(updatedAuth);
+
+      setSuccessMessage('Profile saved successfully.');
       router.replace('/home');
     } catch (error) {
-      console.error('Country save error:', error);
-      setErrorMessage('Unable to save country. Please try again.');
+      console.error('Save error:', error);
+      setErrorMessage('Unable to save profile. Please try again.');
     } finally {
       setIsSaving(false);
     }
   };
+
+  const displayProfilePic = profilePic || '/assets/img/avatars/profile.png';
 
   return (
     <div className="space-y-4">
@@ -81,7 +115,7 @@ export default function ProfilePage() {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <Image
-              src="/assets/img/avatars/1.png"
+              src={displayProfilePic}
               alt="User avatar"
               width={72}
               height={72}
@@ -89,8 +123,8 @@ export default function ProfilePage() {
             />
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">Profile</p>
-              <h1 className="mt-1 text-2xl font-semibold text-slate-900">John Doe</h1>
-              <p className="mt-1 text-sm text-slate-500">Admin</p>
+              <h1 className="mt-1 text-2xl font-semibold text-slate-900">{userName || 'User'}</h1>
+              <p className="mt-1 text-sm text-slate-500">{userRole || ''}</p>
             </div>
           </div>
 
@@ -112,20 +146,39 @@ export default function ProfilePage() {
         </div>
 
         <form onSubmit={handleSave} className="mt-8 max-w-xl space-y-4">
-          <SearchableCountrySelect
-            countries={countries}
-            value={selectedCountryId}
-            onChange={setSelectedCountryId}
-            disabled={isLoading || isSaving}
-          />
+          <div>
+            <label htmlFor="userName" className="mb-2 block text-sm font-medium text-slate-700">
+              Name
+            </label>
+            <input
+              id="userName"
+              name="userName"
+              type="text"
+              readOnly
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Enter your name"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-sky-500 focus:bg-white"
+            />
+          </div>
 
-          {isLoading ? <p className="text-sm text-slate-500">Loading countries...</p> : null}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Country</label>
+            <SearchableCountrySelect
+              countries={countries}
+              value={selectedCountryId}
+              onChange={setSelectedCountryId}
+              disabled={isLoadingCountries || isSaving}
+            />
+          </div>
+
+          {isLoadingCountries ? <p className="text-sm text-slate-500">Loading countries...</p> : null}
           {errorMessage ? <p className="text-sm text-amber-600">{errorMessage}</p> : null}
           {successMessage ? <p className="text-sm text-emerald-600">{successMessage}</p> : null}
 
           <button
             type="submit"
-            disabled={isLoading || isSaving || !selectedCountryId}
+            disabled={isLoadingCountries || isSaving || !selectedCountryId || !userName.trim()}
             className="rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSaving ? 'Saving...' : 'Save'}
