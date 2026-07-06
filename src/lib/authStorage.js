@@ -29,6 +29,11 @@ export function saveAuth(auth) {
 
   const payload = {
     ...auth,
+    user: {
+      ...auth.user,
+      profile_pic: auth.user.profile_pic || '',
+      role: auth.user.role || '',
+    },
     savedAt: Date.now(),
   };
 
