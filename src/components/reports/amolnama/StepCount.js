@@ -105,19 +105,19 @@ export default function StepCount({ searchParams }) {
         </span>
       </div>
 
-      <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-1">
+      <div className="mt-2 max-w-full rounded-3xl border border-slate-200 bg-slate-50 p-1">
         {isLoading ? (
-          <div className="w-full overflow-x-auto pb-2">
-            <div className="flex h-[240px] min-w-[300px] items-end gap-2 sm:h-[280px] sm:gap-3">
+          <div className="w-full min-w-0 overflow-x-auto pb-2">
+            <div className="flex h-[240px] min-w-0 w-full items-end gap-2 sm:h-[280px] sm:gap-3">
               <div className="flex h-full w-7 shrink-0 flex-col justify-between pr-1 text-[8px] text-slate-500 sm:w-8">
                 {yTicks.map((tick) => (
                   <div key={tick} className="h-3 w-full animate-pulse rounded-full bg-slate-200" />
                 ))}
               </div>
 
-              <div className="flex flex-1 items-end gap-[2px] border-l border-slate-200 pl-1 sm:gap-1 sm:pl-2">
+              <div className="flex min-w-max flex-1 items-end gap-[2px] border-l border-slate-200 pl-1 sm:gap-1 sm:pl-2">
                 {Array.from({ length: 7 }).map((_, index) => (
-                  <div key={index} className="flex min-w-[20px] flex-1 flex-col items-center justify-end">
+                  <div key={index} className="flex min-w-0 w-full flex-1 flex-col items-center justify-end">
                     <div className="relative flex h-44 w-full items-end justify-center rounded-none bg-white/70 px-0.5 py-1 shadow-inner sm:h-56 sm:px-1">
                       <div className="h-[55%] w-[85%] animate-pulse bg-slate-300" />
                     </div>
@@ -129,19 +129,19 @@ export default function StepCount({ searchParams }) {
           </div>
         ) : (
           <>
-            <div className="w-full overflow-x-auto pb-2">
-              <div className="flex h-[240px] min-w-[300px] items-end gap-2 sm:h-[280px] sm:gap-3">
+            <div className="w-full min-w-0 overflow-x-auto pb-2">
+              <div className="flex h-[240px] min-w-0 w-full items-end gap-2 sm:h-[280px] sm:gap-3">
                 <div className="flex h-full w-7 shrink-0 flex-col justify-between pr-1 text-[8px] font-medium text-slate-500 sm:w-8">
                   {yTicks.map((tick) => (
                     <span key={tick}>{tick.toLocaleString()}</span>
                   ))}
                 </div>
 
-                <div className="flex flex-1 items-end gap-[2px] border-l border-slate-200 pl-1 sm:gap-1 sm:pl-2">
+                <div className="flex min-w-max flex-1 items-end gap-[2px] border-l border-slate-200 pl-1 sm:gap-1 sm:pl-2">
                   {stepData.map((point) => {
                     const height = point.steps === 0 ? 8 : Math.max((point.steps / yAxisMax) * 100, 10);
                     return (
-                      <div key={`${point.label}-${point.steps}`} className="group flex min-w-[20px] flex-1 flex-col items-center justify-end">
+                      <div key={`${point.label}-${point.steps}`} className="group flex min-w-0 w-full flex-1 flex-col items-center justify-end">
                         <div className="relative flex h-44 w-full items-end justify-center rounded-none bg-white/70 px-0.5 py-1 shadow-inner sm:h-56 sm:px-1">
                           <div className="pointer-events-none absolute -top-8 left-1/2 z-10 -translate-x-1/2 rounded-md border border-slate-200 bg-slate-900 px-2 py-1 text-[10px] font-semibold text-white opacity-0 shadow-sm transition group-hover:opacity-100">
                             {point.steps.toLocaleString()}
