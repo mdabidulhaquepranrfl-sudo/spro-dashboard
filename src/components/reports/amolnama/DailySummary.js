@@ -144,7 +144,7 @@ export default function DailySummary({ searchParams }) {
                       return (
                         <>
                           <p
-                            className="text-[9px] font-semibold uppercase tracking-[0.22em] whitespace-nowrap"
+                            className="text-[9px] font-semibold uppercase tracking-[0.22em] whitespace-wrap"
                             style={{ color: theme.label_color }}
                           >
                             {metric.label}

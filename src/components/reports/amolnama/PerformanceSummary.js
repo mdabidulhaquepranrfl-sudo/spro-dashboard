@@ -227,7 +227,7 @@ export default function PerformanceSummary({ searchParams }) {
     fetchThanaPerformance();
     fetchZonePerformance();
     fetchDistrictPerformance();
-  }, [staffId, startDate, endDate]);
+  }, [searchParams]);
 
   const currentConfig = useMemo(() => {
     if (activeSubTab === 'thana_wise') {

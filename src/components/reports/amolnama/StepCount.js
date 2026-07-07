@@ -88,7 +88,7 @@ export default function StepCount({ searchParams }) {
     }
 
     fetchStepCount();
-  }, [staffId, startDate, endDate]);
+  }, [searchParams]);
 
   const yTicks = useMemo(() => {
     return Array.from({ length: 5 }, (_, index) => Math.round(yAxisMax - (yAxisMax / 4) * index));

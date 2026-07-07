@@ -50,7 +50,7 @@ export default function FieldOperationsSnapshot({ searchParams }) {
     }
 
     fetchFieldOperations();
-  }, [staffId, startDate, endDate]);
+  }, [searchParams]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -170,20 +170,19 @@ export default function FieldOperationsSnapshot({ searchParams }) {
             </span>
           </div>
 
-          <div className="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-slate-100">
-            {isLoading ? (
-              <div className="relative h-80 w-full overflow-hidden rounded-3xl bg-slate-200/70">
+         <div className="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 relative h-80 w-full">
+            {isLoading && (
+              <div className="absolute inset-0 z-10 overflow-hidden rounded-3xl bg-slate-200/70">
                 <div className="absolute inset-0 animate-pulse bg-[radial-gradient(circle_at_center,_rgba(14,165,233,0.16),transparent_45%),linear-gradient(180deg,rgba(14,165,233,0.08),transparent)]" />
                 <div className="absolute inset-x-4 top-4 h-4 rounded-full bg-slate-300" />
                 <div className="absolute inset-x-4 top-12 h-3 w-2/3 rounded-full bg-slate-300" />
                 <div className="absolute inset-x-4 bottom-4 h-20 rounded-2xl border border-slate-300 bg-white/70" />
               </div>
-            ) : (
-              <div className="relative h-80 w-full overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(14,165,233,0.14),transparent_45%),linear-gradient(180deg,rgba(14,165,233,0.06),transparent)]">
-                <div ref={mapContainerRef} className="absolute inset-0 h-full w-full" />
-                <div className="pointer-events-none absolute inset-0 bg-[url('/assets/img/layouts/map-placeholder.svg')] bg-cover bg-center opacity-20" />
-              </div>
             )}
+            <div className={`absolute inset-0 h-full w-full bg-[radial-gradient(circle_at_center,_rgba(14,165,233,0.14),transparent_45%),linear-gradient(180deg,rgba(14,165,233,0.06),transparent)] transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+              <div ref={mapContainerRef} className="absolute inset-0 h-full w-full" />
+              <div className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-20" />
+            </div>
           </div>
         </div>
       </div>

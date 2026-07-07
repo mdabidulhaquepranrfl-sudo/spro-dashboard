@@ -252,7 +252,7 @@ export default function HalfSummaryReport() {
 
   return (
     <div className="min-h-screen w-full bg-slate-50">
-      <div className="mx-auto flex w-full max-w-8xl flex-col gap-4 px-2 py-2 sm:px-2 lg:px-2">
+      <div className="mx-auto flex w-full max-w-8xl flex-col gap-1 px-1 py-1 sm:px-1 lg:px-1">
         <section className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -347,6 +347,30 @@ export default function HalfSummaryReport() {
                             <p className="mt-1 break-words text-xs text-slate-500">
                               {member.sr_id || '—'}
                               {member.sr_mobile ? ` • ${member.sr_mobile}` : ''}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="hidden [@media(min-width:974px)]:flex flex-1 items-center justify-center gap-8 border-l border-slate-200 px-4">
+                          <div className="text-center">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">1st Half Order</p>
+                            <p className="text-sm font-bold text-slate-700 mt-0.5">
+                              {formatAmount(member?.first_half?.order_amount, reportData?.meta?.currency_symbol || '৳')}
+                            </p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">2nd Half Order</p>
+                            <p className="text-sm font-bold text-slate-700 mt-0.5">
+                              {formatAmount(member?.second_half?.order_amount, reportData?.meta?.currency_symbol || '৳')}
+                            </p>
+                          </div>
+                          <div className="text-center bg-slate-100 rounded-xl px-3 py-1.5">
+                            <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Total Order</p>
+                            <p className="text-sm font-black text-sky-700 mt-0.5">
+                              {formatAmount(
+                                (Number(member?.first_half?.order_amount) || 0) + (Number(member?.second_half?.order_amount) || 0),
+                                reportData?.meta?.currency_symbol || '৳'
+                              )}
                             </p>
                           </div>
                         </div>

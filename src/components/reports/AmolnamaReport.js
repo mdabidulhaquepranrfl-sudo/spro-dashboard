@@ -24,15 +24,15 @@ const formatDisplayDate = (value) => {
 };
 
 export default function AmolnamaPage() {
-  const [employeeId, setEmployeeId] = useState('UAE2704');
+  const [employeeId, setEmployeeId] = useState('');
   const [employeeName, setEmployeeName] = useState('');
-  const [startDate, setStartDate] = useState('2026-06-15');
-  const [endDate, setEndDate] = useState('2026-07-05');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [searchParams, setSearchParams] = useState({
-    staffId: 'UAE2704',
-    startDate: '2026-06-15',
+    staffId: '',
+    startDate: '',
     endDate: '',
   });
   const [refreshKey, setRefreshKey] = useState(0);
@@ -54,14 +54,15 @@ export default function AmolnamaPage() {
       return;
     }
 
+    setRefreshKey(prev => prev + 1);
     setSearchError('');
     setSearchParams({
       staffId: employeeId,
       startDate: startDate,
       endDate: endDate,
+      refreshKey: refreshKey,
     });
     setHasSearched(true);
-    setRefreshKey(prev => prev + 1);
   };
 
   return (
@@ -105,17 +106,17 @@ export default function AmolnamaPage() {
 
           <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.3fr_0.7fr] 2xl:grid-cols-[1.45fr_0.55fr]">
             <div className="w-full min-w-0 space-y-1">
-              <DailySummary key={`daily-${refreshKey}`} searchParams={searchParams} />
-              <VisitedSummary key={`visited-${refreshKey}`} searchParams={searchParams} />
-              <PerformanceSummary key={`performance-${refreshKey}`} searchParams={searchParams} />
-              <CoWorkReport key={`cowork-${refreshKey}`} searchParams={searchParams} />
-              <FieldOperationsSnapshot key={`field-${refreshKey}`} searchParams={searchParams} />
+              <DailySummary searchParams={searchParams} />
+              <VisitedSummary searchParams={searchParams} />
+              <PerformanceSummary searchParams={searchParams} />
+              <CoWorkReport searchParams={searchParams} />
+              <FieldOperationsSnapshot searchParams={searchParams} />
             </div>
 
             <div className="w-full min-w-0 space-y-1 self-start">
-              <StepCount key={`step-${refreshKey}`} searchParams={searchParams} />
-              <TtsKpi key={`tts-${refreshKey}`} searchParams={searchParams} />
-              <OutletActivity key={`outlet-${refreshKey}`} searchParams={searchParams} />
+              <StepCount searchParams={searchParams} />
+              <TtsKpi searchParams={searchParams} />
+              <OutletActivity searchParams={searchParams} />
             </div>
             
           </div>

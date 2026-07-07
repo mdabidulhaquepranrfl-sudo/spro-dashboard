@@ -36,7 +36,7 @@ export default function TtsKpi({ searchParams }) {
     }
 
     fetchTTSKPI();
-  }, [staffId, startDate, endDate]);
+  }, [searchParams]);
 
   return (
     <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">

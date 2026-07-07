@@ -99,7 +99,7 @@ export default function CoWorkReport({ searchParams }) {
       }
     }
     fetchCoWorkReport();
-  }, [staffId, startDate, endDate]);
+  }, [searchParams]);
 
   const filteredRows = useMemo(() => {
     if (!searchQuery.trim()) return rows;
