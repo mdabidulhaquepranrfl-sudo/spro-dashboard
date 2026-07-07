@@ -100,8 +100,7 @@ function SkeletonSummaryCards({ count = 3 }) {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-slate-200" />
+          <div className="flex items-start">
             <div className="flex-1 space-y-2">
               <div className="h-3 w-3/4 rounded-full bg-slate-200" />
               <div className="h-6 w-1/2 rounded-full bg-slate-200" />
@@ -412,14 +411,16 @@ export default function PerformanceSummary({ searchParams }) {
                 onClick={() => handleCardToggle(card.id)}
                 className={`relative cursor-pointer rounded-2xl border border-slate-200 bg-white p-3 shadow-sm ${expandedCard === card.id ? 'ring-2 ring-sky-200' : ''}`}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-start">
+                  {/*
                   <div
                     className="flex h-10 w-10 items-center justify-center rounded-xl shadow-sm"
                     style={{ backgroundColor: card.theme.icon_bg, color: card.theme.icon_color }}
                   >
                     <i className={`bx ${ICON_MAP[card.icon] ?? 'bx-help-circle'} text-lg`} />
                   </div>
-                  <div className="min-w-0">
+                  */}
+                  <div className="min-w-0 flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: card.theme.text_color }}>{card.label}</p>
                     <p className="mt-0.5 text-xl font-bold leading-tight" style={{ color: card.theme.text_color }}>{card.value}</p>
                   </div>

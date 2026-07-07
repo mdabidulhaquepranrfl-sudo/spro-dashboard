@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getReportData } from '@/lib/getReportData';
 
 const SUMMARY_ICON_MAP = {
@@ -114,9 +114,8 @@ export default function DailySummary({ searchParams }) {
         <div className="flex flex-wrap gap-2">
           {isDailyLoading
             ? DAILY_SUMMARY_METRICS.map((_, i) => (
-              <div key={i} className="min-w-[180px] flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
-                <div className="flex items-center gap-2">
-                  <div className="h-9 w-9 rounded-2xl bg-slate-200 flex-shrink-0" />
+              <div key={i} className="min-w-[100px] flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
+                <div className="flex items-start">
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="h-2.5 w-3/4 rounded-full bg-slate-200" />
                     <div className="h-5 w-1/2 rounded-full bg-slate-200" />
@@ -125,8 +124,9 @@ export default function DailySummary({ searchParams }) {
               </div>
             ))
             : dailyMetrics.map((metric) => (
-              <div key={metric.label} className="min-w-[170px] lg:min-w-[140px] xl:min-w-[150px] w-fit flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                <div className="flex items-center gap-2">
+              <div key={metric.label} className="min-w-[110px] w-fit flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                <div className="flex items-start">
+                  {/*
                   {(() => {
                     const theme = getDailyMetricTheme(metric);
                     return (
@@ -138,7 +138,8 @@ export default function DailySummary({ searchParams }) {
                       </div>
                     );
                   })()}
-                  <div className="min-w-0">
+                  */}
+                  <div className="min-w-0 flex-1">
                     {(() => {
                       const theme = getDailyMetricTheme(metric);
                       return (

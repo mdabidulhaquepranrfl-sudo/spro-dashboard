@@ -105,26 +105,19 @@ export default function AmolnamaPage() {
         <div className="w-full min-w-0 space-y-1">
 
           <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.2fr_0.8fr] 2xl:grid-cols-[1.25fr_0.75fr]">
-            <div className="w-full min-w-0 space-y-1">
-              <DailySummary searchParams={searchParams} />
-              <VisitedSummary searchParams={searchParams} />
+            <div className="w-full min-w-0 space-y-1 display contents xl:block xl:space-y-1">
+              <div className="order-1 xl:order-none"><DailySummary searchParams={searchParams} /></div>
+              <div className="order-2 xl:order-none"><VisitedSummary searchParams={searchParams} /></div>
+              <div className="order-4 xl:order-none"><PerformanceSummary searchParams={searchParams} /></div>
+              <div className="order-7 xl:order-none"><CoWorkReport searchParams={searchParams} /></div>
+              <div className="order-8 xl:order-none"><FieldOperationsSnapshot searchParams={searchParams} /></div>
             </div>
-            <div className="w-full min-w-0 space-y-1 self-start">
-              <StepCount searchParams={searchParams} />
-            </div>
-          </div>
-            <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.3fr_0.7fr] 2xl:grid-cols-[1.45fr_0.55fr]">
-            <div className="w-full min-w-0 space-y-1">
-              <PerformanceSummary searchParams={searchParams} />
-              <CoWorkReport searchParams={searchParams} />
-              <FieldOperationsSnapshot searchParams={searchParams} />
+            <div className="w-full min-w-0 space-y-1 self-start display contents xl:block xl:space-y-1">
+              <div className="order-3 xl:order-none"><StepCount searchParams={searchParams} /></div>
+              <div className="order-5 xl:order-none"><TtsKpi searchParams={searchParams} /></div>
+              <div className="order-6 xl:order-none"><OutletActivity searchParams={searchParams} /></div>
             </div>
 
-            <div className="w-full min-w-0 space-y-1 self-start">
-              <TtsKpi searchParams={searchParams} />
-              <OutletActivity searchParams={searchParams} />
-            </div>
-            
           </div>
         </div>
       ) : (
