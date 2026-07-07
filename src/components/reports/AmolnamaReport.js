@@ -104,17 +104,23 @@ export default function AmolnamaPage() {
       {hasSearched ? (
         <div className="w-full min-w-0 space-y-1">
 
-          <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.3fr_0.7fr] 2xl:grid-cols-[1.45fr_0.55fr]">
+          <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.2fr_0.8fr] 2xl:grid-cols-[1.25fr_0.75fr]">
             <div className="w-full min-w-0 space-y-1">
               <DailySummary searchParams={searchParams} />
               <VisitedSummary searchParams={searchParams} />
+            </div>
+            <div className="w-full min-w-0 space-y-1 self-start">
+              <StepCount searchParams={searchParams} />
+            </div>
+          </div>
+            <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.3fr_0.7fr] 2xl:grid-cols-[1.45fr_0.55fr]">
+            <div className="w-full min-w-0 space-y-1">
               <PerformanceSummary searchParams={searchParams} />
               <CoWorkReport searchParams={searchParams} />
               <FieldOperationsSnapshot searchParams={searchParams} />
             </div>
 
             <div className="w-full min-w-0 space-y-1 self-start">
-              <StepCount searchParams={searchParams} />
               <TtsKpi searchParams={searchParams} />
               <OutletActivity searchParams={searchParams} />
             </div>
