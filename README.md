@@ -1,3 +1,8 @@
+## Requirements
+
+- Node.js v20+
+- npm v10+
+
 ## Local Development
 
 ```bash
