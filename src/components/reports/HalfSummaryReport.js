@@ -428,7 +428,7 @@ export default function HalfSummaryReport() {
                                   <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
                                     {buildSessionCards(summary, reportData?.meta?.currency_symbol).map((card) => (
                                       <div key={card.label} className="rounded-[14px] border border-slate-200 bg-white/80 p-3 shadow-sm">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600" style={{ color: card.valueColor }}>{card.label}</p>
+                                        <p className="text-[10px] font-bold uppercase text-slate-600" style={{ color: card.valueColor }}>{card.label}</p>
                                         <div className="mt-1.5 flex items-end gap-1">
                                           <span className="text-lg font-black" style={{ color: card.valueColor }}>
                                             {card.value}
@@ -514,7 +514,7 @@ export default function HalfSummaryReport() {
                       <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-3">
                         {session.cards.map((card) => (
                           <div key={card.label} className="rounded-[14px] border border-slate-200 bg-slate-50/80 p-3 shadow-sm">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600" style={{ color: card.valueColor }}>{card.label}</p>
+                            <p className="text-[10px] font-bold uppercase text-slate-600" style={{ color: card.valueColor }}>{card.label}</p>
                             <div className="mt-1.5 flex items-end gap-1">
                               <span className="text-lg font-black" style={{ color: card.valueColor }}>
                                 {card.value}

@@ -7,8 +7,8 @@ const STEP_COUNT_CONFIG = {
   title: 'Step Count',
   badge: {
     label: 'STEP PERFORMANCE',
-    bg_color: '#59A14F',
-    text_color: '#ffffff',
+    bg_color: '#E3FBE8',
+    text_color: '#141414',
   },
 };
 
@@ -95,10 +95,10 @@ export default function StepCount({ searchParams }) {
   }, [yAxisMax]);
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-2 shadow-sm">
+    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.3em]">{STEP_COUNT_CONFIG.title}</p>
+          <p className="text-sm font-bold uppercase">{STEP_COUNT_CONFIG.title}</p>
         </div>
         <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: STEP_COUNT_CONFIG.badge.bg_color, color: STEP_COUNT_CONFIG.badge.text_color }}>
           {STEP_COUNT_CONFIG.badge.label}

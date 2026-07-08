@@ -112,7 +112,7 @@ export default function TargetVsAchievementReport() {
       <section className="w-full max-w-full overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">{header.title}</p>
+            <p className="text-sm font-semibold uppercase text-sky-600">{header.title}</p>
             <h2 className="mt-2 text-2xl font-semibold text-slate-900">{header.subtitle}</h2>
           </div>
         </div>
@@ -176,19 +176,19 @@ export default function TargetVsAchievementReport() {
           <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{metrics.total_target.label}</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.total_target.label}</p>
                 <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.total_target.color }}>
                   {metrics.total_target.value}
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{metrics.expected.label}</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.expected.label}</p>
                 <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.expected.color }}>
                   {metrics.expected.value}
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{metrics.achieved.label}</p>
+                <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.achieved.label}</p>
                 <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.achieved.color }}>
                   {metrics.achieved.value}
                 </p>
@@ -239,11 +239,11 @@ export default function TargetVsAchievementReport() {
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">PACE STATUS</p>
+                <p className="text-xs font-semibold uppercase text-slate-500">PACE STATUS</p>
                 <p className="mt-2 text-xl font-semibold text-slate-900">72% Expected</p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">CURRENT GAP</p>
+                <p className="text-xs font-semibold uppercase text-slate-500">CURRENT GAP</p>
                 <p className="mt-2 text-xl font-semibold text-amber-600">-70,000</p>
               </div>
             </div>

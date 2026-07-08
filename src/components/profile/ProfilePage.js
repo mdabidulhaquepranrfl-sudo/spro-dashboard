@@ -122,7 +122,7 @@ export default function ProfilePage() {
               className="rounded-full border border-slate-200"
             />
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">Profile</p>
+              <p className="text-sm font-semibold uppercase text-sky-600">Profile</p>
               <h1 className="mt-1 text-2xl font-semibold text-slate-900">{userName || 'User'}</h1>
               <p className="mt-1 text-sm text-slate-500">{userRole || ''}</p>
             </div>

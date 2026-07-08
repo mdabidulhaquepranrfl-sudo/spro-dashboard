@@ -116,7 +116,7 @@ function SkeletonTableRows({ colCount = 6, rowCount = 6 }) {
   return (
     <>
       {Array.from({ length: rowCount }).map((_, i) => (
-        <tr key={i} className="animate-pulse border-t border-slate-100">
+        <tr key={i} className="animate-pulse border-t border-slate-300">
           {Array.from({ length: colCount }).map((_, j) => (
             <td key={j} className="px-4 py-3">
               <div className="h-4 rounded-full bg-slate-200" style={{ width: j === 1 ? '70%' : '50%' }} />
@@ -377,7 +377,7 @@ export default function PerformanceSummary({ searchParams }) {
   }, [currentPage, totalPages]);
 
   return (
-    <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <section className="w-full max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-2 sm:px-6">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">Performance Summary</h3>
@@ -387,7 +387,7 @@ export default function PerformanceSummary({ searchParams }) {
             <button
               key={tab.id}
               type="button"
-              className={`rounded-full px-3 py-2 text-sm font-medium ${activeSubTab === tab.id ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-600'}`}
+              className={`rounded-full px-3 py-2 text-sm font-medium ${activeSubTab === tab.id ? 'bg-[#59A14F] text-white' : 'bg-slate-100'}`}
               onClick={() => {
                 setActiveSubTab(tab.id);
                 setSearchQuery('');
@@ -421,7 +421,7 @@ export default function PerformanceSummary({ searchParams }) {
                   </div>
                   */}
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: card.theme.text_color }}>{card.label}</p>
+                    <p className="text-[10px] font-bold uppercase" style={{ color: card.theme.text_color }}>{card.label}</p>
                     <p className="mt-0.5 text-xl font-bold leading-tight" style={{ color: card.theme.text_color }}>{card.value}</p>
                   </div>
                 </div>

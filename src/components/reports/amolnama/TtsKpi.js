@@ -39,7 +39,7 @@ export default function TtsKpi({ searchParams }) {
   }, [searchParams]);
 
   return (
-    <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="w-full max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">TTS KPI</h3>
@@ -56,7 +56,7 @@ export default function TtsKpi({ searchParams }) {
           <tbody>
             {isLoading ? (
               Array.from({ length: DEFAULT_TTS_DATA.length }).map((_, index) => (
-                <tr key={index} className="border-t border-slate-100">
+                <tr key={index} className="border-t border-slate-300">
                   <td className="px-4 py-1">
                     <div className="h-4 w-24 animate-pulse rounded-full bg-slate-200" />
                   </td>
@@ -67,7 +67,7 @@ export default function TtsKpi({ searchParams }) {
               ))
             ) : (
               ttsData.map((row) => (
-                <tr key={row.key} className="border-t border-slate-100">
+                <tr key={row.key} className="border-t border-slate-300">
                   <td className="px-4 py-1 text-slate-700">{row.label}</td>
                   <td className="px-4 py-1 font-semibold text-slate-900">{row.value}</td>
                 </tr>

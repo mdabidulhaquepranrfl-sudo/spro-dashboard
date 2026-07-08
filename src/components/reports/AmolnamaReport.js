@@ -66,11 +66,11 @@ export default function AmolnamaPage() {
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden space-y-1">
+    <div className="w-full max-w-full overflow-hidden">
       <section className="w-full max-w-full overflow-visible border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            {/* <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">Amolnama Report</p> */}
+            {/* <p className="text-sm font-semibold uppercase text-sky-600">Amolnama Report</p> */}
             <h2 className="mt-2 text-2xl font-semibold text-slate-900">Supervisor Performance Ledger {reportHeading}</h2>
             {/* <p className="mt-2 max-w-2xl break-words text-sm text-slate-500">{reportHeading}</p> */}
           </div>
@@ -104,15 +104,15 @@ export default function AmolnamaPage() {
       {hasSearched ? (
         <div className="w-full min-w-0 space-y-1">
 
-          <div className="grid w-full min-w-0 gap-1 items-start xl:grid-cols-[1.2fr_0.8fr] 2xl:grid-cols-[1.25fr_0.75fr]">
-            <div className="w-full min-w-0 space-y-1 display contents xl:block xl:space-y-1">
+          <div className="grid w-full min-w-0 gap-0 items-start xl:grid-cols-[1.2fr_0.8fr] 2xl:grid-cols-[1.25fr_0.75fr]">
+            <div className="w-full min-w-0 display contents xl:block">
               <div className="order-1 xl:order-none"><DailySummary searchParams={searchParams} /></div>
               <div className="order-2 xl:order-none"><VisitedSummary searchParams={searchParams} /></div>
               <div className="order-4 xl:order-none"><PerformanceSummary searchParams={searchParams} /></div>
               <div className="order-7 xl:order-none"><CoWorkReport searchParams={searchParams} /></div>
               <div className="order-8 xl:order-none"><FieldOperationsSnapshot searchParams={searchParams} /></div>
             </div>
-            <div className="w-full min-w-0 space-y-1 self-start display contents xl:block xl:space-y-1">
+            <div className="w-full min-w-0 self-start display contents xl:block">
               <div className="order-3 xl:order-none"><StepCount searchParams={searchParams} /></div>
               <div className="order-5 xl:order-none"><TtsKpi searchParams={searchParams} /></div>
               <div className="order-6 xl:order-none"><OutletActivity searchParams={searchParams} /></div>

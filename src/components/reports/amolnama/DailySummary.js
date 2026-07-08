@@ -99,19 +99,19 @@ export default function DailySummary({ searchParams }) {
   }, [searchParams]);
 
   return (
-    <section className="w-full max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <section className="w-full max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-200 px-3 py-2 sm:px-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-900">Daily Summary</p>
+            <p className="text-sm font-semibold uppercase text-slate-900">Daily Summary</p>
           </div>
-          <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold" style={{ backgroundColor: '#E0E7FF', color: '#2563EB' }}>
+          <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold" style={{ backgroundColor: '#E3FBE8' }}>
             FIELD PERFORMANCE
           </span>
         </div>
       </div>
       <div className="p-2 sm:p-3">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1">
           {isDailyLoading
             ? DAILY_SUMMARY_METRICS.map((_, i) => (
               <div key={i} className="min-w-[100px] flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm animate-pulse">
@@ -124,7 +124,7 @@ export default function DailySummary({ searchParams }) {
               </div>
             ))
             : dailyMetrics.map((metric) => (
-              <div key={metric.label} className="min-w-[110px] w-fit flex-1 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <div key={metric.label} className="min-w-[110px] w-fit flex-1 rounded-l border border-slate-200 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <div className="flex items-start">
                   {/*
                   {(() => {
@@ -145,13 +145,13 @@ export default function DailySummary({ searchParams }) {
                       return (
                         <>
                           <p
-                            className="text-[9px] font-semibold uppercase tracking-[0.22em] whitespace-wrap"
+                            className="text-[9px] font-semibold uppercase whitespace-wrap"
                             style={{ color: theme.label_color }}
                           >
                             {metric.label}
                           </p>
 
-                          <p className="mt-1 text-lg font-extrabold break-words"
+                          <p className=" text-lg font-extrabold break-words"
                             style={{ color: theme.value_color }}
                           >
                             {metric.value}

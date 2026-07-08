@@ -159,7 +159,7 @@ export default function CoWorkReport({ searchParams }) {
 
   return (
     <div className="grid w-full min-w-0 gap-4">
-      <section className="w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm p-5">
+      <section className="w-full min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">{CO_WORK_CONFIG.title}</h3>
