@@ -6,24 +6,30 @@ import { useMemo, useState } from 'react';
 const QUICK_CARDS = [
   {
     title: 'Amolnama',
-    desc: 'Detailed supervisor analytics and KPIs for the latest report view.',
+    desc: 'Detailed supervisor analytics and KPIs for the latest report view. Monitor performance trends with precision.',
     link: '/report/amolnama',
     icon: '📊',
-    accent: 'from-sky-500 to-cyan-500',
+    iconBackground: '#E6F4EA',
+    iconColor: '#059669',
+    accentColor: '#10B981',
   },
   {
     title: 'Target vs Achievement',
-    desc: 'Track progress against planned targets and compare outcomes.',
+    desc: 'Track targets, compare outcomes, and optimize resources in real-time. Stay ahead with instant operational insights.',
     link: '/report/target-vs-achievement',
     icon: '🎯',
-    accent: 'from-emerald-500 to-lime-500',
+    iconBackground: '#E6F4EA',
+    iconColor: '#059669',
+    accentColor: '#10B981',
   },
   {
-    title: 'Half Summary',
-    desc: 'Review concise half-summary insights and operational highlights.',
+    title: 'Half Summery',
+    desc: 'Review concise half-summary insights and operational highlights. Perfect for quick executive briefings.',
     link: '/report/half-summery',
     icon: '📝',
-    accent: 'from-amber-500 to-orange-500',
+    iconBackground: '#E6F4EA',
+    iconColor: '#059669',
+    accentColor: '#10B981',
   },
 ];
 
@@ -43,34 +49,39 @@ export default function WelcomeComponent() {
   }, [searchTerm]);
 
   return (
-    <div className="space-y-6">
-      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-sky-600 via-sky-700 to-indigo-700 p-6 text-white shadow-xl shadow-sky-200 sm:p-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-4 inline-flex rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-sky-50">
-              SPRO operations overview
+    <div className="min-h-screen w-full bg-[#F8FAFC] px-6 py-6 sm:px-8 sm:py-8">
+      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#064E3B] via-[#059669] to-[#10B981] p-6 text-white shadow-xl shadow-slate-300 sm:p-8">
+        <div className="absolute right-0 top-0 h-full w-1/2 opacity-20 blur-3xl" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="mb-4 inline-flex rounded-full bg-white/15 px-3 py-1 text-[12px] font-semibold uppercase tracking-[1.5px] text-[#E6F4EA]">
+              OPERATIONS OVERVIEW
             </div>
-            <h1 className="text-3xl font-semibold sm:text-4xl">Welcome to SPRO Dashboard!</h1>
-            <p className="mt-3 text-sm text-sky-50/90 sm:text-base">
-              Manage and monitor supervisor performance ledger effortlessly. You can check individual performance reports by navigating to the Reports section.
+            <p className="text-base font-semibold uppercase tracking-[0.18em] text-[#E6F4EA]">Good Evening!</p>
+            <h1 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-4xl">Welcome to the Web Reporting Portal</h1>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">
+              Manage and monitor supervisor performance ledger effortlessly. Explore the most important reports from a single, beautiful dashboard.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <section className="mt-6 rounded-[24px] bg-white p-5 shadow-sm shadow-slate-200 sm:p-6">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Report shortcuts</h2>
-            <p className="text-sm text-slate-500">Search and open the report you need.</p>
+            <h2 className="text-[22px] font-bold text-slate-900">Report shortcuts</h2>
+            <p className="mt-1 text-sm text-[#64748B]">Search and open the report you need.</p>
           </div>
-          <label className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
-            <span className="text-base">🔎</span>
+          <label className="flex w-full max-w-[240px] items-center gap-3 rounded-[12px] bg-[#F0F4F8] px-4 py-3 text-sm text-[#64748B] shadow-sm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#64748B]">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
             <input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search reports"
-              className="w-full bg-transparent outline-none placeholder:text-slate-400 sm:w-56"
+              placeholder="Search"
+              className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-[#94A3B8]"
             />
           </label>
         </div>
@@ -81,21 +92,26 @@ export default function WelcomeComponent() {
               <Link
                 key={card.title}
                 href={card.link}
-                className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg"
+                className="group overflow-hidden rounded-[20px] border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className={`inline-flex rounded-2xl bg-gradient-to-br ${card.accent} px-3 py-3 text-2xl shadow-inner`}>
-                  {card.icon}
-                </div>
-                <h2 className="mt-4 text-lg font-semibold text-slate-900">{card.title}</h2>
-                <p className="mt-2 text-sm text-slate-500">{card.desc}</p>
-                <span className="mt-5 inline-flex text-sm font-semibold text-sky-600 transition group-hover:text-sky-700">
-                  Explore →
-                </span>
+<div className="grid grid-cols-[56px_1fr] items-start gap-4 border-l-4 border-[#10B981] pl-4">
+  <div className="grid h-14 w-14 place-items-center rounded-[12px]" style={{ backgroundColor: card.iconBackground }}>
+    <span className="text-2xl" style={{ color: card.iconColor }}>{card.icon}</span>
+  </div>
+
+  <div>
+    <h3 className="text-base font-semibold text-slate-900">{card.title}</h3>
+    <p className="mt-2 text-sm leading-6 text-[#64748B]">{card.desc}</p>
+    <span className="mt-6 inline-flex text-sm font-semibold text-[#10B981] transition group-hover:text-[#059669]">
+      Explore →
+    </span>
+  </div>
+</div>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+          <div className="rounded-[20px] border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">
             No reports matched your search.
           </div>
         )}

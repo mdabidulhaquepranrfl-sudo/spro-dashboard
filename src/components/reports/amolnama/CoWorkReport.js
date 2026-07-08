@@ -78,6 +78,11 @@ export default function CoWorkReport({ searchParams }) {
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTableExpanded, setIsTableExpanded] = useState(true);
+
+  const handleExpandToggle = () => {
+    setIsTableExpanded((current) => !current);
+  };
 
   useEffect(() => {
     if (!staffId) return;
@@ -176,6 +181,14 @@ export default function CoWorkReport({ searchParams }) {
               className="w-full rounded-full border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-sky-500"
             />
           </div>
+                    <button
+            type="button"
+            onClick={handleExpandToggle}
+            className="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold transition hover:bg-slate-200"
+          >
+            <i className={`bx ${isTableExpanded ? 'bx-chevron-up' : 'bx-chevron-down'} text-base`} />
+            {isTableExpanded ? 'Collapse details' : 'Expand details'}
+          </button>
         </div>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
@@ -184,7 +197,8 @@ export default function CoWorkReport({ searchParams }) {
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
+        {isTableExpanded && (
+          <div className="mt-4 overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200 text-sm" style={{ borderColor: CO_WORK_CONFIG.styling.border_color }}>
             <thead className="bg-slate-50 text-left" style={{ color: CO_WORK_CONFIG.styling.header_text_color, fontWeight: CO_WORK_CONFIG.styling.header_font_weight === 'bold' ? 700 : 400 }}>
               <tr>
@@ -237,8 +251,9 @@ export default function CoWorkReport({ searchParams }) {
             </tbody>
           </table>
         </div>
+        )}
 
-        {totalPages > 1 && (
+        {isTableExpanded && totalPages > 1 && (
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-3">
             <p className="text-sm text-slate-600">
               Page {currentPage} of {totalPages}

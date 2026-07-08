@@ -89,8 +89,8 @@ export default function SearchableCountrySelect({
                     <button
                       type="button"
                       onClick={() => handleSelect(country)}
-                      className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition hover:bg-sky-50 ${
-                        isSelected ? 'bg-sky-50 font-semibold text-sky-700' : 'text-slate-700'
+                      className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition hover:bg-[#E3FBE8] ${
+                        isSelected ? 'bg-[#E3FBE8] font-semibold text-sky-700' : 'text-slate-700'
                       }`}
                     >
                       <span>{country.cont_name}</span>

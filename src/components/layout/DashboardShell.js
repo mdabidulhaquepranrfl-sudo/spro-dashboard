@@ -9,7 +9,7 @@ import { AuthProvider } from '@/context/AuthContext';
 
 export default function DashboardShell({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -33,7 +33,7 @@ export default function DashboardShell({ children }) {
             onClick={() => setMobileOpen(false)}
           />
 
-          <div className={`flex min-h-screen flex-1 flex-col ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-72'}`}>
+          <div className={`flex min-h-screen flex-1 flex-col ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-50'}`}>
             <Navbar onMenuClick={() => setMobileOpen(true)} onToggleSidebar={handleToggleSidebar} isSidebarCollapsed={sidebarCollapsed} />
             <main className="flex-1">
               <div className="mx-auto max-w-8xl">{children}</div>

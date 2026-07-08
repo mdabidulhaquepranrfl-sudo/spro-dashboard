@@ -135,6 +135,7 @@ export default function PerformanceSummary({ searchParams }) {
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState(THANA_SUMMARY_TEMPLATE[0].id);
 
   const [thanaRows, setThanaRows] = useState([]);
   const [thanaSummary, setThanaSummary] = useState(THANA_SUMMARY_TEMPLATE);
@@ -336,9 +337,14 @@ export default function PerformanceSummary({ searchParams }) {
     }));
   };
 
-  const handleCardToggle = (cardId) => {
+  const handleCardSelection = (cardId) => {
+    setSelectedCard(cardId);
+  };
+
+  const handleExpandToggle = () => {
+    if (!selectedCard) return;
     setCurrentPage(1);
-    setExpandedCard((current) => (current === cardId ? null : cardId));
+    setExpandedCard((current) => (current === selectedCard ? null : selectedCard));
   };
 
   // When a summary card is expanded, derive filtered rows for that card.
@@ -368,6 +374,13 @@ export default function PerformanceSummary({ searchParams }) {
   useEffect(() => {
     setCurrentPage(1);
     setExpandedCard(null);
+    if (activeSubTab === 'thana_wise') {
+      setSelectedCard(THANA_SUMMARY_TEMPLATE[0].id);
+    } else if (activeSubTab === 'zone_wise') {
+      setSelectedCard(ZONE_SUMMARY_TEMPLATE[0].id);
+    } else {
+      setSelectedCard(DISTRICT_SUMMARY_TEMPLATE[0].id);
+    }
   }, [activeSubTab, searchQuery, sortConfig.key, sortConfig.direction]);
 
   useEffect(() => {
@@ -382,7 +395,7 @@ export default function PerformanceSummary({ searchParams }) {
         <div>
           <h3 className="text-lg font-semibold text-slate-900">Performance Summary</h3>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {PERFORMANCE_TABS.map((tab) => (
             <button
               key={tab.id}
@@ -397,6 +410,19 @@ export default function PerformanceSummary({ searchParams }) {
               {tab.label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={handleExpandToggle}
+            disabled={!selectedCard}
+            className="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <i
+              className={`bx ${
+                expandedCard === selectedCard ? 'bx-chevron-up' : 'bx-chevron-down'
+              } text-base`}
+            />
+            {expandedCard === selectedCard ? 'Collapse details' : 'Expand details'}
+          </button>
         </div>
       </div>
 
@@ -408,31 +434,15 @@ export default function PerformanceSummary({ searchParams }) {
             {currentConfig.summaryCards.map((card) => (
               <div
                 key={card.id}
-                onClick={() => handleCardToggle(card.id)}
-                className={`relative cursor-pointer rounded-2xl border border-slate-200 bg-white p-3 shadow-sm ${expandedCard === card.id ? 'ring-2 ring-sky-200' : ''}`}
+                onClick={() => handleCardSelection(card.id)}
+                className={`rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-all ${selectedCard === card.id ? 'ring-2 ring-sky-200' : ''}`}
               >
                 <div className="flex items-start">
-                  {/*
-                  <div
-                    className="flex h-10 w-10 items-center justify-center rounded-xl shadow-sm"
-                    style={{ backgroundColor: card.theme.icon_bg, color: card.theme.icon_color }}
-                  >
-                    <i className={`bx ${ICON_MAP[card.icon] ?? 'bx-help-circle'} text-lg`} />
-                  </div>
-                  */}
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] font-bold uppercase" style={{ color: card.theme.text_color }}>{card.label}</p>
                     <p className="mt-0.5 text-xl font-bold leading-tight" style={{ color: card.theme.text_color }}>{card.value}</p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); handleCardToggle(card.id); }}
-                  aria-pressed={expandedCard === card.id}
-                  className="absolute right-2 top-2 rounded-full p-0.5 text-slate-500 hover:text-slate-700"
-                >
-                  <i className={`bx ${expandedCard === card.id ? 'bx-chevron-up' : 'bx-chevron-down'}`} />
-                </button>
               </div>
             ))}
           </div>

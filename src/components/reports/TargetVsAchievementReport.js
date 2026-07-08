@@ -294,7 +294,7 @@ export default function TargetVsAchievementReport() {
                                 row.status === 'Ahead'
                                   ? 'bg-emerald-50 text-emerald-700'
                                   : row.status === 'On Track'
-                                    ? 'bg-sky-50 text-sky-700'
+                                    ? 'bg-[#E3FBE8] text-[#59A14F]'
                                     : 'bg-amber-50 text-amber-700'
                               }`}
                             >

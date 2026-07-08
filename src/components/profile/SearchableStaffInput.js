@@ -114,8 +114,8 @@ export default function SearchableStaffInput({ value, onChange, placeholder = 'S
                   <button
                     type="button"
                     onClick={() => handleSelect(item)}
-                    className={`flex w-full flex-col items-start gap-1 px-4 py-3 text-left text-sm transition hover:bg-sky-50 ${
-                      item.staff_id === normalizedValue ? 'bg-sky-50 font-semibold text-sky-700' : 'text-slate-700'
+                    className={`flex w-full flex-col items-start gap-1 px-4 py-3 text-left text-sm transition hover:bg-[#E3FBE8] ${
+                      item.staff_id === normalizedValue ? 'bg-[#E3FBE8] font-semibold text-sky-700' : 'text-slate-700'
                     }`}
                   >
                     <span>{item.label}</span>

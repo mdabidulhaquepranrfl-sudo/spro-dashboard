@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getReportData } from '@/lib/getReportData';
 import SearchableStaffInput from '@/components/profile/SearchableStaffInput';
 import DailySummary from './amolnama/DailySummary';
@@ -11,6 +11,7 @@ import TtsKpi from './amolnama/TtsKpi';
 import OutletActivity from './amolnama/OutletActivity';
 import CoWorkReport from './amolnama/CoWorkReport';
 import FieldOperationsSnapshot from './amolnama/FieldOperationsSnapshot';
+import KeyLocations from './amolnama/KeyLocations';
 
 const formatDisplayDate = (value) => {
   if (!value) return '';
@@ -24,11 +25,15 @@ const formatDisplayDate = (value) => {
 };
 
 export default function AmolnamaPage() {
+  const todayString = new Date().toISOString().slice(0, 10);
   const [employeeId, setEmployeeId] = useState('');
   const [employeeName, setEmployeeName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(todayString);
+  const [endDate, setEndDate] = useState(todayString);
+  const [isRangePickerOpen, setIsRangePickerOpen] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const rangePickerRef = useRef(null);
+  const startDateInputRef = useRef(null);
   const [searchError, setSearchError] = useState('');
   const [searchParams, setSearchParams] = useState({
     staffId: '',
@@ -38,12 +43,43 @@ export default function AmolnamaPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const formattedStartDate = formatDisplayDate(startDate);
   const formattedEndDate = formatDisplayDate(endDate);
-  const selectedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
+  const selectedDateRange = startDate || endDate
+    ? `${formattedStartDate || 'Start'} - ${formattedEndDate || 'End'}`
+    : '';
   const reportHeading = `Insights for ${searchParams.staffId || '—'} ${employeeName}`;
 
   useEffect(() => {
     if (!hasSearched || !searchParams.staffId) return;
   }, [hasSearched, searchParams, refreshKey]);
+
+  useEffect(() => {
+    if (!isRangePickerOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (rangePickerRef.current && !rangePickerRef.current.contains(event.target)) {
+        setIsRangePickerOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isRangePickerOpen]);
+
+  const handleRangeButtonClick = () => {
+    setIsRangePickerOpen((current) => {
+      const next = !current;
+      if (next) {
+        window.requestAnimationFrame(() => {
+          if (startDateInputRef.current?.showPicker) {
+            startDateInputRef.current.showPicker();
+          } else {
+            startDateInputRef.current?.focus();
+          }
+        });
+      }
+      return next;
+    });
+  };
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -76,7 +112,7 @@ export default function AmolnamaPage() {
           </div>
         </div>
 
-        <form className="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-[1.2fr_1fr_1fr_auto]" onSubmit={handleSearch}>
+        <form className="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-[1.2fr_1.4fr_auto]" onSubmit={handleSearch}>
           <div>
             {/* <label className="mb-2 block text-sm font-medium text-slate-700">Employee ID</label> */}
             <SearchableStaffInput
@@ -86,13 +122,56 @@ export default function AmolnamaPage() {
               disabled={false}
             />
           </div>
-          <div>
-            {/* <label className="mb-2 block text-sm font-medium text-slate-700">Start date</label> */}
-            <input type="date" placeholder="From Date" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
-          </div>
-          <div>
-            {/* <label className="mb-2 block text-sm font-medium text-slate-700">End date</label> */}
-            <input type="date" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
+          <div className="relative" ref={rangePickerRef}>
+            <button
+              type="button"
+              onClick={handleRangeButtonClick}
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm text-slate-600 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:bg-white"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className={`truncate ${selectedDateRange ? 'text-slate-900' : 'text-slate-400'}`}>
+                  {selectedDateRange || 'Select date range'}
+                </span>
+                <i className="bx bx-calendar text-lg text-slate-500" />
+              </div>
+            </button>
+
+            {isRangePickerOpen && (
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 lg:col-span-3">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="space-y-2 text-sm text-slate-600">
+                    <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">From</span>
+                    <input
+                      ref={startDateInputRef}
+                      type="date"
+                      max={todayString}
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 outline-none transition focus:border-sky-500 focus:bg-white"
+                      value={startDate}
+                      onChange={(event) => setStartDate(event.target.value)}
+                    />
+                  </label>
+                  <label className="space-y-2 text-sm text-slate-600">
+                    <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">To</span>
+                    <input
+                      type="date"
+                      max={todayString}
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 outline-none transition focus:border-sky-500 focus:bg-white"
+                      value={endDate}
+                      onChange={(event) => setEndDate(event.target.value)}
+                    />
+                  </label>
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setIsRangePickerOpen(false)}
+                    className="rounded-2xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex items-end">
             <button type="submit" className="w-full rounded-2xl bg-[#59A14F] px-4 py-3 font-semibold text-white transition hover:bg-[#59A14F]">Search</button>
@@ -116,6 +195,7 @@ export default function AmolnamaPage() {
               <div className="order-3 xl:order-none"><StepCount searchParams={searchParams} /></div>
               <div className="order-5 xl:order-none"><TtsKpi searchParams={searchParams} /></div>
               <div className="order-6 xl:order-none"><OutletActivity searchParams={searchParams} /></div>
+              <div className="order-9 xl:order-none"><KeyLocations searchParams={searchParams} /></div>
             </div>
 
           </div>
