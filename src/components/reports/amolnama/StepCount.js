@@ -7,13 +7,13 @@ const STEP_COUNT_CONFIG = {
   title: 'Step Count',
   badge: {
     label: 'STEP PERFORMANCE',
-    bg_color: '#FCE7F3',
-    text_color: '#000000',
+    bg_color: '#59A14F',
+    text_color: '#ffffff',
   },
 };
 
-const DEFAULT_STEP_DATA = [{ label: 'No Data', steps: 0, bar_color: '#2563EB' }];
-const BAR_COLORS = ['#2563EB', '#2563EB', '#2563EB', '#2563EB', '#2563EB'];
+const DEFAULT_STEP_DATA = [{ label: 'No Data', steps: 0, bar_color: '#59A14F' }];
+const BAR_COLORS = ['#59A14F', '#59A14F', '#59A14F', '#59A14F', '#59A14F'];
 
 function getDateRange(startDate, endDate) {
   if (!startDate || !endDate) return [];
@@ -98,7 +98,7 @@ export default function StepCount({ searchParams }) {
     <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-2 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-600">{STEP_COUNT_CONFIG.title}</p>
+          <p className="text-sm font-bold uppercase tracking-[0.3em]">{STEP_COUNT_CONFIG.title}</p>
         </div>
         <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: STEP_COUNT_CONFIG.badge.bg_color, color: STEP_COUNT_CONFIG.badge.text_color }}>
           {STEP_COUNT_CONFIG.badge.label}

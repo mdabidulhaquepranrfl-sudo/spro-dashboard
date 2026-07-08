@@ -67,7 +67,7 @@ export default function AmolnamaPage() {
 
   return (
     <div className="w-full max-w-full overflow-hidden space-y-1">
-      <section className="w-full max-w-full overflow-visible rounded-3xl border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
+      <section className="w-full max-w-full overflow-visible border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             {/* <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">Amolnama Report</p> */}
@@ -95,7 +95,7 @@ export default function AmolnamaPage() {
             <input type="date" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-sky-500 focus:bg-white" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
           </div>
           <div className="flex items-end">
-            <button type="submit" className="w-full rounded-2xl bg-sky-600 px-4 py-3 font-semibold text-white transition hover:bg-sky-700">Search</button>
+            <button type="submit" className="w-full rounded-2xl bg-[#59A14F] px-4 py-3 font-semibold text-white transition hover:bg-[#59A14F]">Search</button>
           </div>
           {searchError ? <div className="md:col-span-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">{searchError}</div> : null}
         </form>

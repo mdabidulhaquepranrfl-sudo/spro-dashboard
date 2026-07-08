@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getCountries } from '@/lib/getCountries';
@@ -20,6 +19,15 @@ function LoginFormContent() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [autoLogin, setAutoLogin] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberStaffId, setRememberStaffId] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const sliderImages = [
+    '/assets/img/login_slider_1.jpg',
+    '/assets/img/login_slider_2.jpg',
+    '/assets/img/login_slider_3.jpg',
+  ];
 
   useEffect(() => {
     const queryStaff = searchParams?.get('staffId') ?? searchParams?.get('stuffId') ?? '';
@@ -50,6 +58,14 @@ function LoginFormContent() {
 
     loadCountries();
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((current) => (current + 1) % sliderImages.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [sliderImages.length]);
 
   useEffect(() => {
     if (!autoLogin || isLoading || !staffId || !password || !countryId) {
@@ -116,10 +132,10 @@ function LoginFormContent() {
 
   if (isAutoLoginPending) {
     return (
-      <main className="relative flex min-h-screen items-center justify-center bg-white px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
-        <div className="absolute inset-0 bg-white/95" />
-        <div className="relative z-10 flex flex-col items-center gap-4 rounded-[28px] border border-slate-200 bg-white/95 px-8 py-10 shadow-[0_20px_70px_rgba(2,6,23,0.12)]">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-slate-200 border-t-sky-600" />
+      <main className="relative flex h-screen w-screen max-h-screen max-w-full items-center justify-center bg-[#F8FAFC] px-4 py-6 overflow-hidden">
+        <div className="absolute inset-0 bg-[#F8FAFC]" />
+        <div className="relative z-10 flex flex-col items-center gap-4 rounded-[24px] border border-slate-200 bg-white px-10 py-12 shadow-[0_25px_70px_rgba(0,0,0,0.12)]">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-500" />
           <p className="text-center text-lg font-semibold text-slate-900">Logging in…</p>
           <p className="max-w-sm text-center text-sm text-slate-500">
             Please wait while we verify your credentials and load your dashboard.
@@ -130,88 +146,126 @@ function LoginFormContent() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-white" />
-        <div className="absolute inset-0" />
-      </div>
+    <main className="grid grid-cols-1 lg:grid-cols-2 h-screen w-screen max-h-screen max-w-full overflow-hidden bg-[#F8FAFC]">
+      {/* Left Portion: Carousel */}
+      <section className="relative hidden lg:block h-full w-full overflow-hidden">
+        <div className="absolute inset-0">
+          {sliderImages.map((src, index) => (
+            <img
+              key={src}
+              src={src}
+              alt={`Login slide ${index + 1}`}
+              className={`absolute inset-0 h-full w-full object-cover ${ index === 2 ? 'object-top' : ''} transition-opacity duration-1000 ease-in-out ${activeSlide === index ? 'opacity-100' : 'opacity-0'
+                }`}
+            />
+          ))}
+          <div className="absolute inset-0 bg-slate-200/10" />
+        </div>
 
-      <div className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/20 bg-white/90 shadow-[0_20px_70px_rgba(2,6,23,0.3)] backdrop-blur-xl lg:grid lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="relative hidden min-h-[280px] overflow-hidden lg:flex">
-          <img
-            src="/assets/img/backgrounds/login_img.png"
-            alt=""
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0" />
-          <div className="absolute bottom-0 left-0 right-0 p-7 text-white">
-            <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-100">
-              SPRO Operations
-            </div>
-            <p className="mt-2 max-w-md text-sm text-slate-200/90">
-              Monitor progress, review targets, and manage reports from one elegant dashboard.
+        <div className="absolute bottom-8 left-8 right-8 z-10">
+          <div className="bg-white/30 backdrop-blur-md border border-white/40 p-3 rounded-2xl shadow-xl">
+            <h5 className="font-thin text-2xl text-black mb-3">Connecting Businesses Worldwide</h5>
+            <p className="text-sm text-slate-600 font-small leading-relaxed">
+              Welcome to SPRO, the centralized enterprise portal of PRAN-RFL Group.
             </p>
           </div>
         </div>
+      </section>
 
-        <div className="w-full bg-white/95 p-6 sm:p-7 lg:p-8">
-          <div className="mb-6 flex items-center justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-600 to-indigo-600 text-base font-semibold text-white shadow-lg shadow-sky-200">
-              SPRO
-            </div>
+      {/* Right Portion: Login Form */}
+      <section className="flex h-screen items-center justify-center overflow-y-auto p-2 sm:p-4 lg:p-6">
+        <div className="w-full max-w-[460px] max-h-[98vh] overflow-y-auto rounded-[24px] border border-[#F1F5F9] bg-white p-8 sm:p-6 lg:p-8 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)]">
+
+          <div className="flex items-center justify-center gap-2">
+            <img
+              src="/assets/img/spro_logo.svg"
+              alt="SPRO Logo"
+              className="h-7 w-auto shrink-0 lg:h-8"
+            />
+            <h4 className="m-0 leading-none text-2xl font-bold text-slate-800">
+              Web Portal
+            </h4>
           </div>
 
-          <div className="text-center lg:text-left">
-            <h1 className="text-2xl font-semibold text-slate-900">Welcome back</h1>
-            <p className="mt-2 text-sm text-slate-500">
-              Sign in with staff ID, password, and country.
-            </p>
-          </div>
+          <p className="mt-2 text-center text-sm font-medium text-slate-400">
+            Login using your HRIS credentials.
+          </p>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-3 sm:space-y-4">
-            <div>
-              <label htmlFor="staffId" className="mb-2 block text-sm font-medium text-slate-700">
-                Staff ID
-              </label>
-              <input
-                id="staffId"
-                name="staffId"
-                type="text"
-                autoFocus
-                value={staffId}
-                onChange={(event) => setStaffId(event.target.value)}
-                placeholder="Enter staff ID"
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none ring-0 transition focus:border-sky-500 focus:bg-white"
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            {/* ... rest of your form remains the same ... */}
 
             <div>
-              <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="••••••••••••"
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-sky-500 focus:bg-white"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Country</label>
               <SearchableCountrySelect
                 countries={countries}
                 value={countryId}
                 onChange={setCountryId}
                 disabled={isLoading || isLoggingIn}
+                placeholder="Search and select a country"
               />
             </div>
 
+            <div>
+              <label htmlFor="staffId" className="mb-1 block text-sm font-medium text-slate-700">
+                Staff ID
+              </label>
+              <div className="relative">
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 flex items-center">
+                  <i className="bx bx-user text-base" />
+                </span>
+                <input
+                  id="staffId"
+                  name="staffId"
+                  type="text"
+                  autoComplete="username"
+                  value={staffId}
+                  onChange={(event) => setStaffId(event.target.value)}
+                  placeholder="Enter your Staff ID"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-emerald-500 text-sm font-medium transition-all text-slate-800 placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">
+                Password
+              </label>
+              <div className="relative">
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 flex items-center">
+                  <i className="bx bx-lock-alt text-base" />
+                </span>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Enter your hris password"
+                  className="w-full pl-10 pr-11 py-3 rounded-xl border border-slate-200 outline-none focus:border-emerald-500 text-sm font-medium transition-all text-slate-800 placeholder:text-slate-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((current) => !current)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 flex items-center"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'} text-base`} />
+                </button>
+              </div>
+            </div>
+
+            <label className="inline-flex w-fit cursor-pointer items-center gap-2 text-xs font-semibold text-slate-500">
+              <input
+                type="checkbox"
+                checked={rememberStaffId}
+                onChange={(event) => setRememberStaffId(event.target.checked)}
+                className="mt-0 h-4 w-4 shrink-0 rounded border-slate-300 align-middle text-emerald-500"
+              />
+              <span className="leading-none">  Remember Staff ID</span>
+            </label>
+
             {errorMessage ? (
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+              <div className="rounded-xl border border-rose-100 bg-rose-50 px-4 py-2.5 text-sm text-rose-700">
                 {errorMessage}
               </div>
             ) : null}
@@ -219,20 +273,30 @@ function LoginFormContent() {
             <button
               type="submit"
               disabled={isLoading || isLoggingIn || !staffId.trim() || !password.trim() || !countryId}
-              className="w-full rounded-2xl bg-sky-600 px-4 py-3 font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="bg-[#00AA4F] hover:bg-[#009142] text-white font-bold py-3.5 rounded-xl w-full text-base tracking-wide shadow-md shadow-emerald-200/50 transition-all transform active:scale-95 mt-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoggingIn ? 'Logging in...' : 'Login'}
             </button>
-          </form>
 
-          <p className="mt-5 text-center text-sm text-slate-500 lg:text-left">
-            New here?{' '}
-            <Link href="/register" className="font-semibold text-sky-600 hover:text-sky-700">
-              Create account
-            </Link>
-          </p>
+            <div className="bg-[#E0F2FE] text-[#0369A1] rounded-xl p-3 flex items-start gap-3 mt-4 border border-blue-100 text-xs font-medium leading-normal">
+              <span className="mt-0.5 text-base flex items-center">
+                <i className="bx bx-info-circle" />
+              </span>
+              <span>Staff ID and Password are authenticated through the HRIS system.</span>
+            </div>
+
+            <div className="text-xs font-semibold text-slate-400 tracking-wide transition-colors flex flex-wrap items-center justify-center gap-4 mt-5">
+              <a href="#" className="hover:text-slate-600">Contact IT Support</a>
+              <span className="h-px w-2 bg-slate-200" />
+              <a href="#" className="hover:text-slate-600">Privacy Policy</a>
+            </div>
+
+            <p className="text-[10px] font-medium text-slate-400 mt-4 text-center block">
+              © 2026 PRAN-RFL Group. All rights reserved.
+            </p>
+          </form>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
@@ -242,9 +306,7 @@ export default function LoginForm() {
     <Suspense
       fallback={
         <main className="flex min-h-screen items-center justify-center bg-white">
-          <div className="text-sm text-slate-500">
-            Loading...
-          </div>
+          <div className="text-sm text-slate-500">Loading...</div>
         </main>
       }
     >

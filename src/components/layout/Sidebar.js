@@ -5,12 +5,6 @@ import { usePathname } from 'next/navigation';
 import { SIDEBAR_NAV } from '@/lib/constants/navigation';
 import { useCountry } from '@/context/CountryContext';
 
-const BrandMark = () => (
-  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-600 to-indigo-600 text-lg font-semibold text-white shadow-lg shadow-sky-200">
-    S
-  </div>
-);
-
 export default function Sidebar({ isOpen, onClose, collapsed }) {
   const pathname = usePathname();
   const isExpanded = !collapsed || isOpen;
@@ -22,10 +16,13 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
     >
       <div className="flex items-center justify-between">
         <Link href="/home" className="flex items-center gap-3" onClick={onClose}>
-          <BrandMark />
           <div className={collapsed && !isOpen ? 'block md:hidden' : 'block'}>
-            <p className="text-lg font-semibold tracking-wide text-slate-900">SPRO</p>
-            <p className="text-sm text-slate-500">{country?.countryName ?? 'Performance portal'}</p>
+                        <img
+              src="/assets/img/spro_logo.svg"
+              alt="SPRO Logo"
+              className="h-7 w-auto shrink-0 lg:h-8"
+            />
+            <p className="text-sm text-slate-500 text-center">{country?.countryName ?? 'Performance portal'}</p>
           </div>
         </Link>
         <button type="button" className="rounded-full p-2 text-slate-500 hover:bg-slate-100 md:hidden" onClick={onClose} aria-label="Close menu">
