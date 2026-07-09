@@ -85,7 +85,7 @@ export default function AmolnamaPage() {
     event.preventDefault();
 
     if (!employeeId.trim() || !startDate || !endDate) {
-      setSearchError('Please enter employee ID and both dates to load the report.');
+      setSearchError('Please enter Staff ID and both dates to load the report.');
       setHasSearched(false);
       return;
     }
@@ -102,8 +102,8 @@ export default function AmolnamaPage() {
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
-      <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+    <div className="w-full max-w-full">
+      <section className="relative w-full max-w-full rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-end justify-between gap-4">
           {/* Left - Header */}
           <div>
@@ -117,13 +117,13 @@ export default function AmolnamaPage() {
           </div>
 
           {/* Right - Controls */}
-          <div className="grid grid-cols-1 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-end">
+          <div className="grid grid-cols-2 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-end">
             {/* Employee ID */}
             <div className="w-full min-[420px]:w-[240px]">
               <SearchableStaffInput
                 value={employeeId}
                 onChange={setEmployeeId}
-                placeholder="Enter employee ID"
+                placeholder="Enter Staff ID"
                 disabled={false}
               />
             </div>

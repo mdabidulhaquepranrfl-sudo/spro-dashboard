@@ -61,7 +61,7 @@ export default function KeyLocations({ searchParams }) {
         <div className="mt-4 space-y-3">
           {isLoading ? (
             Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="rounded-2xl border border-slate-200 bg-white p-3">
+              <div key={index} className="rounded-2xl bg-white p-1">
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-slate-200" />
                   <div className="h-4 w-3/4 animate-pulse rounded-full bg-slate-200" />
@@ -71,7 +71,7 @@ export default function KeyLocations({ searchParams }) {
             ))
           ) : (
             locations.map((location, index) => (
-              <div key={`${location.site_name}-${index}`} className="rounded-2xl border border-slate-200 bg-white p-3">
+              <div key={`${location.site_name}-${index}`} className="rounded-2xl bg-white p-1">
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   <p className="font-medium text-slate-900">{location.site_name}</p>

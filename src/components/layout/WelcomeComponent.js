@@ -40,18 +40,37 @@ export default function WelcomeComponent() {
     const hour = new Date().getHours();
 
     if (hour >= 5 && hour < 12) {
-      return { greeting: 'Good Morning!', backgroundImage: '/assets/img/bg_morning.jpeg' };
+      return {
+        greeting: 'Good Morning!',
+        backgroundImage: '/assets/img/bg_morning.jpeg',
+      };
     }
 
-    if (hour >= 12 && hour < 17) {
-      return { greeting: 'Good Afternoon!', backgroundImage: '/assets/img/bg_noon.jpeg' };
+    if (hour >= 12 && hour < 15) {
+      return {
+        greeting: 'Good Noon!',
+        backgroundImage: '/assets/img/bg_noon.jpeg',
+      };
+    }
+
+    if (hour >= 15 && hour < 17) {
+      return {
+        greeting: 'Good Afternoon!',
+        backgroundImage: '/assets/img/bg_noon.jpeg',
+      };
     }
 
     if (hour >= 17 && hour < 20) {
-      return { greeting: 'Good Evening!', backgroundImage: '/assets/img/bg_evening.jpeg' };
+      return {
+        greeting: 'Good Evening!',
+        backgroundImage: '/assets/img/bg_evening.jpeg',
+      };
     }
 
-    return { greeting: 'Good Night!', backgroundImage: '/assets/img/bg_night.jpeg' };
+    return {
+      greeting: 'Good Night!',
+      backgroundImage: '/assets/img/bg_night.jpeg',
+    };
   }, []);
 
   const filteredCards = useMemo(() => {
@@ -85,7 +104,7 @@ export default function WelcomeComponent() {
       </section>
 
       <section className="mt-2 p-1 sm:p-1">
-        <div className="mb-6 grid grid-cols-2 items-center gap-4">
+        <div className="mb-3 grid grid-cols-2 items-center gap-4">
           <div>
             <h2 className="text-[14px] font-semibold text-slate-900 sm:text-[22px]">
               Report shortcuts
@@ -123,14 +142,14 @@ export default function WelcomeComponent() {
         </div>
 
         {filteredCards.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-2">
             {filteredCards.map((card) => (
               <Link
                 key={card.title}
                 href={card.link}
                 className="group overflow-hidden rounded-[20px] border border-slate-200 bg-white p-0 sm:p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className="grid grid-cols-[56px_1fr] items-start gap-4 border-l-5 border-[#10B981] rounded-[12px] pl-4">
+                <div className="grid grid-cols-[56px_1fr] items-start gap-4 rounded-[12px] border-l-[5px] border-[#10B981] p-3 sm:p-0 sm:pl-4">
                   <div className="grid h-14 w-14 sm:h-12 sm:w-12 place-items-center rounded-[12px]" style={{ backgroundColor: card.iconBackground }}>
                     <i className={`${card.icon} text-3xl`} style={{ color: card.iconColor }} />
                   </div>

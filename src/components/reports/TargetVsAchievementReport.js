@@ -166,179 +166,275 @@ export default function TargetVsAchievementReport() {
             </button>
           </div>
         </div>
-
-        {/* Error Message */}
-        {inputError && (
-          <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-            {inputError}
-          </div>
-        )}
       </section>
 
       {showReport ? (
-        <>
-          <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900">{main_content.card_title}</h3>
-                <p className="mt-1 text-sm text-slate-500">Performance outlook for the current reporting window.</p>
+        <div className="flex flex-col gap-1 w-full mt-1">
+          {/* Alert Box */}
+          <div className="w-full px-4 py-3 bg-white/90 rounded-xl shadow-sm border-l-2 border-red-500 flex justify-between items-center">
+            <div className="flex justify-start items-start gap-4">
+              <div className="h-10 w-10 bg-red-500/10 rounded-full flex justify-center items-center flex-shrink-0">
+                <div className="w-4 h-2.5 bg-red-500 rounded-sm" />
               </div>
-              <span
-                className="rounded-full px-3 py-1 text-xs font-semibold"
-                style={{ backgroundColor: main_content.badge.bg_color, color: main_content.badge.text_color }}
-              >
-                {main_content.badge.label}
-              </span>
+              <div className="flex flex-col justify-start items-start gap-1">
+                <div className="text-slate-900 text-base font-semibold leading-5">
+                  65% Achieved • Expected 72% • Behind by 7%
+                </div>
+                <div className="text-slate-500 text-sm font-normal leading-5">
+                  Need <span className="text-slate-900 font-bold">৳ 70,000</span> to reach today's pace.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Four Stat Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+            {/* Target */}
+            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
+              <div className="w-full flex justify-between items-center">
+                <div className="text-slate-500 text-xs font-medium uppercase">Target</div>
+                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
+                  <div className="h-3.5 w-3.5 outline outline-2 outline-offset-[-1px] outline-slate-500 rounded-full" />
+                </div>
+              </div>
+              <div className="text-slate-900 text-xl font-bold">10,00,000</div>
+            </div>
+            
+            {/* Achieved */}
+            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
+              <div className="w-full flex justify-between items-center">
+                <div className="text-slate-500 text-xs font-medium uppercase">Achieved</div>
+                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
+                  <div className="w-3 h-2 outline outline-2 outline-offset-[-1px] outline-emerald-500" />
+                </div>
+              </div>
+              <div className="text-emerald-500 text-xl font-bold">7,20,000</div>
             </div>
 
-            <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.total_target.label}</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.total_target.color }}>
-                      {metrics.total_target.value}
-                    </p>
+            {/* Achievement Rate */}
+            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
+              <div className="w-full flex justify-between items-center">
+                <div className="text-slate-500 text-xs font-medium uppercase">Achievement Rate</div>
+                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
+                  <div className="w-3.5 h-3.5 outline outline-2 outline-offset-[-1px] outline-amber-500 rounded-sm" />
+                </div>
+              </div>
+              <div className="text-amber-500 text-xl font-bold">72%</div>
+            </div>
+
+            {/* Gap */}
+            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
+              <div className="w-full flex justify-between items-center">
+                <div className="text-slate-500 text-xs font-medium uppercase">Gap</div>
+                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 outline outline-2 outline-offset-[-1px] outline-red-500 rotate-45" />
+                </div>
+              </div>
+              <div className="text-red-500 text-xl font-bold">6,50,000</div>
+            </div>
+          </div>
+
+          {/* Bottom Layout: Left and Right Columns */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-1 w-full">
+            
+            {/* LEFT COLUMN */}
+            <div className="flex flex-col gap-1 w-full min-w-0">
+              {/* Target vs Achieved Progress */}
+              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-3">
+                <div className="text-slate-900 text-sm font-semibold">Target vs Achieved Progress</div>
+                <div className="w-full flex flex-col gap-2">
+                  <div className="w-full h-6 bg-slate-50 rounded-sm flex overflow-hidden">
+                    <div className="w-[55%] h-full bg-emerald-500" />
+                    <div className="w-[17%] h-full opacity-60 bg-amber-500" />
                   </div>
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.expected.label}</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.expected.color }}>
-                      {metrics.expected.value}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.achieved.label}</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.achieved.color }}>
-                      {metrics.achieved.value}
-                    </p>
+                  <div className="w-full flex justify-between items-start flex-wrap gap-2">
+                    <div className="flex items-start gap-4">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-2 w-2 bg-emerald-500 rounded-full" />
+                        <div className="text-slate-500 text-xs font-normal">55% Achieved</div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-2 w-2 bg-amber-500 rounded-full" />
+                        <div className="text-slate-500 text-xs font-normal">17% Pending Expected</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
+                      <div className="text-slate-900 text-xs font-semibold">72% Expected</div>
+                      <div className="px-2 py-1 bg-red-500 rounded-sm flex items-center justify-center">
+                        <div className="text-white text-[10px] font-bold">-70,000 GAP</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="mt-4">
-                  <div className="flex items-center justify-between text-sm text-slate-500">
-                    <span>{main_content.progress_bar.min_percentage}</span>
-                    <span>{main_content.progress_bar.max_percentage}</span>
-                  </div>
-                  <div className="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-200">
-                    {main_content.progress_bar.segments.map((segment) => (
-                      <div
-                        key={segment.type}
-                        className="h-full"
-                        style={{ width: `${segment.percentage}%`, backgroundColor: segment.color }}
-                        title={segment.label}
-                      />
-                    ))}
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                    {main_content.progress_bar.segments.map((segment) => (
-                      <span key={segment.type} className="flex items-center gap-2 text-slate-600">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
-                        {segment.label}
+              {/* Representative Performance */}
+              <div className="w-full bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col">
+                <div className="w-full px-4 py-3 flex flex-wrap justify-between items-center gap-3 border-b border-slate-200">
+                  <div className="text-slate-900 text-sm font-semibold">Representative Performance</div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="text-slate-500 text-xs font-medium leading-4">Sort by</div>
+                      <select className="px-3 py-1.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-300 text-slate-700 text-xs font-medium">
+                        <option>Low performance</option>
+                        <option>High performance</option>
+                      </select>
+                    </div>
+                    <div className="relative">
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i className="bx bx-search" />
                       </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-sky-50 p-5">
-                <div
-                  className="rounded-2xl border-l-4 bg-slate-100/70 p-4"
-                  style={{ borderLeftColor: main_content.status_alert.styling.border_left_color, backgroundColor: main_content.status_alert.styling.bg_color }}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm">
-                      <i className={`bx bx-${main_content.status_alert.icon}`} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{main_content.status_alert.title}</p>
-                      <p className="mt-1 text-sm text-slate-600">{main_content.status_alert.description}</p>
+                      <input
+                        type="text"
+                        placeholder="Search representatives..."
+                        className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-slate-50 rounded-lg outline outline-1 outline-offset-[-0.50px] outline-slate-200 text-xs text-slate-700 focus:outline-sky-500"
+                      />
                     </div>
                   </div>
                 </div>
+                
+                <div className="w-full overflow-x-auto">
+                  <div className="min-w-[700px] w-full">
+                    {/* Table Header */}
+                    <div className="w-full px-5 py-2.5 bg-slate-50 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 border-b border-slate-200">
+                      <div className="text-slate-500 text-[10px] font-semibold uppercase">Representative</div>
+                      <div className="text-center text-slate-500 text-[10px] font-semibold uppercase">Status</div>
+                      <div className="text-right text-slate-500 text-[10px] font-semibold uppercase">Target</div>
+                      <div className="text-right text-slate-500 text-[10px] font-semibold uppercase">Achieved</div>
+                      <div className="text-center text-slate-500 text-[10px] font-semibold uppercase">Gap</div>
+                      <div className="text-center text-slate-500 text-[10px] font-semibold uppercase">Progress</div>
+                    </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <p className="text-xs font-semibold uppercase text-slate-500">PACE STATUS</p>
-                    <p className="mt-2 text-xl font-semibold text-slate-900">72% Expected</p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <p className="text-xs font-semibold uppercase text-slate-500">CURRENT GAP</p>
-                    <p className="mt-2 text-xl font-semibold text-amber-600">-70,000</p>
+                    {/* Row 1 */}
+                    <div className="w-full px-5 py-3 border-b border-slate-200 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold">RK</div>
+                        <div className="text-slate-900 text-xs font-medium truncate">Rahul Kumar</div>
+                      </div>
+                      <div className="flex justify-center">
+                        <div className="px-2 py-1 bg-emerald-100 rounded-full">
+                          <div className="text-emerald-600 text-[10px] font-semibold">On Track</div>
+                        </div>
+                      </div>
+                      <div className="text-right text-slate-900 text-xs font-normal">2,00,000</div>
+                      <div className="text-right text-slate-900 text-xs font-normal">1,85,000</div>
+                      <div className="text-center text-emerald-500 text-xs font-semibold">-15,000</div>
+                      <div className="flex items-center gap-2 pl-4">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500 w-[74%]" />
+                        </div>
+                        <div className="text-slate-900 text-xs font-semibold">74%</div>
+                      </div>
+                    </div>
+
+                    {/* Row 2 */}
+                    <div className="w-full px-5 py-3 border-b border-slate-200 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-amber-100 rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold">PS</div>
+                        <div className="text-slate-900 text-xs font-medium truncate">Priya Sharma</div>
+                      </div>
+                      <div className="flex justify-center">
+                        <div className="px-2 py-1 bg-red-100 rounded-full">
+                          <div className="text-red-500 text-[10px] font-semibold">Behind</div>
+                        </div>
+                      </div>
+                      <div className="text-right text-slate-900 text-xs font-normal">3,00,000</div>
+                      <div className="text-right text-slate-900 text-xs font-normal">1,90,000</div>
+                      <div className="text-center text-red-500 text-xs font-semibold">-60,000</div>
+                      <div className="flex items-center gap-2 pl-4">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-red-500 w-[63%]" />
+                        </div>
+                        <div className="text-slate-900 text-xs font-semibold">63%</div>
+                      </div>
+                    </div>
+
+                    {/* Row 3 */}
+                    <div className="w-full px-5 py-3 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold">AP</div>
+                        <div className="text-slate-900 text-xs font-medium truncate">Amit Patel</div>
+                      </div>
+                      <div className="flex justify-center">
+                        <div className="px-2 py-1 bg-amber-100 rounded-full">
+                          <div className="text-amber-600 text-[10px] font-semibold">At Risk</div>
+                        </div>
+                      </div>
+                      <div className="text-right text-slate-900 text-xs font-normal">2,50,000</div>
+                      <div className="text-right text-slate-900 text-xs font-normal">1,45,000</div>
+                      <div className="text-center text-amber-500 text-xs font-semibold">-55,000</div>
+                      <div className="flex items-center gap-2 pl-4">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-500 w-[58%]" />
+                        </div>
+                        <div className="text-slate-900 text-xs font-semibold">58%</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
 
-          <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900">Representative Breakdown</h3>
-                <p className="mt-1 text-sm text-slate-500">A quick view of how the team is tracking against the goal.</p>
+            {/* RIGHT COLUMN */}
+            <div className="flex flex-col gap-1 w-full">
+              {/* Achievement Gap Breakdown */}
+              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3">
+                <div className="text-slate-900 text-sm font-semibold">Achievement Gap Breakdown</div>
+                <div className="w-full flex items-center gap-5">
+                  <div className="h-24 w-24 relative flex-shrink-0 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border-[8px] border-slate-100" />
+                    <div className="absolute inset-0 rounded-full border-[8px] border-amber-500 border-t-transparent border-r-transparent rotate-45" />
+                    <div className="text-slate-900 text-xl font-bold z-10">72%</div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="text-slate-500 text-xs font-normal">Current Shortfall</div>
+                    <div className="text-red-500 text-2xl font-bold">-70,000</div>
+                    <div className="text-slate-500 text-xs font-normal leading-4">The team is currently 7% behind the active target.</div>
+                  </div>
+                </div>
+                <div className="w-full flex gap-3 mt-2">
+                  <div className="flex-1 px-3 py-2.5 bg-slate-50 rounded-lg flex flex-col gap-1">
+                    <div className="text-slate-500 text-[10px] font-semibold uppercase">Expected</div>
+                    <div className="text-slate-900 text-base font-bold">72%</div>
+                  </div>
+                  <div className="flex-1 px-3 py-2.5 bg-slate-50 rounded-lg flex flex-col gap-1">
+                    <div className="text-slate-500 text-[10px] font-semibold uppercase">Actual</div>
+                    <div className="text-amber-500 text-base font-bold">65%</div>
+                  </div>
+                </div>
               </div>
-              <label className="relative block w-full max-w-xs">
-                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <i className="bx bx-search text-base" />
-                </span>
-                <input
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  type="text"
-                  placeholder="Search representatives"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-sm outline-none transition focus:border-sky-500 focus:bg-white"
-                />
-              </label>
-            </div>
 
-            <div className="grid w-full min-w-0 gap-1 xl:grid-cols-[1.3fr_0.7fr]">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-200 text-sm">
-                  <thead className="bg-slate-50 text-left text-slate-600">
-                    <tr>
-                      <th className="px-4 py-3 font-semibold">Representative</th>
-                      <th className="px-4 py-3 font-semibold">Status</th>
-                      <th className="px-4 py-3 font-semibold">Target</th>
-                      <th className="px-4 py-3 font-semibold">Achieved</th>
-                      <th className="px-4 py-3 font-semibold">Delta</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
-                    {filteredRows.length > 0 ? (
-                      filteredRows.map((row) => (
-                        <tr key={row.name} className="bg-slate-50/40">
-                          <td className="px-4 py-3 font-medium text-slate-900">{row.name}</td>
-                          <td className="px-4 py-3">
-                            <span
-                              className={`rounded-full px-2.5 py-1 text-xs font-semibold ${row.status === 'Ahead'
-                                ? 'bg-emerald-50 text-emerald-700'
-                                : row.status === 'On Track'
-                                  ? 'bg-[#E3FBE8] text-[#59A14F]'
-                                  : 'bg-amber-50 text-amber-700'
-                                }`}
-                            >
-                              {row.status}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-slate-700">{row.target}</td>
-                          <td className="px-4 py-3 text-slate-700">{row.achieved}</td>
-                          <td className={`px-4 py-3 font-semibold ${row.delta.startsWith('+') ? 'text-emerald-600' : 'text-amber-600'}`}>
-                            {row.delta}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="5" className="px-4 py-6 text-center text-sm text-slate-500">
-                          No matches found for your search.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+              {/* Top & Bottom Performers */}
+              <div className="w-full px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-2.5">
+                <div className="text-slate-900 text-sm font-semibold">Top & Bottom Performers</div>
+                <div className="w-full flex flex-col gap-2.5">
+                  {/* Top Performer */}
+                  <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-6 w-6 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">RK</div>
+                      <div className="text-slate-900 text-xs font-medium">Rahul Kumar</div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <i className="bx bx-up-arrow-alt text-emerald-500" />
+                      <div className="text-emerald-500 text-xs font-bold">74%</div>
+                    </div>
+                  </div>
+                  {/* Bottom Performer */}
+                  <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-6 w-6 bg-red-200 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">AP</div>
+                      <div className="text-slate-900 text-xs font-medium">Amit Patel</div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <i className="bx bx-down-arrow-alt text-red-500" />
+                      <div className="text-red-500 text-xs font-bold">58%</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </section>
-        </>
+          </div>
+        </div>
       ) : (
         <section className="min-h-screen w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-8 text-center shadow-sm">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-500">

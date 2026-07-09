@@ -78,7 +78,7 @@ export default function CoWorkReport({ searchParams }) {
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [isTableExpanded, setIsTableExpanded] = useState(true);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   const handleExpandToggle = () => {
     setIsTableExpanded((current) => !current);

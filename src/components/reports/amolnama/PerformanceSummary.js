@@ -134,7 +134,7 @@ export default function PerformanceSummary({ searchParams }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'sl', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
-  const [expandedCard, setExpandedCard] = useState(null);
+  const [expandedCard, setExpandedCard] = useState(false);
   const [selectedCard, setSelectedCard] = useState(THANA_SUMMARY_TEMPLATE[0].id);
 
   const [thanaRows, setThanaRows] = useState([]);
@@ -373,7 +373,7 @@ export default function PerformanceSummary({ searchParams }) {
 
   useEffect(() => {
     setCurrentPage(1);
-    setExpandedCard(null);
+    // setExpandedCard(null);
     if (activeSubTab === 'thana_wise') {
       setSelectedCard(THANA_SUMMARY_TEMPLATE[0].id);
     } else if (activeSubTab === 'zone_wise') {

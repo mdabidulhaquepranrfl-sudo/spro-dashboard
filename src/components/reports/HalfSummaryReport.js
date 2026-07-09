@@ -253,7 +253,7 @@ export default function HalfSummaryReport() {
   return (
     <div className="min-h-screen w-full bg-slate-50">
       <div className="mx-auto flex w-full max-w-8xl flex-col">
-        <section className="rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+        <section className="relative rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h4 className="text-2xl font-semibold text-slate-900 sm:text-xl">
@@ -467,7 +467,7 @@ export default function HalfSummaryReport() {
               </section>
             </div>
           ) : (
-            <section className="grid w-full gap-4 xl:grid-cols-2">
+            <section className="grid w-full gap-1 xl:grid-cols-2">
               {sessionRows.map((session) => (
                 <article key={session.sessionId} className="rounded-[24px] border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
                   <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
