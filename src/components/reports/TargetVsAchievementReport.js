@@ -77,7 +77,8 @@ export default function TargetVsAchievementReport() {
   /* ─── derived values ─────────────────────────────────────────── */
   const summary = reportData?.summary;
   const meta = reportData?.meta;
-  const currency = meta?.currency_symbol || '৳';
+  // const currency = meta?.currency_symbol || '৳';
+  const currency = '';
   const daysInMonth = meta?.days_in_month || 30;
 
   // Monthly figures
@@ -257,24 +258,31 @@ export default function TargetVsAchievementReport() {
           </div>
 
           {/* ── Monthly stat cards ── */}
-          <div className="w-full">
-            <div className="text-slate-500 text-[10px] font-semibold uppercase tracking-wide px-1 py-1">Monthly Overview</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-              <StatCard label="Target" icon={<div className="h-3.5 w-3.5 outline outline-2 outline-offset-[-1px] outline-slate-500 rounded-full" />} value={`${currency} ${fmt(monthlyTarget)}`} valueClass="text-slate-900" />
-              <StatCard label="Achieved" icon={<div className="w-3 h-2 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(monthlyOrder)}`} valueClass="text-emerald-500" />
-              <StatCard label="Achievement Rate" icon={<div className="w-3.5 h-3.5 outline outline-2 outline-offset-[-1px] outline-amber-500 rounded-sm" />} value={`${achievementPercent.toFixed(1)}%`} valueClass="text-amber-500" />
-              <StatCard label="Gap" icon={<div className="w-2.5 h-2.5 outline outline-2 outline-offset-[-1px] outline-red-500 rotate-45" />} value={`${currency} ${fmt(monthlyGap)}`} valueClass="text-red-500" />
+          <div className="grid grid-cols-1 xl:grid-cols-2 xl:grid-cols-2 gap-4 bg-white py-2">
+            {/* Monthly */}
+            <div className="w-full">
+              <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                Monthly Overview
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4  gap-1 w-full">
+                <StatCard label="Target" icon={<div className="h-3.5 w-3.5 rounded-full outline outline-2 outline-offset-[-1px] outline-slate-500" />} value={`${currency} ${fmt(monthlyTarget)}`} valueClass="text-slate-900" />
+                <StatCard label="Achieved" icon={<div className="h-2 w-3 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(monthlyOrder)}`} valueClass="text-emerald-500" />
+                <StatCard label="Achievement Rate" icon={<div className="h-3.5 w-3.5 rounded-sm outline outline-2 outline-offset-[-1px] outline-amber-500" />} value={`${achievementPercent.toFixed(1)}%`} valueClass="text-amber-500" />
+                <StatCard label="Gap" icon={<div className="h-2.5 w-2.5 rotate-45 outline outline-2 outline-offset-[-1px] outline-red-500" />} value={`${currency} ${fmt(monthlyGap)}`} valueClass="text-red-500" />
+              </div>
             </div>
-          </div>
 
-          {/* ── Daily stat cards ── */}
-          <div className="w-full">
-            <div className="text-slate-500 text-[10px] font-semibold uppercase tracking-wide px-1 py-1">Today's Overview</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-              <StatCard label="Today's Target" icon={<div className="h-3.5 w-3.5 outline outline-2 outline-offset-[-1px] outline-slate-500 rounded-full" />} value={`${currency} ${fmt(todayTarget)}`} valueClass="text-slate-900" />
-              <StatCard label="Today's Achievement" icon={<div className="w-3 h-2 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(todayAchievement)}`} valueClass="text-emerald-500" />
-              <StatCard label="Order / Day" icon={<div className="w-3.5 h-3.5 outline outline-2 outline-offset-[-1px] outline-amber-500 rounded-sm" />} value={`${currency} ${fmt(orderPerDay)}`} valueClass="text-amber-500" />
-              <StatCard label="Today's Gap" icon={<div className="w-2.5 h-2.5 outline outline-2 outline-offset-[-1px] outline-red-500 rotate-45" />} value={`${currency} ${fmt(Math.abs(todayGap))}`} valueClass={todayGap > 0 ? 'text-red-500' : 'text-emerald-500'} />
+            {/* Today's */}
+            <div className="w-full">
+              <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                Today's Overview
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-1 w-full">
+                <StatCard label="Today's Target" icon={<div className="h-3.5 w-3.5 rounded-full outline outline-2 outline-offset-[-1px] outline-slate-500" />} value={`${currency} ${fmt(todayTarget)}`} valueClass="text-slate-900" />
+                <StatCard label="Today's Achievement" icon={<div className="h-2 w-3 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(todayAchievement)}`} valueClass="text-emerald-500" />
+                <StatCard label="Order / Day" icon={<div className="h-3.5 w-3.5 rounded-sm outline outline-2 outline-offset-[-1px] outline-amber-500" />} value={`${currency} ${fmt(orderPerDay)}`} valueClass="text-amber-500" />
+                <StatCard label="Today's Gap" icon={<div className="h-2.5 w-2.5 rotate-45 outline outline-2 outline-offset-[-1px] outline-red-500" />} value={`${currency} ${fmt(Math.abs(todayGap))}`} valueClass={todayGap > 0 ? 'text-red-500' : 'text-emerald-500'} />
+              </div>
             </div>
           </div>
 
@@ -543,35 +551,37 @@ function ReportSkeleton() {
         </div>
       </div>
 
-      {/* Monthly Overview */}
-      <div className="w-full mt-2">
-        <div className="h-3 w-32 bg-slate-200 rounded mb-2 ml-1" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-24 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-3">
-              <div className="flex justify-between items-center w-full">
-                <div className="h-3 w-24 bg-slate-200 rounded" />
-                <div className="h-4 w-4 bg-slate-200 rounded-full" />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {/* Monthly Overview */}
+        <div className="w-full mt-2">
+          <div className="h-3 w-32 rounded bg-slate-200 mb-2 ml-1" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
+                <div className="flex w-full items-center justify-between">
+                  <div className="h-3 w-24 rounded bg-slate-200" />
+                  <div className="h-4 w-4 rounded-full bg-slate-200" />
+                </div>
+                <div className="mt-auto h-7 w-32 rounded bg-slate-200" />
               </div>
-              <div className="h-7 w-32 bg-slate-200 rounded mt-auto" />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Today's Overview */}
-      <div className="w-full mt-2">
-        <div className="h-3 w-32 bg-slate-200 rounded mb-2 ml-1" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-24 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-3">
-              <div className="flex justify-between items-center w-full">
-                <div className="h-3 w-24 bg-slate-200 rounded" />
-                <div className="h-4 w-4 bg-slate-200 rounded-full" />
+        {/* Today's Overview */}
+        <div className="w-full mt-2">
+          <div className="h-3 w-32 rounded bg-slate-200 mb-2 ml-1" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3">
+                <div className="flex w-full items-center justify-between">
+                  <div className="h-3 w-24 rounded bg-slate-200" />
+                  <div className="h-4 w-4 rounded-full bg-slate-200" />
+                </div>
+                <div className="mt-auto h-7 w-32 rounded bg-slate-200" />
               </div>
-              <div className="h-7 w-32 bg-slate-200 rounded mt-auto" />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
