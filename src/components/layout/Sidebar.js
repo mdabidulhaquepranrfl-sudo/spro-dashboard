@@ -81,7 +81,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
                   {/* Expanded Submenu */}
                   {isExpanded && (
-                    <div className="ml-8 mt-1 space-y-1 border-l-2 border-emerald-100 pl-4">
+                    <div className="ml-2 mt-1 space-y-1 border-l-2 border-emerald-100 pl-4">
                       {item.children.map((child) => {
                         const active = pathname === child.href;
                         return (

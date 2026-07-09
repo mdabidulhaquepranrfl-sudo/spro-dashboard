@@ -1,6 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import SearchableStaffInput from '@/components/profile/SearchableStaffInput';
+
+const TODAY = new Date().toISOString().slice(0, 10);
 
 const REPORT_DATA = {
   dashboard_page: {
@@ -10,11 +13,11 @@ const REPORT_DATA = {
     },
     controls: {
       search_bar: {
-        placeholder: 'Search representatives, IDs, status...',
+        placeholder: 'Enter Staff ID',
         icon: 'search',
       },
       date_picker: {
-        selected_value: 'Sep 2024',
+        selected_value: TODAY,
         icon: 'calendar',
         dropdown: true,
       },
@@ -108,8 +111,8 @@ export default function TargetVsAchievementReport() {
   const metrics = main_content.metrics;
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
-      <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+    <div className="w-full max-w-full">
+      <section className="relative w-full max-w-full rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-end justify-between gap-4">
           {/* Left Side - Header */}
           <div>
@@ -125,33 +128,25 @@ export default function TargetVsAchievementReport() {
           <div className="grid grid-cols-2 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-end">
             {/* Staff ID Input */}
             <div className="w-full sm:w-[220px]">
-              <div className="relative">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                  <i className="bx bx-user text-lg" />
-                </span>
-                <input
-                  value={staffId}
-                  onChange={(event) => setStaffId(event.target.value)}
-                  type="text"
-                  placeholder={controls.search_bar.placeholder}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#59A14F] focus:bg-white"
-                />
-              </div>
+              <SearchableStaffInput
+                value={staffId}
+                onChange={setStaffId}
+                placeholder={controls.search_bar.placeholder}
+              />
               {inputError && <p className="mt-1.5 text-sm text-amber-600">{inputError}</p>}
             </div>
 
-            {/* Month Select */}
+            {/* Date Select */}
             <div className="w-full min-[420px]:w-auto">
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 focus-within:border-[#59A14F] focus-within:bg-white transition">
                 <i className="bx bx-calendar text-lg text-slate-500" />
-                <select
+                <input
+                  type="date"
+                  max={TODAY}
                   value={selectedMonth}
                   onChange={(event) => setSelectedMonth(event.target.value)}
                   className="w-full bg-transparent font-medium outline-none"
-                >
-                  <option>Sep 2024</option>
-                  <option>Aug 2024</option>
-                </select>
+                />
               </div>
             </div>
 
@@ -286,7 +281,7 @@ export default function TargetVsAchievementReport() {
                       </span>
                       <input
                         type="text"
-                        placeholder="Search representatives..."
+                        placeholder="Enter Staff ID"
                         className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-slate-50 rounded-lg outline outline-1 outline-offset-[-0.50px] outline-slate-200 text-xs text-slate-700 focus:outline-sky-500"
                       />
                     </div>
