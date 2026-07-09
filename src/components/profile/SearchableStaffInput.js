@@ -94,7 +94,7 @@ export default function SearchableStaffInput({ value, onChange, placeholder = 'S
         onChange={handleInputChange}
         disabled={disabled}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-sm text-slate-900 outline-none transition focus:border-[#59A14F] focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
         onFocus={() => {
           if (searchTerm.trim().length >= 3) {
             setIsOpen(true);

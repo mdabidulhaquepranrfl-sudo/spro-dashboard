@@ -108,150 +108,169 @@ export default function TargetVsAchievementReport() {
   const metrics = main_content.metrics;
 
   return (
-    <div className="w-full max-w-full overflow-hidden space-y-4">
-      <section className="w-full max-w-full overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className="w-full max-w-full overflow-hidden">
+      <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          {/* Left Side - Header */}
           <div>
-            <p className="text-sm font-semibold uppercase text-sky-600">{header.title}</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-900">{header.subtitle}</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              {header.title}
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              {header.subtitle}
+            </p>
+          </div>
+
+          {/* Right Side - Controls */}
+          <div className="grid grid-cols-2 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-end">
+            {/* Staff ID Input */}
+            <div className="w-full sm:w-[220px]">
+              <div className="relative">
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                  <i className="bx bx-user text-lg" />
+                </span>
+                <input
+                  value={staffId}
+                  onChange={(event) => setStaffId(event.target.value)}
+                  type="text"
+                  placeholder={controls.search_bar.placeholder}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#59A14F] focus:bg-white"
+                />
+              </div>
+              {inputError && <p className="mt-1.5 text-sm text-amber-600">{inputError}</p>}
+            </div>
+
+            {/* Month Select */}
+            <div className="w-full min-[420px]:w-auto">
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                <i className="bx bx-calendar text-lg text-slate-500" />
+                <select
+                  value={selectedMonth}
+                  onChange={(event) => setSelectedMonth(event.target.value)}
+                  className="w-full bg-transparent font-medium outline-none"
+                >
+                  <option>Sep 2024</option>
+                  <option>Aug 2024</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <button
+              type="submit"
+              onClick={handleShowReport}   // Changed to onClick if not using form submit
+              className="h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-5 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
+            >
+              <i className="bx bx-search text-base" />
+              <span>Search</span>
+            </button>
           </div>
         </div>
 
-        <form onSubmit={handleShowReport} className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="w-full lg:max-w-md">
-            <label className="block text-sm font-medium text-slate-700">Staff ID / Representative ID</label>
-            <div className="relative mt-2">
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                <i className="bx bx-user text-lg" />
-              </span>
-              <input
-                value={staffId}
-                onChange={(event) => setStaffId(event.target.value)}
-                type="text"
-                placeholder={controls.search_bar.placeholder}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-sky-500 focus:bg-white"
-              />
-            </div>
-            {inputError ? <p className="mt-2 text-sm text-amber-600">{inputError}</p> : null}
+        {/* Error Message */}
+        {inputError && (
+          <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            {inputError}
           </div>
-
-          <div className="w-full max-w-full lg:max-w-[220px]">
-            <label className="block text-sm font-medium text-slate-700">Month</label>
-            <div className="mt-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-              <i className="bx bx-calendar text-lg text-slate-500" />
-              <select
-                value={selectedMonth}
-                onChange={(event) => setSelectedMonth(event.target.value)}
-                className="w-full bg-transparent font-medium outline-none"
-              >
-                <option>Sep 2024</option>
-                <option>Aug 2024</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" className="w-full rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 lg:w-auto">
-            Show
-          </button>
-        </form>
+        )}
       </section>
 
       {showReport ? (
         <>
-          <section className="w-full max-w-full overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-semibold text-slate-900">{main_content.card_title}</h3>
-            <p className="mt-1 text-sm text-slate-500">Performance outlook for the current reporting window.</p>
-          </div>
-          <span
-            className="rounded-full px-3 py-1 text-xs font-semibold"
-            style={{ backgroundColor: main_content.badge.bg_color, color: main_content.badge.text_color }}
-          >
-            {main_content.badge.label}
-          </span>
-        </div>
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.total_target.label}</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.total_target.color }}>
-                  {metrics.total_target.value}
-                </p>
+          <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900">{main_content.card_title}</h3>
+                <p className="mt-1 text-sm text-slate-500">Performance outlook for the current reporting window.</p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.expected.label}</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.expected.color }}>
-                  {metrics.expected.value}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.achieved.label}</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.achieved.color }}>
-                  {metrics.achieved.value}
-                </p>
-              </div>
+              <span
+                className="rounded-full px-3 py-1 text-xs font-semibold"
+                style={{ backgroundColor: main_content.badge.bg_color, color: main_content.badge.text_color }}
+              >
+                {main_content.badge.label}
+              </span>
             </div>
 
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-sm text-slate-500">
-                <span>{main_content.progress_bar.min_percentage}</span>
-                <span>{main_content.progress_bar.max_percentage}</span>
-              </div>
-              <div className="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-200">
-                {main_content.progress_bar.segments.map((segment) => (
-                  <div
-                    key={segment.type}
-                    className="h-full"
-                    style={{ width: `${segment.percentage}%`, backgroundColor: segment.color }}
-                    title={segment.label}
-                  />
-                ))}
-              </div>
-              <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                {main_content.progress_bar.segments.map((segment) => (
-                  <span key={segment.type} className="flex items-center gap-2 text-slate-600">
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
-                    {segment.label}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[24px] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-sky-50 p-5">
-            <div
-              className="rounded-2xl border-l-4 bg-slate-100/70 p-4"
-              style={{ borderLeftColor: main_content.status_alert.styling.border_left_color, backgroundColor: main_content.status_alert.styling.bg_color }}
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm">
-                  <i className={`bx bx-${main_content.status_alert.icon}`} />
+            <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.total_target.label}</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.total_target.color }}>
+                      {metrics.total_target.value}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.expected.label}</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.expected.color }}>
+                      {metrics.expected.value}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-[11px] font-semibold uppercase text-slate-500">{metrics.achieved.label}</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900" style={{ color: metrics.achieved.color }}>
+                      {metrics.achieved.value}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">{main_content.status_alert.title}</p>
-                  <p className="mt-1 text-sm text-slate-600">{main_content.status_alert.description}</p>
+
+                <div className="mt-4">
+                  <div className="flex items-center justify-between text-sm text-slate-500">
+                    <span>{main_content.progress_bar.min_percentage}</span>
+                    <span>{main_content.progress_bar.max_percentage}</span>
+                  </div>
+                  <div className="mt-2 flex h-3 overflow-hidden rounded-full bg-slate-200">
+                    {main_content.progress_bar.segments.map((segment) => (
+                      <div
+                        key={segment.type}
+                        className="h-full"
+                        style={{ width: `${segment.percentage}%`, backgroundColor: segment.color }}
+                        title={segment.label}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-3 text-sm">
+                    {main_content.progress_bar.segments.map((segment) => (
+                      <span key={segment.type} className="flex items-center gap-2 text-slate-600">
+                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
+                        {segment.label}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-xs font-semibold uppercase text-slate-500">PACE STATUS</p>
-                <p className="mt-2 text-xl font-semibold text-slate-900">72% Expected</p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="text-xs font-semibold uppercase text-slate-500">CURRENT GAP</p>
-                <p className="mt-2 text-xl font-semibold text-amber-600">-70,000</p>
+              <div className="rounded-[24px] border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-sky-50 p-5">
+                <div
+                  className="rounded-2xl border-l-4 bg-slate-100/70 p-4"
+                  style={{ borderLeftColor: main_content.status_alert.styling.border_left_color, backgroundColor: main_content.status_alert.styling.bg_color }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm">
+                      <i className={`bx bx-${main_content.status_alert.icon}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{main_content.status_alert.title}</p>
+                      <p className="mt-1 text-sm text-slate-600">{main_content.status_alert.description}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs font-semibold uppercase text-slate-500">PACE STATUS</p>
+                    <p className="mt-2 text-xl font-semibold text-slate-900">72% Expected</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <p className="text-xs font-semibold uppercase text-slate-500">CURRENT GAP</p>
+                    <p className="mt-2 text-xl font-semibold text-amber-600">-70,000</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-          <section className="w-full max-w-full overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Representative Breakdown</h3>
@@ -290,13 +309,12 @@ export default function TargetVsAchievementReport() {
                           <td className="px-4 py-3 font-medium text-slate-900">{row.name}</td>
                           <td className="px-4 py-3">
                             <span
-                              className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                                row.status === 'Ahead'
-                                  ? 'bg-emerald-50 text-emerald-700'
-                                  : row.status === 'On Track'
-                                    ? 'bg-[#E3FBE8] text-[#59A14F]'
-                                    : 'bg-amber-50 text-amber-700'
-                              }`}
+                              className={`rounded-full px-2.5 py-1 text-xs font-semibold ${row.status === 'Ahead'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : row.status === 'On Track'
+                                  ? 'bg-[#E3FBE8] text-[#59A14F]'
+                                  : 'bg-amber-50 text-amber-700'
+                                }`}
                             >
                               {row.status}
                             </span>
@@ -322,7 +340,7 @@ export default function TargetVsAchievementReport() {
           </section>
         </>
       ) : (
-        <section className="w-full max-w-full overflow-hidden rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <section className="min-h-screen w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-8 text-center shadow-sm">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-500">
             <i className="bx bx-bar-chart-alt-2" />
           </div>

@@ -74,7 +74,7 @@ export default function WelcomeComponent() {
       >
         <div className="absolute right-0 top-0 h-full w-1/2 opacity-20 blur-3xl" />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl bg-black/10 p-2 md:p-4 rounded-2xl">
             <div className="inline-flex rounded-full py-1 text-[12px] font-semibold uppercase tracking-[1px] text-[#E6F4EA]">
               OPERATIONS OVERVIEW
             </div>
@@ -85,35 +85,41 @@ export default function WelcomeComponent() {
       </section>
 
       <section className="mt-2 p-1 sm:p-1">
-        <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 grid grid-cols-2 items-center gap-4">
           <div>
-            <h2 className="text-[22px] font-semibold text-slate-900">Report shortcuts</h2>
-            <p className="mt-1 text-sm text-[#64748B]">Search and open the report you need.</p>
+            <h2 className="text-[14px] font-semibold text-slate-900 sm:text-[22px]">
+              Report shortcuts
+            </h2>
+            <p className="mt-1 text-[10px] text-[#64748B] sm:text-sm">
+              Search report you need.
+            </p>
           </div>
 
-          <label className="ml-auto mt-5 flex w-full max-w-[240px] items-center gap-3 rounded-[12px] bg-[#F0F4F8] px-4 py-3 text-sm text-[#64748B] shadow-sm sm:mt-0">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-[#64748B]"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
+          <div className="flex justify-end">
+            <label className="flex w-full max-w-[260px] items-center gap-3 rounded-[12px] bg-[#F0F4F8] px-4 py-2.5 text-sm text-[#64748B] shadow-sm sm:max-w-[220px] sm:py-3">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="flex-shrink-0 text-[#64748B]"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
 
-            <input
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search"
-              className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-[#94A3B8]"
-            />
-          </label>
+              <input
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search"
+                className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-[#94A3B8]"
+              />
+            </label>
+          </div>
         </div>
 
         {filteredCards.length > 0 ? (

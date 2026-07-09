@@ -46,7 +46,7 @@ export default function AmolnamaPage() {
   const selectedDateRange = startDate || endDate
     ? `${formattedStartDate || 'Start'} - ${formattedEndDate || 'End'}`
     : '';
-  const reportHeading = `Insights for ${searchParams.staffId || '—'} ${employeeName}`;
+  const reportHeading = ` ${searchParams.staffId} ${employeeName}`;
 
   useEffect(() => {
     if (!hasSearched || !searchParams.staffId) return;
@@ -103,81 +103,105 @@ export default function AmolnamaPage() {
 
   return (
     <div className="w-full max-w-full overflow-hidden">
-      <section className="w-full max-w-full overflow-visible border border-slate-200 bg-white p-2 shadow-sm sm:p-2">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <section className="w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          {/* Left - Header */}
           <div>
-            {/* <p className="text-sm font-semibold uppercase text-sky-600">Amolnama Report</p> */}
-            <h2 className="mt-2 text-2xl font-semibold text-slate-900">Supervisor Performance Ledger {reportHeading}</h2>
-            {/* <p className="mt-2 max-w-2xl break-words text-sm text-slate-500">{reportHeading}</p> */}
+            <h2 className="text-2xl font-semibold text-slate-900">
+              SV Performance Ledger {reportHeading}
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Supervisor Performance Ledger Report
+            </p>
+            {/* You can add subtitle here if needed later */}
+          </div>
+
+          {/* Right - Controls */}
+          <div className="grid grid-cols-1 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-end">
+            {/* Employee ID */}
+            <div className="w-full min-[420px]:w-[240px]">
+              <SearchableStaffInput
+                value={employeeId}
+                onChange={setEmployeeId}
+                placeholder="Enter employee ID"
+                disabled={false}
+              />
+            </div>
+
+            {/* Date Range Picker */}
+            <div className="w-full min-[420px]:w-[260px]" ref={rangePickerRef}>
+              <button
+                type="button"
+                onClick={handleRangeButtonClick}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm text-slate-600 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:bg-white"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className={`truncate ${selectedDateRange ? 'text-slate-900' : 'text-slate-400'}`}>
+                    {selectedDateRange || 'Select date range'}
+                  </span>
+                  <i className="bx bx-calendar text-lg text-slate-500" />
+                </div>
+              </button>
+
+              {/* Date Range Picker Popover */}
+              {isRangePickerOpen && (
+                <div className="absolute z-50 mt-2 w-full min-[420px]:w-[320px] rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <label className="space-y-2 text-sm text-slate-600">
+                      <span className="block text-xs font-semibold uppercase tracking-widest text-slate-500">From</span>
+                      <input
+                        ref={startDateInputRef}
+                        type="date"
+                        max={todayString}
+                        value={startDate}
+                        onChange={(event) => setStartDate(event.target.value)}
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none transition focus:border-sky-500 focus:bg-white"
+                      />
+                    </label>
+
+                    <label className="space-y-2 text-sm text-slate-600">
+                      <span className="block text-xs font-semibold uppercase tracking-widest text-slate-500">To</span>
+                      <input
+                        type="date"
+                        max={todayString}
+                        value={endDate}
+                        onChange={(event) => setEndDate(event.target.value)}
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none transition focus:border-sky-500 focus:bg-white"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mt-5 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setIsRangePickerOpen(false)}
+                      className="rounded-2xl border border-slate-200 bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Search Button */}
+            <button
+              type="button"
+              onClick={handleSearch}
+              className="h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-6 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
+            >
+              <i className="bx bx-search text-base" />
+              <span>Search</span>
+            </button>
           </div>
         </div>
 
-        <form className="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-[1.2fr_1.4fr_auto]" onSubmit={handleSearch}>
-          <div>
-            {/* <label className="mb-2 block text-sm font-medium text-slate-700">Employee ID</label> */}
-            <SearchableStaffInput
-              value={employeeId}
-              onChange={setEmployeeId}
-              placeholder="Enter employee ID"
-              disabled={false}
-            />
+        {/* Error Message */}
+        {searchError && (
+          <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            {searchError}
           </div>
-          <div className="relative" ref={rangePickerRef}>
-            <button
-              type="button"
-              onClick={handleRangeButtonClick}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-left text-sm text-slate-600 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:bg-white"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span className={`truncate ${selectedDateRange ? 'text-slate-900' : 'text-slate-400'}`}>
-                  {selectedDateRange || 'Select date range'}
-                </span>
-                <i className="bx bx-calendar text-lg text-slate-500" />
-              </div>
-            </button>
-
-            {isRangePickerOpen && (
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-2 py-2 text-sm text-amber-700 lg:col-span-3">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <label className="space-y-2 text-sm text-slate-600">
-                    <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">From</span>
-                    <input
-                      ref={startDateInputRef}
-                      type="date"
-                      max={todayString}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 outline-none transition focus:border-sky-500 focus:bg-white"
-                      value={startDate}
-                      onChange={(event) => setStartDate(event.target.value)}
-                    />
-                  </label>
-                  <label className="space-y-2 text-sm text-slate-600">
-                    <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">To</span>
-                    <input
-                      type="date"
-                      max={todayString}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 outline-none transition focus:border-sky-500 focus:bg-white"
-                      value={endDate}
-                      onChange={(event) => setEndDate(event.target.value)}
-                    />
-                  </label>
-                </div>
-                <div className="mt-4 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setIsRangePickerOpen(false)}
-                    className="rounded-2xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
-                  >
-                    Done
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="flex items-end">
-            <button type="submit" className="w-full rounded-2xl bg-[#59A14F] px-4 py-3 font-semibold text-white transition hover:bg-[#59A14F]">Search</button>
-          </div>
-          {searchError ? <div className="md:col-span-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">{searchError}</div> : null}
-        </form>
+        )}
       </section>
 
       {hasSearched ? (

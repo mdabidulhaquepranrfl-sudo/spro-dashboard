@@ -11,9 +11,9 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-30 ${
+      className={`fixed inset-y-0 left-0 z-[60] ${
         collapsed ? 'w-[260px] md:w-20' : 'w-50'
-      } border-r border-slate-200 bg-white/95 px-3 py-4 shadow-2xl backdrop-blur-xl transition-all duration-300 md:translate-x-0 ${
+      } border-r border-slate-200 bg-white/95 px-3 py-4 shadow-l backdrop-blur-xl transition-all duration-300 md:translate-x-0 ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
               alt="SPRO Logo"
               className="mx-auto h-8 w-auto"
             />
-            <p className="mt-2 text-center text-sm font-medium text-slate-600">
+            <p className="text-center text-[12px] font-medium text-slate-600">
               {country?.countryName ?? ""}
             </p>
           </div>
@@ -46,7 +46,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
         </button>
       </div>
 
-      <nav className="space-y-1.5 overflow-y-auto h-[calc(100vh-120px)] pr-1 custom-scrollbar">
+      <nav className={`space-y-1.5 h-[calc(100vh-120px)] pr-1 custom-scrollbar ${isExpanded ? 'overflow-y-auto' : 'overflow-visible'}`}>
         {SIDEBAR_NAV.map((item) => {
           const hasChildren = item.children?.length > 0;
           const isParentActive = hasChildren
@@ -104,7 +104,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
                   {/* Collapsed Hover Popup (Rich Design) */}
                   {!isExpanded && (
-                    <div className="pointer-events-none absolute left-full top-1/2 z-50 hidden -translate-y-1/2 rounded-3xl border border-slate-100 bg-white p-4 shadow-2xl group-hover:block w-60">
+                    <div className="pointer-events-none group-hover:pointer-events-auto absolute left-full top-1/2 z-50 hidden -translate-y-1/2 rounded-3xl border border-slate-100 bg-white p-4 shadow-l group-hover:block w-60">
                       <div className="mb-3 px-2">
                         <p className="font-semibold text-slate-700">{item.label}</p>
                       </div>

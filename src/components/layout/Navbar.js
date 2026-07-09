@@ -2,14 +2,38 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Navbar({ onMenuClick, onToggleSidebar, isSidebarCollapsed }) {
   const { auth } = useAuth();
+  const pathname = usePathname();
   const user = auth?.user;
   const profilePic = user?.profile_pic || '/assets/img/avatars/profile.png';
   const userName = user?.name || 'User';
   const userRole = user?.role || '';
+
+  const getBreadcrumbs = () => {
+    if (!pathname || pathname === '/' || pathname.startsWith('/welcome')) return null;
+    const segments = pathname.split('/').filter(Boolean);
+    
+    return (
+      <div className="ml-2 hidden sm:flex items-center gap-2 text-sm font-medium">
+        {segments.map((segment, index) => {
+          const isLast = index === segments.length - 1;
+          const formattedSegment = segment.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+          return (
+            <div key={segment} className="flex items-center gap-2">
+              <span className={isLast ? 'text-slate-800 font-semibold' : 'text-slate-500'}>
+                {formattedSegment}
+              </span>
+              {!isLast && <span className="text-slate-300">/</span>}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <nav className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-2 py-2 backdrop-blur sm:px-2 lg:px-2">
@@ -31,6 +55,7 @@ export default function Navbar({ onMenuClick, onToggleSidebar, isSidebarCollapse
           >
             {isSidebarCollapsed ? '➡' : '⬅'}
           </button>
+          {getBreadcrumbs()}
         </div>
 
         <div className="flex items-center gap-3">
