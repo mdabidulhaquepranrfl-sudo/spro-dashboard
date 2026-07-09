@@ -256,9 +256,9 @@ export default function HalfSummaryReport() {
         <section className="relative rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h4 className="text-2xl font-semibold text-slate-900 sm:text-xl">
+              <h2 className="text-2xl font-semibold text-slate-900 sm:text-xl">
                 Half Summary Report
-              </h4>
+              </h2>
 
               <p className="mt-1 text-sm text-slate-500">
                 Search staff ID and date to load the half summary report.

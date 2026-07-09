@@ -2,158 +2,189 @@
 
 import { useMemo, useState } from 'react';
 import SearchableStaffInput from '@/components/profile/SearchableStaffInput';
+import { getReportData } from '@/lib/getReportData';
 
 const TODAY = new Date().toISOString().slice(0, 10);
+const PAGE_SIZE = 10;
 
-const REPORT_DATA = {
-  dashboard_page: {
-    header: {
-      title: 'Target vs. Achievement',
-      subtitle: 'Real-time tracking of logistics performance metrics.',
-    },
-    controls: {
-      search_bar: {
-        placeholder: 'Enter Staff ID',
-        icon: 'search',
-      },
-      date_picker: {
-        selected_value: TODAY,
-        icon: 'calendar',
-        dropdown: true,
-      },
-    },
-    main_content: {
-      card_title: 'Team Performance',
-      badge: {
-        label: 'OVERALL',
-        bg_color: '#E6F4EA',
-        text_color: '#137333',
-      },
-      metrics: {
-        total_target: {
-          label: 'TOTAL TARGET',
-          value: '10,00,000',
-          color: '#991B1B',
-        },
-        expected: {
-          label: 'EXPECTED',
-          value: '7,20,000',
-          color: '#D97706',
-        },
-        achieved: {
-          label: 'ACHIEVED',
-          value: '6,50,000',
-          color: '#065F46',
-        },
-      },
-      progress_bar: {
-        min_percentage: '0%',
-        max_percentage: '100%',
-        segments: [
-          { type: 'achieved', percentage: 65, color: '#065F46', label: '65% ACHIEVED' },
-          { type: 'expected_gap', percentage: 7, color: '#D97706', label: '72% EXPECTED' },
-          { type: 'remaining', percentage: 28, color: '#F3E8E6' },
-        ],
-      },
-      status_alert: {
-        type: 'warning',
-        icon: 'trending_down',
-        title: 'Achievement Gap: -70,000',
-        description: 'The team is currently 7% behind the expected linear target for today.',
-        styling: {
-          border_left_color: '#065F46',
-          bg_color: '#F3F4F6',
-        },
-      },
-    },
-  },
+/* ─── helpers ──────────────────────────────────────────────────── */
+const fmt = (value, symbol = '') => {
+  if (value == null || value === '') return '—';
+  const n = Number(value);
+  if (Number.isNaN(n)) return String(value);
+  const formatted = n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return symbol ? `${symbol} ${formatted}` : formatted;
 };
 
-const performanceRows = [
-  { name: 'Amina Rahman', status: 'Ahead', target: '2,40,000', achieved: '2,55,000', delta: '+15,000' },
-  { name: 'Rafiq Hossain', status: 'On Track', target: '2,10,000', achieved: '1,95,000', delta: '-15,000' },
-  { name: 'Nadia Islam', status: 'Behind', target: '1,80,000', achieved: '1,50,000', delta: '-30,000' },
-];
+const initials = (name) => {
+  if (!name) return '?';
+  const words = String(name).split(/[^A-Za-z0-9]+/).filter(Boolean);
+  if (!words.length) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return `${words[0][0]}${words[1][0]}`.toUpperCase();
+};
+
+/* ─── status helper ─────────────────────────────────────────────── */
+const getStatusConfig = (gapAmount) => {
+  if (gapAmount <= 0) return { label: 'Ahead', bg: 'bg-emerald-100', text: 'text-emerald-600', bar: 'bg-emerald-500' };
+  if (gapAmount <= 5000) return { label: 'On Track', bg: 'bg-emerald-100', text: 'text-emerald-600', bar: 'bg-emerald-500' };
+  if (gapAmount <= 30000) return { label: 'At Risk', bg: 'bg-amber-100', text: 'text-amber-600', bar: 'bg-amber-500' };
+  return { label: 'Behind', bg: 'bg-red-100', text: 'text-red-500', bar: 'bg-red-500' };
+};
 
 export default function TargetVsAchievementReport() {
   const [staffId, setStaffId] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState(REPORT_DATA.dashboard_page.controls.date_picker.selected_value);
+  const [selectedDate, setSelectedDate] = useState(TODAY);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showReport, setShowReport] = useState(false);
+  const [sortOrder, setSortOrder] = useState('low_to_high');
+  const [tablePage, setTablePage] = useState(1);
+
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [reportData, setReportData] = useState(null);
   const [inputError, setInputError] = useState('');
+  const [apiError, setApiError] = useState('');
 
-  const filteredRows = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
-
-    if (!term) return performanceRows;
-
-    return performanceRows.filter((row) => {
-      return [row.name, row.status, row.target, row.achieved, row.delta].some((value) =>
-        String(value).toLowerCase().includes(term),
-      );
-    });
-  }, [searchTerm]);
-
-  const handleShowReport = (event) => {
+  /* ─── fetch ─────────────────────────────────────────────────── */
+  const handleShowReport = async (event) => {
     event.preventDefault();
-
     if (!staffId.trim()) {
-      setInputError('Please enter a staff ID or representative ID to continue.');
-      setShowReport(false);
+      setInputError('Please enter a staff ID to continue.');
       return;
     }
-
     setInputError('');
-    setShowReport(true);
+    setApiError('');
+    setHasSearched(true);
+    setIsLoading(true);
+    setReportData(null);
+
+    try {
+      const response = await getReportData(
+        'target-vs-achievement',
+        `aemp_id=${encodeURIComponent(staffId.trim())}&date=${encodeURIComponent(selectedDate)}`,
+      );
+      const rd = response?.receive_data || null;
+      if (!rd) setApiError('No data returned for the selected staff and date.');
+      setReportData(rd);
+    } catch (err) {
+      console.error('TargetVsAchievement fetch error:', err);
+      setApiError('Unable to load report. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const { header, controls, main_content } = REPORT_DATA.dashboard_page;
-  const metrics = main_content.metrics;
+  /* ─── derived values ─────────────────────────────────────────── */
+  const summary = reportData?.summary;
+  const meta = reportData?.meta;
+  const currency = meta?.currency_symbol || '৳';
+  const daysInMonth = meta?.days_in_month || 30;
 
+  // Monthly figures
+  const monthlyTarget = summary?.target || 0;
+  const monthlyOrder = summary?.order || 0;
+  const monthlyGap = summary?.gap_amount || 0;
+  const achievementPercent = summary?.achievement_percent || 0;
+
+  // Daily / today figures
+  const todayTarget = summary?.today_target || 0;
+  const todayAchievement = summary?.today_achievement || 0;
+  const todayGap = todayTarget - todayAchievement;
+
+  // Progress bar calcs (monthly)
+  const achievedPct = Math.min(achievementPercent, 100);
+  // expected = linear: days elapsed / days in month * 100
+  // We derive from (order + gap) / target * 100 which = today_target * elapsed_days_ratio
+  // But simpler: expected% = (today_target_cumulative / target) * 100
+  // API gives today_target which is daily. Elapsed days = orderPerDay > 0 => order / order_per_day
+  const orderPerDay = summary?.order_per_day || 0;
+  const elapsedDays = orderPerDay > 0 ? Math.round(monthlyOrder / orderPerDay) : 0;
+  const expectedPct = monthlyTarget > 0
+    ? Math.min((todayTarget * elapsedDays) / monthlyTarget * 100, 100)
+    : 0;
+  const gapPct = monthlyTarget > 0 ? (monthlyGap / monthlyTarget) * 100 : 0;
+  const isBehind = monthlyGap > 0;
+  const dailyIsBehind = todayGap > 0;
+
+  /* ─── table rows ─────────────────────────────────────────────── */
+  const filteredRows = useMemo(() => {
+    if (!reportData?.data) return [];
+    let rows = [...reportData.data];
+    const term = searchTerm.trim().toLowerCase();
+    if (term) {
+      rows = rows.filter(
+        (r) =>
+          r.sales_representative?.name?.toLowerCase().includes(term) ||
+          r.sales_representative?.id?.toLowerCase().includes(term),
+      );
+    }
+    rows.sort((a, b) => {
+      const pa = a.progress?.achievement_percent || 0;
+      const pb = b.progress?.achievement_percent || 0;
+      return sortOrder === 'low_to_high' ? pa - pb : pb - pa;
+    });
+    return rows;
+  }, [reportData, searchTerm, sortOrder]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+  const paginatedRows = useMemo(() => {
+    const start = (tablePage - 1) * PAGE_SIZE;
+    return filteredRows.slice(start, start + PAGE_SIZE);
+  }, [filteredRows, tablePage]);
+
+  // Reset to page 1 when filter/sort changes
+  useMemo(() => { setTablePage(1); }, [searchTerm, sortOrder]);
+
+  const topPerformer = useMemo(() => {
+    if (!reportData?.data?.length) return null;
+    return [...reportData.data].sort(
+      (a, b) => (b.progress?.achievement_percent || 0) - (a.progress?.achievement_percent || 0),
+    )[0];
+  }, [reportData]);
+
+  const bottomPerformer = useMemo(() => {
+    if (!reportData?.data?.length) return null;
+    return [...reportData.data].sort(
+      (a, b) => (a.progress?.achievement_percent || 0) - (b.progress?.achievement_percent || 0),
+    )[0];
+  }, [reportData]);
+
+  /* ─── render ─────────────────────────────────────────────────── */
   return (
     <div className="w-full max-w-full">
-      <section className="relative w-full max-w-full rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+      {/* ── Search bar ── */}
+      <section className="relative z-[60] w-full max-w-full rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          {/* Left Side - Header */}
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">
-              {header.title}
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              {header.subtitle}
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">Target vs. Achievement</h2>
+            <p className="mt-1 text-sm text-slate-500">Real-time tracking of logistics performance metrics.</p>
           </div>
 
-          {/* Right Side - Controls */}
           <div className="grid grid-cols-2 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-end">
-            {/* Staff ID Input */}
+            {/* Staff ID */}
             <div className="w-full sm:w-[220px]">
-              <SearchableStaffInput
-                value={staffId}
-                onChange={setStaffId}
-                placeholder={controls.search_bar.placeholder}
-              />
+              <SearchableStaffInput value={staffId} onChange={setStaffId} placeholder="Enter Staff ID" />
               {inputError && <p className="mt-1.5 text-sm text-amber-600">{inputError}</p>}
             </div>
 
-            {/* Date Select */}
+            {/* Date */}
             <div className="w-full min-[420px]:w-auto">
               <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 focus-within:border-[#59A14F] focus-within:bg-white transition">
                 <i className="bx bx-calendar text-lg text-slate-500" />
                 <input
                   type="date"
                   max={TODAY}
-                  value={selectedMonth}
-                  onChange={(event) => setSelectedMonth(event.target.value)}
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
                   className="w-full bg-transparent font-medium outline-none"
                 />
               </div>
             </div>
 
-            {/* Search Button */}
+            {/* Search */}
             <button
-              type="submit"
-              onClick={handleShowReport}   // Changed to onClick if not using form submit
+              type="button"
+              onClick={handleShowReport}
               className="h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-5 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
             >
               <i className="bx bx-search text-base" />
@@ -161,118 +192,147 @@ export default function TargetVsAchievementReport() {
             </button>
           </div>
         </div>
+
+        {apiError && (
+          <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            {apiError}
+          </div>
+        )}
       </section>
 
-      {showReport ? (
+      {/* ── Report body ── */}
+      {!hasSearched ? (
+        /* Empty state */
+        <section className="min-h-[60vh] w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-8 text-center shadow-sm mt-1">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-500">
+            <i className="bx bx-bar-chart-alt-2" />
+          </div>
+          <h3 className="mt-4 text-xl font-semibold text-slate-900">No report loaded yet</h3>
+          <p className="mt-2 text-sm text-slate-500">Enter a staff ID, choose the date, and click Search to load the performance data.</p>
+        </section>
+      ) : isLoading ? (
+        <ReportSkeleton />
+      ) : !reportData ? null : (
         <div className="flex flex-col gap-1 w-full mt-1">
-          {/* Alert Box */}
-          <div className="w-full px-4 py-3 bg-white/90 rounded-xl shadow-sm border-l-2 border-red-500 flex justify-between items-center">
-            <div className="flex justify-start items-start gap-4">
-              <div className="h-10 w-10 bg-red-500/10 rounded-full flex justify-center items-center flex-shrink-0">
-                <div className="w-4 h-2.5 bg-red-500 rounded-sm" />
+
+          {/* ── Alert row: Daily + Monthly ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 w-full">
+            {/* Daily alert */}
+            <div className={`w-full px-4 py-3 bg-white rounded-xl shadow-sm border-l-2 ${dailyIsBehind ? 'border-red-500' : 'border-emerald-500'} flex items-start gap-4`}>
+              <div className={`h-10 w-10 flex-shrink-0 ${dailyIsBehind ? 'bg-red-500/10' : 'bg-emerald-500/10'} rounded-full flex items-center justify-center`}>
+                <i className={`bx ${dailyIsBehind ? 'bx-trending-down text-red-500' : 'bx-trending-up text-emerald-500'} text-xl`} />
               </div>
-              <div className="flex flex-col justify-start items-start gap-1">
-                <div className="text-slate-900 text-base font-semibold leading-5">
-                  65% Achieved • Expected 72% • Behind by 7%
+              <div className="flex flex-col gap-0.5">
+                <div className="text-slate-400 text-[10px] font-semibold uppercase tracking-wide">Today's Target</div>
+                <div className="text-slate-900 text-sm font-semibold leading-5">
+                  {currency} {fmt(todayAchievement)} Achieved • Target {currency} {fmt(todayTarget)}
                 </div>
-                <div className="text-slate-500 text-sm font-normal leading-5">
-                  Need <span className="text-slate-900 font-bold">৳ 70,000</span> to reach today's pace.
+                <div className="text-slate-500 text-xs font-normal leading-5">
+                  {dailyIsBehind
+                    ? <>Gap: <span className="text-red-500 font-bold">{currency} {fmt(todayGap)}</span> behind today's pace.</>
+                    : <span className="text-emerald-600 font-medium">Ahead of today's target! ✓</span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            {/* Monthly alert */}
+            <div className={`w-full px-4 py-3 bg-white rounded-xl shadow-sm border-l-2 ${isBehind ? 'border-red-500' : 'border-emerald-500'} flex items-start gap-4`}>
+              <div className={`h-10 w-10 flex-shrink-0 ${isBehind ? 'bg-red-500/10' : 'bg-emerald-500/10'} rounded-full flex items-center justify-center`}>
+                {isBehind ? <div className="w-4 h-2.5 bg-red-500 rounded-sm" /> : <i className="bx bx-check text-emerald-500 text-xl" />}
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <div className="text-slate-400 text-[10px] font-semibold uppercase tracking-wide">Monthly Target</div>
+                <div className="text-slate-900 text-sm font-semibold leading-5">
+                  {achievementPercent.toFixed(1)}% Achieved • Expected {expectedPct.toFixed(1)}% • {isBehind ? 'Behind' : 'Ahead'} by {Math.abs(achievementPercent - expectedPct).toFixed(1)}%
+                </div>
+                <div className="text-slate-500 text-xs font-normal leading-5">
+                  {isBehind
+                    ? <>Need <span className="text-slate-900 font-bold">{currency} {fmt(monthlyGap)}</span> to reach monthly target.</>
+                    : <span className="text-emerald-600 font-medium">Team is exceeding the monthly target! ✓</span>
+                  }
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Four Stat Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-            {/* Target */}
-            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
-              <div className="w-full flex justify-between items-center">
-                <div className="text-slate-500 text-xs font-medium uppercase">Target</div>
-                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
-                  <div className="h-3.5 w-3.5 outline outline-2 outline-offset-[-1px] outline-slate-500 rounded-full" />
-                </div>
-              </div>
-              <div className="text-slate-900 text-xl font-bold">10,00,000</div>
-            </div>
-            
-            {/* Achieved */}
-            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
-              <div className="w-full flex justify-between items-center">
-                <div className="text-slate-500 text-xs font-medium uppercase">Achieved</div>
-                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
-                  <div className="w-3 h-2 outline outline-2 outline-offset-[-1px] outline-emerald-500" />
-                </div>
-              </div>
-              <div className="text-emerald-500 text-xl font-bold">7,20,000</div>
-            </div>
-
-            {/* Achievement Rate */}
-            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
-              <div className="w-full flex justify-between items-center">
-                <div className="text-slate-500 text-xs font-medium uppercase">Achievement Rate</div>
-                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
-                  <div className="w-3.5 h-3.5 outline outline-2 outline-offset-[-1px] outline-amber-500 rounded-sm" />
-                </div>
-              </div>
-              <div className="text-amber-500 text-xl font-bold">72%</div>
-            </div>
-
-            {/* Gap */}
-            <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
-              <div className="w-full flex justify-between items-center">
-                <div className="text-slate-500 text-xs font-medium uppercase">Gap</div>
-                <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">
-                  <div className="w-2.5 h-2.5 outline outline-2 outline-offset-[-1px] outline-red-500 rotate-45" />
-                </div>
-              </div>
-              <div className="text-red-500 text-xl font-bold">6,50,000</div>
+          {/* ── Monthly stat cards ── */}
+          <div className="w-full">
+            <div className="text-slate-500 text-[10px] font-semibold uppercase tracking-wide px-1 py-1">Monthly Overview</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+              <StatCard label="Target" icon={<div className="h-3.5 w-3.5 outline outline-2 outline-offset-[-1px] outline-slate-500 rounded-full" />} value={`${currency} ${fmt(monthlyTarget)}`} valueClass="text-slate-900" />
+              <StatCard label="Achieved" icon={<div className="w-3 h-2 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(monthlyOrder)}`} valueClass="text-emerald-500" />
+              <StatCard label="Achievement Rate" icon={<div className="w-3.5 h-3.5 outline outline-2 outline-offset-[-1px] outline-amber-500 rounded-sm" />} value={`${achievementPercent.toFixed(1)}%`} valueClass="text-amber-500" />
+              <StatCard label="Gap" icon={<div className="w-2.5 h-2.5 outline outline-2 outline-offset-[-1px] outline-red-500 rotate-45" />} value={`${currency} ${fmt(monthlyGap)}`} valueClass="text-red-500" />
             </div>
           </div>
 
-          {/* Bottom Layout: Left and Right Columns */}
+          {/* ── Daily stat cards ── */}
+          <div className="w-full">
+            <div className="text-slate-500 text-[10px] font-semibold uppercase tracking-wide px-1 py-1">Today's Overview</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+              <StatCard label="Today's Target" icon={<div className="h-3.5 w-3.5 outline outline-2 outline-offset-[-1px] outline-slate-500 rounded-full" />} value={`${currency} ${fmt(todayTarget)}`} valueClass="text-slate-900" />
+              <StatCard label="Today's Achievement" icon={<div className="w-3 h-2 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(todayAchievement)}`} valueClass="text-emerald-500" />
+              <StatCard label="Order / Day" icon={<div className="w-3.5 h-3.5 outline outline-2 outline-offset-[-1px] outline-amber-500 rounded-sm" />} value={`${currency} ${fmt(orderPerDay)}`} valueClass="text-amber-500" />
+              <StatCard label="Today's Gap" icon={<div className="w-2.5 h-2.5 outline outline-2 outline-offset-[-1px] outline-red-500 rotate-45" />} value={`${currency} ${fmt(Math.abs(todayGap))}`} valueClass={todayGap > 0 ? 'text-red-500' : 'text-emerald-500'} />
+            </div>
+          </div>
+
+          {/* ── Bottom: Left + Right ── */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-1 w-full">
-            
-            {/* LEFT COLUMN */}
+
+            {/* LEFT */}
             <div className="flex flex-col gap-1 w-full min-w-0">
-              {/* Target vs Achieved Progress */}
-              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-3">
+
+              {/* Progress bar */}
+              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3">
                 <div className="text-slate-900 text-sm font-semibold">Target vs Achieved Progress</div>
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full h-6 bg-slate-50 rounded-sm flex overflow-hidden">
-                    <div className="w-[55%] h-full bg-emerald-500" />
-                    <div className="w-[17%] h-full opacity-60 bg-amber-500" />
+                    <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${achievedPct}%` }} />
+                    {isBehind && (
+                      <div className="h-full opacity-60 bg-amber-500 transition-all duration-500" style={{ width: `${Math.max(0, Math.min(gapPct, 100 - achievedPct))}%` }} />
+                    )}
                   </div>
                   <div className="w-full flex justify-between items-start flex-wrap gap-2">
                     <div className="flex items-start gap-4">
                       <div className="flex items-center gap-1.5">
                         <div className="h-2 w-2 bg-emerald-500 rounded-full" />
-                        <div className="text-slate-500 text-xs font-normal">55% Achieved</div>
+                        <div className="text-slate-500 text-xs font-normal">{achievedPct.toFixed(1)}% Achieved</div>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2 w-2 bg-amber-500 rounded-full" />
-                        <div className="text-slate-500 text-xs font-normal">17% Pending Expected</div>
-                      </div>
+                      {isBehind && (
+                        <div className="flex items-center gap-1.5">
+                          <div className="h-2 w-2 bg-amber-500 rounded-full" />
+                          <div className="text-slate-500 text-xs font-normal">{gapPct.toFixed(1)}% Pending Expected</div>
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                      <div className="text-slate-900 text-xs font-semibold">72% Expected</div>
-                      <div className="px-2 py-1 bg-red-500 rounded-sm flex items-center justify-center">
-                        <div className="text-white text-[10px] font-bold">-70,000 GAP</div>
-                      </div>
+                      <div className="text-slate-900 text-xs font-semibold">{expectedPct.toFixed(1)}% Expected</div>
+                      {isBehind && (
+                        <div className="px-2 py-1 bg-red-500 rounded-sm flex items-center justify-center">
+                          <div className="text-white text-[10px] font-bold">-{currency} {fmt(monthlyGap)} GAP</div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Representative Performance */}
+              {/* Representative table */}
               <div className="w-full bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col">
                 <div className="w-full px-4 py-3 flex flex-wrap justify-between items-center gap-3 border-b border-slate-200">
                   <div className="text-slate-900 text-sm font-semibold">Representative Performance</div>
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="flex items-center gap-2">
                       <div className="text-slate-500 text-xs font-medium leading-4">Sort by</div>
-                      <select className="px-3 py-1.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-300 text-slate-700 text-xs font-medium">
-                        <option>Low performance</option>
-                        <option>High performance</option>
+                      <select
+                        value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value)}
+                        className="px-3 py-1.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-300 text-slate-700 text-xs font-medium"
+                      >
+                        <option value="low_to_high">Low performance</option>
+                        <option value="high_to_low">High performance</option>
                       </select>
                     </div>
                     <div className="relative">
@@ -281,164 +341,300 @@ export default function TargetVsAchievementReport() {
                       </span>
                       <input
                         type="text"
-                        placeholder="Enter Staff ID"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search name or ID"
                         className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-slate-50 rounded-lg outline outline-1 outline-offset-[-0.50px] outline-slate-200 text-xs text-slate-700 focus:outline-sky-500"
                       />
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="w-full overflow-x-auto">
                   <div className="min-w-[700px] w-full">
-                    {/* Table Header */}
+                    {/* Table header */}
                     <div className="w-full px-5 py-2.5 bg-slate-50 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 border-b border-slate-200">
-                      <div className="text-slate-500 text-[10px] font-semibold uppercase">Representative</div>
-                      <div className="text-center text-slate-500 text-[10px] font-semibold uppercase">Status</div>
-                      <div className="text-right text-slate-500 text-[10px] font-semibold uppercase">Target</div>
-                      <div className="text-right text-slate-500 text-[10px] font-semibold uppercase">Achieved</div>
-                      <div className="text-center text-slate-500 text-[10px] font-semibold uppercase">Gap</div>
-                      <div className="text-center text-slate-500 text-[10px] font-semibold uppercase">Progress</div>
+                      {['Representative', 'Status', 'Target', 'Achieved', 'Gap', 'Progress'].map((h, i) => (
+                        <div key={h} className={`text-slate-500 text-[10px] font-semibold uppercase ${i === 0 ? '' : i >= 4 ? 'text-center' : i >= 2 ? 'text-right' : 'text-center'}`}>{h}</div>
+                      ))}
                     </div>
 
-                    {/* Row 1 */}
-                    <div className="w-full px-5 py-3 border-b border-slate-200 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold">RK</div>
-                        <div className="text-slate-900 text-xs font-medium truncate">Rahul Kumar</div>
-                      </div>
-                      <div className="flex justify-center">
-                        <div className="px-2 py-1 bg-emerald-100 rounded-full">
-                          <div className="text-emerald-600 text-[10px] font-semibold">On Track</div>
-                        </div>
-                      </div>
-                      <div className="text-right text-slate-900 text-xs font-normal">2,00,000</div>
-                      <div className="text-right text-slate-900 text-xs font-normal">1,85,000</div>
-                      <div className="text-center text-emerald-500 text-xs font-semibold">-15,000</div>
-                      <div className="flex items-center gap-2 pl-4">
-                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500 w-[74%]" />
-                        </div>
-                        <div className="text-slate-900 text-xs font-semibold">74%</div>
-                      </div>
-                    </div>
+                    {paginatedRows.length > 0 ? paginatedRows.map((row) => {
+                      const sr = row.sales_representative;
+                      const amt = row.amounts;
+                      const prog = row.progress;
+                      const st = getStatusConfig(prog.gap_amount);
 
-                    {/* Row 2 */}
-                    <div className="w-full px-5 py-3 border-b border-slate-200 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 bg-amber-100 rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold">PS</div>
-                        <div className="text-slate-900 text-xs font-medium truncate">Priya Sharma</div>
-                      </div>
-                      <div className="flex justify-center">
-                        <div className="px-2 py-1 bg-red-100 rounded-full">
-                          <div className="text-red-500 text-[10px] font-semibold">Behind</div>
+                      return (
+                        <div key={sr.id} className="w-full px-5 py-3 border-b border-slate-200 last:border-0 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center hover:bg-slate-50 transition">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`h-8 w-8 flex-shrink-0 ${st.bg} rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold`}>
+                              {initials(sr.name)}
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <div className="text-slate-900 text-xs font-medium truncate" title={sr.name}>{sr.name}</div>
+                              <div className="text-slate-500 text-[10px] truncate">{sr.id}</div>
+                            </div>
+                          </div>
+                          <div className="flex justify-center">
+                            <div className={`px-2 py-1 ${st.bg} rounded-full`}>
+                              <div className={`${st.text} text-[10px] font-semibold whitespace-nowrap`}>{st.label}</div>
+                            </div>
+                          </div>
+                          <div className="text-right text-slate-900 text-xs font-normal">{fmt(amt.target)}</div>
+                          <div className="text-right text-slate-900 text-xs font-normal">{fmt(amt.order)}</div>
+                          <div className={`text-center text-xs font-semibold ${prog.gap_amount > 0 ? 'text-red-500' : 'text-emerald-500'}`}>
+                            {prog.gap_amount > 0 ? `-${fmt(prog.gap_amount)}` : `+${fmt(Math.abs(prog.gap_amount))}`}
+                          </div>
+                          <div className="flex items-center gap-2 pl-4">
+                            <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div className={`h-full ${st.bar}`} style={{ width: `${Math.min(prog.achievement_percent, 100)}%` }} />
+                            </div>
+                            <div className="text-slate-900 text-xs font-semibold w-10 text-right">{prog.achievement_percent.toFixed(0)}%</div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-right text-slate-900 text-xs font-normal">3,00,000</div>
-                      <div className="text-right text-slate-900 text-xs font-normal">1,90,000</div>
-                      <div className="text-center text-red-500 text-xs font-semibold">-60,000</div>
-                      <div className="flex items-center gap-2 pl-4">
-                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-red-500 w-[63%]" />
-                        </div>
-                        <div className="text-slate-900 text-xs font-semibold">63%</div>
-                      </div>
-                    </div>
-
-                    {/* Row 3 */}
-                    <div className="w-full px-5 py-3 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold">AP</div>
-                        <div className="text-slate-900 text-xs font-medium truncate">Amit Patel</div>
-                      </div>
-                      <div className="flex justify-center">
-                        <div className="px-2 py-1 bg-amber-100 rounded-full">
-                          <div className="text-amber-600 text-[10px] font-semibold">At Risk</div>
-                        </div>
-                      </div>
-                      <div className="text-right text-slate-900 text-xs font-normal">2,50,000</div>
-                      <div className="text-right text-slate-900 text-xs font-normal">1,45,000</div>
-                      <div className="text-center text-amber-500 text-xs font-semibold">-55,000</div>
-                      <div className="flex items-center gap-2 pl-4">
-                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-amber-500 w-[58%]" />
-                        </div>
-                        <div className="text-slate-900 text-xs font-semibold">58%</div>
-                      </div>
-                    </div>
+                      );
+                    }) : (
+                      <div className="py-8 text-center text-sm text-slate-500">No representatives found.</div>
+                    )}
                   </div>
                 </div>
+
+                {/* Pagination footer */}
+                {totalPages > 1 && (
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3">
+                    <p className="text-sm text-slate-600">
+                      Page {tablePage} of {totalPages}
+                      <span className="ml-2 text-slate-400">({filteredRows.length} total)</span>
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setTablePage((p) => Math.max(1, p - 1))}
+                        disabled={tablePage === 1}
+                        className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 transition"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTablePage((p) => Math.min(totalPages, p + 1))}
+                        disabled={tablePage === totalPages}
+                        className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 transition"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* RIGHT COLUMN */}
+            {/* RIGHT */}
             <div className="flex flex-col gap-1 w-full">
-              {/* Achievement Gap Breakdown */}
+
+              {/* Achievement gap breakdown */}
               <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3">
                 <div className="text-slate-900 text-sm font-semibold">Achievement Gap Breakdown</div>
                 <div className="w-full flex items-center gap-5">
                   <div className="h-24 w-24 relative flex-shrink-0 flex items-center justify-center">
                     <div className="absolute inset-0 rounded-full border-[8px] border-slate-100" />
                     <div className="absolute inset-0 rounded-full border-[8px] border-amber-500 border-t-transparent border-r-transparent rotate-45" />
-                    <div className="text-slate-900 text-xl font-bold z-10">72%</div>
+                    <div className="text-slate-900 text-xl font-bold z-10">{achievementPercent.toFixed(0)}%</div>
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="text-slate-500 text-xs font-normal">Current Shortfall</div>
-                    <div className="text-red-500 text-2xl font-bold">-70,000</div>
-                    <div className="text-slate-500 text-xs font-normal leading-4">The team is currently 7% behind the active target.</div>
+                    <div className={`text-2xl font-bold ${isBehind ? 'text-red-500' : 'text-emerald-500'}`}>
+                      {isBehind ? '-' : '+'}{currency} {fmt(Math.abs(monthlyGap))}
+                    </div>
+                    <div className="text-slate-500 text-xs font-normal leading-4">
+                      {isBehind
+                        ? `Team is currently ${gapPct.toFixed(1)}% behind the monthly target.`
+                        : 'Team is currently exceeding the monthly target.'}
+                    </div>
                   </div>
                 </div>
                 <div className="w-full flex gap-3 mt-2">
                   <div className="flex-1 px-3 py-2.5 bg-slate-50 rounded-lg flex flex-col gap-1">
                     <div className="text-slate-500 text-[10px] font-semibold uppercase">Expected</div>
-                    <div className="text-slate-900 text-base font-bold">72%</div>
+                    <div className="text-slate-900 text-base font-bold">{expectedPct.toFixed(1)}%</div>
                   </div>
                   <div className="flex-1 px-3 py-2.5 bg-slate-50 rounded-lg flex flex-col gap-1">
                     <div className="text-slate-500 text-[10px] font-semibold uppercase">Actual</div>
-                    <div className="text-amber-500 text-base font-bold">65%</div>
+                    <div className="text-amber-500 text-base font-bold">{achievementPercent.toFixed(1)}%</div>
                   </div>
                 </div>
               </div>
 
               {/* Top & Bottom Performers */}
               <div className="w-full px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-2.5">
-                <div className="text-slate-900 text-sm font-semibold">Top & Bottom Performers</div>
+                <div className="text-slate-900 text-sm font-semibold">Top &amp; Bottom Performers</div>
                 <div className="w-full flex flex-col gap-2.5">
-                  {/* Top Performer */}
-                  <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-6 w-6 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">RK</div>
-                      <div className="text-slate-900 text-xs font-medium">Rahul Kumar</div>
+                  {topPerformer && (
+                    <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="h-6 w-6 flex-shrink-0 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">
+                          {initials(topPerformer.sales_representative?.name)}
+                        </div>
+                        <div className="text-slate-900 text-xs font-medium truncate">{topPerformer.sales_representative?.name}</div>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <i className="bx bx-up-arrow-alt text-emerald-500" />
+                        <div className="text-emerald-500 text-xs font-bold">{topPerformer.progress?.achievement_percent.toFixed(1)}%</div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <i className="bx bx-up-arrow-alt text-emerald-500" />
-                      <div className="text-emerald-500 text-xs font-bold">74%</div>
+                  )}
+                  {bottomPerformer && bottomPerformer.sales_representative?.id !== topPerformer?.sales_representative?.id && (
+                    <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="h-6 w-6 flex-shrink-0 bg-red-200 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">
+                          {initials(bottomPerformer.sales_representative?.name)}
+                        </div>
+                        <div className="text-slate-900 text-xs font-medium truncate">{bottomPerformer.sales_representative?.name}</div>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <i className="bx bx-down-arrow-alt text-red-500" />
+                        <div className="text-red-500 text-xs font-bold">{bottomPerformer.progress?.achievement_percent.toFixed(1)}%</div>
+                      </div>
                     </div>
-                  </div>
-                  {/* Bottom Performer */}
-                  <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-6 w-6 bg-red-200 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">AP</div>
-                      <div className="text-slate-900 text-xs font-medium">Amit Patel</div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <i className="bx bx-down-arrow-alt text-red-500" />
-                      <div className="text-red-500 text-xs font-bold">58%</div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      ) : (
-        <section className="min-h-screen w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-500">
-            <i className="bx bx-bar-chart-alt-2" />
-          </div>
-          <h3 className="mt-4 text-xl font-semibold text-slate-900">No report loaded yet</h3>
-          <p className="mt-2 text-sm text-slate-500">Enter a staff ID, choose the month, and click Show to load the performance data.</p>
-        </section>
       )}
+    </div>
+  );
+}
+
+/* ─── Reusable stat card ─────────────────────────────────────── */
+function StatCard({ label, icon, value, valueClass }) {
+  return (
+    <div className="flex-1 px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-start items-start gap-2.5">
+      <div className="w-full flex justify-between items-center">
+        <div className="text-slate-500 text-xs font-medium uppercase">{label}</div>
+        <div className="h-4 w-4 relative overflow-hidden flex items-center justify-center">{icon}</div>
+      </div>
+      <div className={`text-xl font-bold ${valueClass}`}>{value}</div>
+    </div>
+  );
+}
+
+/* ─── Skeleton Loading UI ─────────────────────────────────────── */
+function ReportSkeleton() {
+  return (
+    <div className="flex flex-col gap-1 w-full mt-1 animate-pulse">
+      {/* Alert Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 w-full">
+        <div className="w-full h-[76px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center gap-4">
+          <div className="h-10 w-10 bg-slate-200 rounded-full flex-shrink-0" />
+          <div className="flex flex-col gap-2 w-full">
+            <div className="h-3 w-20 bg-slate-200 rounded" />
+            <div className="h-4 w-3/4 bg-slate-200 rounded" />
+          </div>
+        </div>
+        <div className="w-full h-[76px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center gap-4">
+          <div className="h-10 w-10 bg-slate-200 rounded-full flex-shrink-0" />
+          <div className="flex flex-col gap-2 w-full">
+            <div className="h-3 w-20 bg-slate-200 rounded" />
+            <div className="h-4 w-3/4 bg-slate-200 rounded" />
+          </div>
+        </div>
+      </div>
+
+      {/* Monthly Overview */}
+      <div className="w-full mt-2">
+        <div className="h-3 w-32 bg-slate-200 rounded mb-2 ml-1" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-24 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-3">
+              <div className="flex justify-between items-center w-full">
+                <div className="h-3 w-24 bg-slate-200 rounded" />
+                <div className="h-4 w-4 bg-slate-200 rounded-full" />
+              </div>
+              <div className="h-7 w-32 bg-slate-200 rounded mt-auto" />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Today's Overview */}
+      <div className="w-full mt-2">
+        <div className="h-3 w-32 bg-slate-200 rounded mb-2 ml-1" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 w-full">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-24 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-3">
+              <div className="flex justify-between items-center w-full">
+                <div className="h-3 w-24 bg-slate-200 rounded" />
+                <div className="h-4 w-4 bg-slate-200 rounded-full" />
+              </div>
+              <div className="h-7 w-32 bg-slate-200 rounded mt-auto" />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-1 w-full mt-2">
+        {/* Left */}
+        <div className="flex flex-col gap-1 w-full">
+          <div className="h-[120px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+            <div className="h-4 w-48 bg-slate-200 rounded" />
+            <div className="h-6 w-full bg-slate-200 rounded" />
+            <div className="flex justify-between">
+              <div className="h-3 w-32 bg-slate-200 rounded" />
+              <div className="h-3 w-32 bg-slate-200 rounded" />
+            </div>
+          </div>
+          <div className="h-[400px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+              <div className="h-4 w-48 bg-slate-200 rounded" />
+              <div className="h-8 w-48 bg-slate-200 rounded" />
+            </div>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex justify-between items-center py-2 border-b border-slate-50">
+                <div className="flex gap-3 items-center">
+                  <div className="h-8 w-8 bg-slate-200 rounded-full" />
+                  <div className="flex flex-col gap-1.5">
+                    <div className="h-3 w-32 bg-slate-200 rounded" />
+                    <div className="h-2 w-20 bg-slate-200 rounded" />
+                  </div>
+                </div>
+                <div className="h-4 w-16 bg-slate-200 rounded" />
+                <div className="h-4 w-24 bg-slate-200 rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right */}
+        <div className="flex flex-col gap-1 w-full">
+          <div className="h-[180px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+            <div className="h-4 w-48 bg-slate-200 rounded" />
+            <div className="flex gap-5 items-center">
+              <div className="h-24 w-24 bg-slate-200 rounded-full" />
+              <div className="flex flex-col gap-2">
+                <div className="h-3 w-24 bg-slate-200 rounded" />
+                <div className="h-6 w-32 bg-slate-200 rounded" />
+                <div className="h-3 w-48 bg-slate-200 rounded" />
+              </div>
+            </div>
+          </div>
+          <div className="h-[200px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+            <div className="h-4 w-48 bg-slate-200 rounded" />
+            {[1, 2].map((i) => (
+              <div key={i} className="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg">
+                <div className="flex gap-2.5 items-center">
+                  <div className="h-6 w-6 bg-slate-200 rounded-full" />
+                  <div className="h-3 w-24 bg-slate-200 rounded" />
+                </div>
+                <div className="h-4 w-10 bg-slate-200 rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
