@@ -1,5 +1,4 @@
 'use client';
-
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SIDEBAR_NAV } from '@/lib/constants/navigation';
@@ -12,9 +11,14 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-30 ${collapsed ? 'w-50 md:w-20' : 'w-50'} border-r border-slate-200 bg-white/95 px-2 py-2 shadow-xl backdrop-blur transition-all duration-300 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      className={`fixed inset-y-0 left-0 z-30 ${
+        collapsed ? 'w-[260px] md:w-20' : 'w-50'
+      } border-r border-slate-200 bg-white/95 px-3 py-4 shadow-2xl backdrop-blur-xl transition-all duration-300 md:translate-x-0 ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}
     >
-      <div className="relative flex items-center">
+      {/* Logo Section */}
+      <div className="relative flex items-center mb-8 px-2">
         <Link
           href="/home"
           className="flex flex-1 justify-center"
@@ -24,9 +28,9 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
             <img
               src="/assets/img/spro_logo.svg"
               alt="SPRO Logo"
-              className="mx-auto h-7 w-auto lg:h-8"
+              className="mx-auto h-8 w-auto"
             />
-            <p className="mt-1 text-center text-sm text-slate-500">
+            <p className="mt-2 text-center text-sm font-medium text-slate-600">
               {country?.countryName ?? ""}
             </p>
           </div>
@@ -34,7 +38,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
         <button
           type="button"
-          className="absolute right-0 rounded-full p-2 text-slate-500 hover:bg-slate-100 md:hidden"
+          className="absolute right-1 rounded-full p-2 text-slate-500 hover:bg-slate-100 md:hidden"
           onClick={onClose}
           aria-label="Close menu"
         >
@@ -42,9 +46,9 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
         </button>
       </div>
 
-      <nav className="mt-8 space-y-2 overflow-hidden">
+      <nav className="space-y-1.5 overflow-y-auto h-[calc(100vh-120px)] pr-1 custom-scrollbar">
         {SIDEBAR_NAV.map((item) => {
-          const hasChildren = item.children?.length;
+          const hasChildren = item.children?.length > 0;
           const isParentActive = hasChildren
             ? item.children.some((child) => pathname === child.href || pathname.startsWith(child.href + '/'))
             : pathname === item.href;
@@ -52,16 +56,32 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
           return (
             <div key={item.id} className="group relative">
               {hasChildren ? (
-                <div>
-                  <div className={`flex items-center ${isExpanded ? 'justify-between' : 'justify-center'} rounded-2xl px-3 py-2.5 ${isParentActive ? 'bg-[#E3FBE8]' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
+                <>
+                  {/* Parent Item */}
+                  <div
+                    className={`flex items-center gap-3 rounded-2xl px-4 py-3 cursor-pointer transition-all duration-200 ${
+                      isParentActive
+                        ? 'bg-emerald-50 text-emerald-700 shadow-sm'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    } ${isExpanded ? 'justify-between' : 'justify-center'}`}
+                  >
                     <span className="flex items-center gap-3">
-                      <i className={`text-lg ${item.icon}`} />
-                      <span className={`font-medium transition-all duration-200 ${isExpanded ? 'block' : 'hidden'}`}>{item.label}</span>
+                      <i className={`text-xl ${item.icon}`} />
+                      <span className={`font-medium text-[15px] transition-all ${isExpanded ? 'block' : 'hidden'}`}>
+                        {item.label}
+                      </span>
                     </span>
-                    {!collapsed && item.badge ? <span className="rounded-full bg-rose-500 px-2 py-0.5 text-xs font-semibold text-white">{item.badge}</span> : null}
+
+                    {isExpanded && item.badge && (
+                      <span className="rounded-full bg-rose-500 px-2.5 py-0.5 text-xs font-semibold text-white">
+                        {item.badge}
+                      </span>
+                    )}
                   </div>
+
+                  {/* Expanded Submenu */}
                   {isExpanded && (
-                    <div className="ml-7 mt-1 space-y-1 border-l border-slate-200 pl-3">
+                    <div className="ml-8 mt-1 space-y-1 border-l-2 border-emerald-100 pl-4">
                       {item.children.map((child) => {
                         const active = pathname === child.href;
                         return (
@@ -69,7 +89,11 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                             key={child.id}
                             href={child.href}
                             onClick={onClose}
-                            className={`block rounded-xl px-1 py-1 text-sm transition ${active ? 'bg-[#E3FBE8] font-semibold text-sky-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}
+                            className={`block rounded-xl px-4 py-1.5 text-sm font-medium transition-all ${
+                              active
+                                ? 'bg-emerald-100 text-emerald-700 font-semibold'
+                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                            }`}
                           >
                             {child.label}
                           </Link>
@@ -77,8 +101,13 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                       })}
                     </div>
                   )}
-                  {!isExpanded && hasChildren && (
-                    <div className="pointer-events-none absolute left-full top-1/2 z-20 hidden -translate-y-1/2 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg group-hover:block">
+
+                  {/* Collapsed Hover Popup (Rich Design) */}
+                  {!isExpanded && (
+                    <div className="pointer-events-none absolute left-full top-1/2 z-50 hidden -translate-y-1/2 rounded-3xl border border-slate-100 bg-white p-4 shadow-2xl group-hover:block w-60">
+                      <div className="mb-3 px-2">
+                        <p className="font-semibold text-slate-700">{item.label}</p>
+                      </div>
                       <div className="space-y-1">
                         {item.children.map((child) => {
                           const active = pathname === child.href;
@@ -87,24 +116,36 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                               key={child.id}
                               href={child.href}
                               onClick={onClose}
-                              className={`block rounded-xl px-3 py-2 text-sm transition ${active ? 'bg-[#E3FBE8] font-semibold' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}
+                              className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-all ${
+                                active
+                                  ? 'bg-emerald-100 text-emerald-700 font-medium'
+                                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                              }`}
                             >
-                              {child.icon}
+                              <i className={child.icon || 'bx bx-circle'} />
+                              {child.label}
                             </Link>
                           );
                         })}
                       </div>
                     </div>
                   )}
-                </div>
+                </>
               ) : (
+                /* Single Menu Item */
                 <Link
                   href={item.href}
                   onClick={onClose}
-                  className={`flex items-center ${isExpanded ? '' : 'justify-center'} gap-3 rounded-2xl px-3 py-2.5 transition ${pathname === item.href ? 'bg-[#E3FBE8] font-semibold text-sky-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
+                  className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
+                    pathname === item.href
+                      ? 'bg-emerald-50 text-emerald-700 shadow-sm'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  } ${isExpanded ? '' : 'justify-center'}`}
                 >
-                  <i className={`text-xl ${item.icon}`} />
-                  <span className={`transition-all duration-200 ${isExpanded ? 'block' : 'hidden'}`}>{item.label}</span>
+                  <i className={`text-2xl ${item.icon}`} />
+                  <span className={`transition-all ${isExpanded ? 'block' : 'hidden'}`}>
+                    {item.label}
+                  </span>
                 </Link>
               )}
             </div>
