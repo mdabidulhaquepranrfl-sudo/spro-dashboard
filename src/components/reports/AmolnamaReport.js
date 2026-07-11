@@ -129,7 +129,7 @@ export default function AmolnamaPage() {
             </div>
 
             {/* Date Range Picker */}
-            <div className="w-full min-[420px]:w-[260px]" ref={rangePickerRef}>
+            <div className="relative w-full min-[420px]:w-[260px]" ref={rangePickerRef}>
               <button
                 type="button"
                 onClick={handleRangeButtonClick}
@@ -145,7 +145,7 @@ export default function AmolnamaPage() {
 
               {/* Date Range Picker Popover */}
               {isRangePickerOpen && (
-                <div className="absolute z-50 mt-2 w-full min-[420px]:w-[320px] rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+                <div className="absolute left-0 z-50 mt-2 w-full min-[420px]:w-[320px] rounded-2xl border border-slate-200 bg-white p-4 shadow-lg min-[420px]:left-auto min-[420px]:right-0 sm:left-0 sm:right-auto">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <label className="space-y-2 text-sm text-slate-600">
                       <span className="block text-xs font-semibold uppercase tracking-widest text-slate-500">From</span>
@@ -188,7 +188,7 @@ export default function AmolnamaPage() {
             <button
               type="button"
               onClick={handleSearch}
-              className="h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-6 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
+              className="col-span-2  h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-6 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
             >
               <i className="bx bx-search text-base" />
               <span>Search</span>

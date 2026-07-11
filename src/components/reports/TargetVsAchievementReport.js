@@ -154,7 +154,7 @@ export default function TargetVsAchievementReport() {
   return (
     <div className="w-full max-w-full">
       {/* ── Search bar ── */}
-      <section className="relative z-[60] w-full max-w-full rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
+      <section className="relative w-full max-w-full rounded-[5px] border border-slate-200 bg-white p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">Target vs. Achievement</h2>
@@ -186,7 +186,7 @@ export default function TargetVsAchievementReport() {
             <button
               type="button"
               onClick={handleShowReport}
-              className="h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-5 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
+              className="col-span-2 h-12 w-full min-[420px]:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#59A14F] px-5 text-sm font-semibold text-white transition hover:bg-[#4B8A42]"
             >
               <i className="bx bx-search text-base" />
               <span>Search</span>
@@ -204,7 +204,7 @@ export default function TargetVsAchievementReport() {
       {/* ── Report body ── */}
       {!hasSearched ? (
         /* Empty state */
-        <section className="min-h-[60vh] w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-8 text-center shadow-sm mt-1">
+        <section className="min-h-[100vh] w-full max-w-full overflow-hidden rounded-[5px] border border-slate-200 bg-white p-8 text-center shadow-sm mt-1">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-500">
             <i className="bx bx-bar-chart-alt-2" />
           </div>
@@ -258,10 +258,10 @@ export default function TargetVsAchievementReport() {
           </div>
 
           {/* ── Monthly stat cards ── */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 xl:grid-cols-2 gap-4 bg-white py-2">
+          <div className="grid grid-cols-2 xl:grid-cols-2 xl:grid-cols-2 gap-1 bg-white py-2">
             {/* Monthly */}
-            <div className="w-full">
-              <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+            <div className="w-full rounded-2xl border border-slate-200 p-2">
+              <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">
                 Monthly Overview
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4  gap-1 w-full">
@@ -273,15 +273,15 @@ export default function TargetVsAchievementReport() {
             </div>
 
             {/* Today's */}
-            <div className="w-full">
-              <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+            <div className="w-full rounded-2xl border border-slate-200 p-2">
+              <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">
                 Today's Overview
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-1 w-full">
-                <StatCard label="Today's Target" icon={<div className="h-3.5 w-3.5 rounded-full outline outline-2 outline-offset-[-1px] outline-slate-500" />} value={`${currency} ${fmt(todayTarget)}`} valueClass="text-slate-900" />
-                <StatCard label="Today's Achievement" icon={<div className="h-2 w-3 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(todayAchievement)}`} valueClass="text-emerald-500" />
+                <StatCard label="Target" icon={<div className="h-3.5 w-3.5 rounded-full outline outline-2 outline-offset-[-1px] outline-slate-500" />} value={`${currency} ${fmt(todayTarget)}`} valueClass="text-slate-900" />
+                <StatCard label="Achievement" icon={<div className="h-2 w-3 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(todayAchievement)}`} valueClass="text-emerald-500" />
                 <StatCard label="Order / Day" icon={<div className="h-3.5 w-3.5 rounded-sm outline outline-2 outline-offset-[-1px] outline-amber-500" />} value={`${currency} ${fmt(orderPerDay)}`} valueClass="text-amber-500" />
-                <StatCard label="Today's Gap" icon={<div className="h-2.5 w-2.5 rotate-45 outline outline-2 outline-offset-[-1px] outline-red-500" />} value={`${currency} ${fmt(Math.abs(todayGap))}`} valueClass={todayGap > 0 ? 'text-red-500' : 'text-emerald-500'} />
+                <StatCard label="Gap" icon={<div className="h-2.5 w-2.5 rotate-45 outline outline-2 outline-offset-[-1px] outline-red-500" />} value={`${currency} ${fmt(Math.abs(todayGap))}`} valueClass={todayGap > 0 ? 'text-red-500' : 'text-emerald-500'} />
               </div>
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function TargetVsAchievementReport() {
             <div className="flex flex-col gap-1 w-full min-w-0">
 
               {/* Progress bar */}
-              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3">
+              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3 h-full">
                 <div className="text-slate-900 text-sm font-semibold">Target vs Achieved Progress</div>
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full h-6 bg-slate-50 rounded-sm flex overflow-hidden">
@@ -326,156 +326,13 @@ export default function TargetVsAchievementReport() {
                   </div>
                 </div>
               </div>
-
-              {/* Representative table */}
-              <div className="w-full bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col">
-                <div className="w-full px-4 py-3 flex flex-wrap justify-between items-center gap-3 border-b border-slate-200">
-                  <div className="text-slate-900 text-sm font-semibold">Representative Performance</div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <div className="text-slate-500 text-xs font-medium leading-4">Sort by</div>
-                      <select
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                        className="px-3 py-1.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-300 text-slate-700 text-xs font-medium"
-                      >
-                        <option value="low_to_high">Low performance</option>
-                        <option value="high_to_low">High performance</option>
-                      </select>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                        <i className="bx bx-search" />
-                      </span>
-                      <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search name or ID"
-                        className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-slate-50 rounded-lg outline outline-1 outline-offset-[-0.50px] outline-slate-200 text-xs text-slate-700 focus:outline-sky-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full overflow-x-auto">
-                  <div className="min-w-[700px] w-full">
-                    {/* Table header */}
-                    <div className="w-full px-5 py-2.5 bg-slate-50 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 border-b border-slate-200">
-                      {['Representative', 'Status', 'Target', 'Achieved', 'Gap', 'Progress'].map((h, i) => (
-                        <div key={h} className={`text-slate-500 text-[10px] font-semibold uppercase ${i === 0 ? '' : i >= 4 ? 'text-center' : i >= 2 ? 'text-right' : 'text-center'}`}>{h}</div>
-                      ))}
-                    </div>
-
-                    {paginatedRows.length > 0 ? paginatedRows.map((row) => {
-                      const sr = row.sales_representative;
-                      const amt = row.amounts;
-                      const prog = row.progress;
-                      const st = getStatusConfig(prog.gap_amount);
-
-                      return (
-                        <div key={sr.id} className="w-full px-5 py-3 border-b border-slate-200 last:border-0 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center hover:bg-slate-50 transition">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className={`h-8 w-8 flex-shrink-0 ${st.bg} rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold`}>
-                              {initials(sr.name)}
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <div className="text-slate-900 text-xs font-medium truncate" title={sr.name}>{sr.name}</div>
-                              <div className="text-slate-500 text-[10px] truncate">{sr.id}</div>
-                            </div>
-                          </div>
-                          <div className="flex justify-center">
-                            <div className={`px-2 py-1 ${st.bg} rounded-full`}>
-                              <div className={`${st.text} text-[10px] font-semibold whitespace-nowrap`}>{st.label}</div>
-                            </div>
-                          </div>
-                          <div className="text-right text-slate-900 text-xs font-normal">{fmt(amt.target)}</div>
-                          <div className="text-right text-slate-900 text-xs font-normal">{fmt(amt.order)}</div>
-                          <div className={`text-center text-xs font-semibold ${prog.gap_amount > 0 ? 'text-red-500' : 'text-emerald-500'}`}>
-                            {prog.gap_amount > 0 ? `-${fmt(prog.gap_amount)}` : `+${fmt(Math.abs(prog.gap_amount))}`}
-                          </div>
-                          <div className="flex items-center gap-2 pl-4">
-                            <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                              <div className={`h-full ${st.bar}`} style={{ width: `${Math.min(prog.achievement_percent, 100)}%` }} />
-                            </div>
-                            <div className="text-slate-900 text-xs font-semibold w-10 text-right">{prog.achievement_percent.toFixed(0)}%</div>
-                          </div>
-                        </div>
-                      );
-                    }) : (
-                      <div className="py-8 text-center text-sm text-slate-500">No representatives found.</div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Pagination footer */}
-                {totalPages > 1 && (
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3">
-                    <p className="text-sm text-slate-600">
-                      Page {tablePage} of {totalPages}
-                      <span className="ml-2 text-slate-400">({filteredRows.length} total)</span>
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setTablePage((p) => Math.max(1, p - 1))}
-                        disabled={tablePage === 1}
-                        className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 transition"
-                      >
-                        Previous
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTablePage((p) => Math.min(totalPages, p + 1))}
-                        disabled={tablePage === totalPages}
-                        className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 transition"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* RIGHT */}
             <div className="flex flex-col gap-1 w-full">
 
-              {/* Achievement gap breakdown */}
-              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3">
-                <div className="text-slate-900 text-sm font-semibold">Achievement Gap Breakdown</div>
-                <div className="w-full flex items-center gap-5">
-                  <div className="h-24 w-24 relative flex-shrink-0 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-full border-[8px] border-slate-100" />
-                    <div className="absolute inset-0 rounded-full border-[8px] border-amber-500 border-t-transparent border-r-transparent rotate-45" />
-                    <div className="text-slate-900 text-xl font-bold z-10">{achievementPercent.toFixed(0)}%</div>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="text-slate-500 text-xs font-normal">Current Shortfall</div>
-                    <div className={`text-2xl font-bold ${isBehind ? 'text-red-500' : 'text-emerald-500'}`}>
-                      {isBehind ? '-' : '+'}{currency} {fmt(Math.abs(monthlyGap))}
-                    </div>
-                    <div className="text-slate-500 text-xs font-normal leading-4">
-                      {isBehind
-                        ? `Team is currently ${gapPct.toFixed(1)}% behind the monthly target.`
-                        : 'Team is currently exceeding the monthly target.'}
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full flex gap-3 mt-2">
-                  <div className="flex-1 px-3 py-2.5 bg-slate-50 rounded-lg flex flex-col gap-1">
-                    <div className="text-slate-500 text-[10px] font-semibold uppercase">Expected</div>
-                    <div className="text-slate-900 text-base font-bold">{expectedPct.toFixed(1)}%</div>
-                  </div>
-                  <div className="flex-1 px-3 py-2.5 bg-slate-50 rounded-lg flex flex-col gap-1">
-                    <div className="text-slate-500 text-[10px] font-semibold uppercase">Actual</div>
-                    <div className="text-amber-500 text-base font-bold">{achievementPercent.toFixed(1)}%</div>
-                  </div>
-                </div>
-              </div>
-
               {/* Top & Bottom Performers */}
-              <div className="w-full px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-2.5">
+              <div className="w-full px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-2.5 h-full">
                 <div className="text-slate-900 text-sm font-semibold">Top &amp; Bottom Performers</div>
                 <div className="w-full flex flex-col gap-2.5">
                   {topPerformer && (
@@ -509,6 +366,172 @@ export default function TargetVsAchievementReport() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Representative table */}
+          <div className="w-full bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col mt-2">
+
+            {/* Common Header for both Desktop and Mobile */}
+            <div className="w-full px-4 py-3 flex flex-wrap justify-between items-center gap-3 border-b border-slate-200">
+              <div className="text-slate-900 text-sm font-semibold">Representative Performance</div>
+              <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                <div className="flex items-center gap-2 flex-1 sm:flex-none">
+                  <div className="text-slate-500 text-xs font-medium leading-4 whitespace-nowrap">Sort by</div>
+                  <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="w-full sm:w-auto px-3 py-1.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-300 text-slate-700 text-xs font-medium"
+                  >
+                    <option value="low_to_high">Low performance</option>
+                    <option value="high_to_low">High performance</option>
+                  </select>
+                </div>
+                <div className="relative flex-1 sm:flex-none">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
+                    <i className="bx bx-search" />
+                  </span>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search name or ID"
+                    className="w-full sm:w-48 pl-8 pr-3 py-1.5 bg-slate-50 rounded-lg outline outline-1 outline-offset-[-0.50px] outline-slate-200 text-xs text-slate-700 focus:outline-sky-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block w-full overflow-x-auto">
+              <div className="min-w-[700px] w-full">
+                {/* Table header */}
+                <div className="w-full px-5 py-2.5 bg-slate-50 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 border-b border-slate-200">
+                  {['Representative', 'Status', 'Target', 'Achieved', 'Gap', 'Progress'].map((h, i) => (
+                    <div key={h} className={`text-slate-500 text-[10px] font-semibold uppercase ${i === 0 ? '' : i >= 4 ? 'text-center' : i >= 2 ? 'text-right' : 'text-center'}`}>{h}</div>
+                  ))}
+                </div>
+
+                {paginatedRows.length > 0 ? paginatedRows.map((row) => {
+                  const sr = row.sales_representative;
+                  const amt = row.amounts;
+                  const prog = row.progress;
+                  const st = getStatusConfig(prog.gap_amount);
+
+                  return (
+                    <div key={sr.id} className="w-full px-5 py-3 border-b border-slate-200 last:border-0 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center hover:bg-slate-50 transition">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`h-8 w-8 flex-shrink-0 ${st.bg} rounded-full flex items-center justify-center text-slate-900 text-xs font-semibold`}>
+                          {initials(sr.name)}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <div className="text-slate-900 text-xs font-medium truncate" title={sr.name}>{sr.name}</div>
+                          <div className="text-slate-500 text-[10px] truncate">{sr.id}</div>
+                        </div>
+                      </div>
+                      <div className="flex justify-center">
+                        <div className={`px-2 py-1 ${st.bg} rounded-full`}>
+                          <div className={`${st.text} text-[10px] font-semibold whitespace-nowrap`}>{st.label}</div>
+                        </div>
+                      </div>
+                      <div className="text-right text-slate-900 text-xs font-normal">{fmt(amt.target)}</div>
+                      <div className="text-right text-slate-900 text-xs font-normal">{fmt(amt.order)}</div>
+                      <div className={`text-center text-xs font-semibold ${prog.gap_amount > 0 ? 'text-red-500' : 'text-emerald-500'}`}>
+                        {prog.gap_amount > 0 ? `-${fmt(prog.gap_amount)}` : `+${fmt(Math.abs(prog.gap_amount))}`}
+                      </div>
+                      <div className="flex items-center gap-2 pl-4">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className={`h-full ${st.bar}`} style={{ width: `${Math.min(prog.achievement_percent, 100)}%` }} />
+                        </div>
+                        <div className="text-slate-900 text-xs font-semibold w-10 text-right">{prog.achievement_percent.toFixed(0)}%</div>
+                      </div>
+                    </div>
+                  );
+                }) : (
+                  <div className="py-8 text-center text-sm text-slate-500">No representatives found.</div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Cards View */}
+            <div className="block md:hidden w-full flex flex-col">
+              {paginatedRows.length > 0 ? paginatedRows.map((row) => {
+                const sr = row.sales_representative;
+                const amt = row.amounts;
+                const prog = row.progress;
+                const st = getStatusConfig(prog.gap_amount);
+
+                return (
+                  <div key={sr.id} className="self-stretch p-3 bg-white border-b border-slate-200 last:border-0 flex flex-col justify-start items-start gap-3">
+                    <div className="self-stretch flex flex-col justify-center items-start gap-2">
+                      <div className="self-stretch inline-flex justify-start items-center gap-2">
+                        <div className={`h-10 w-10 flex-shrink-0 relative ${st.bg} rounded-[20px] flex justify-center items-center`}>
+                          <div className="text-slate-950 text-sm font-semibold font-['Inter'] leading-4">{initials(sr.name)}</div>
+                        </div>
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-1 min-w-0">
+                          <div className="justify-start text-slate-900 text-sm font-semibold font-['Inter'] truncate w-full">{sr.name}</div>
+                          <div className="self-stretch inline-flex justify-start items-center gap-2">
+                            <div className="flex-1 flex justify-start items-center gap-2">
+                              <div className={`justify-start ${prog.gap_amount > 0 ? 'text-red-500' : 'text-emerald-500'} text-xs font-medium font-['Inter'] leading-4`}>
+                                Gap: {prog.gap_amount > 0 ? `-${fmt(prog.gap_amount)}` : `+${fmt(Math.abs(prog.gap_amount))}`}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`px-2.5 py-1 ${st.bg} rounded-[100px] flex justify-start items-start`}>
+                          <div className={`justify-start ${st.text} text-[10px] font-bold font-['Inter'] uppercase`}>{st.label}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="self-stretch flex flex-col justify-start items-end gap-1">
+                      <div className="justify-start text-slate-700 text-xs font-semibold font-['Inter'] leading-4">{prog.achievement_percent.toFixed(0)}%</div>
+                      <div className="self-stretch relative bg-slate-100 rounded-[100px] h-2 overflow-hidden">
+                        <div className={`h-full ${st.bar} rounded-[100px]`} style={{ width: `${Math.min(prog.achievement_percent, 100)}%` }} />
+                      </div>
+                    </div>
+                    <div className="self-stretch inline-flex justify-between items-center mt-1">
+                      <div className="inline-flex flex-col justify-center items-start gap-1">
+                        <div className="justify-start text-slate-500 text-[11px] font-medium font-['Inter'] uppercase tracking-wider leading-4">Target</div>
+                        <div className="justify-start text-slate-900 text-sm font-bold font-['Inter'] leading-5">{currency} {fmt(amt.target)}</div>
+                      </div>
+                      <div className="inline-flex flex-col justify-center items-end gap-1">
+                        <div className="justify-start text-slate-500 text-[11px] font-medium font-['Inter'] uppercase tracking-wider leading-4">Achievement</div>
+                        <div className="justify-start text-slate-900 text-sm font-bold font-['Inter'] leading-5">{currency} {fmt(amt.order)}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }) : (
+                <div className="py-8 text-center text-sm text-slate-500">No representatives found.</div>
+              )}
+            </div>
+
+            {/* Pagination footer */}
+            {totalPages > 1 && (
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3">
+                <p className="text-sm text-slate-600">
+                  Page {tablePage} of {totalPages}
+                  <span className="ml-2 text-slate-400">({filteredRows.length} total)</span>
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setTablePage((p) => Math.max(1, p - 1))}
+                    disabled={tablePage === 1}
+                    className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 transition"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTablePage((p) => Math.min(totalPages, p + 1))}
+                    disabled={tablePage === totalPages}
+                    className="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 transition"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -586,6 +609,7 @@ function ReportSkeleton() {
       </div>
 
       {/* Bottom Layout */}
+      {/* Bottom Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-1 w-full mt-2">
         {/* Left */}
         <div className="flex flex-col gap-1 w-full">
@@ -597,30 +621,11 @@ function ReportSkeleton() {
               <div className="h-3 w-32 bg-slate-200 rounded" />
             </div>
           </div>
-          <div className="h-[400px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
-            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-              <div className="h-4 w-48 bg-slate-200 rounded" />
-              <div className="h-8 w-48 bg-slate-200 rounded" />
-            </div>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex justify-between items-center py-2 border-b border-slate-50">
-                <div className="flex gap-3 items-center">
-                  <div className="h-8 w-8 bg-slate-200 rounded-full" />
-                  <div className="flex flex-col gap-1.5">
-                    <div className="h-3 w-32 bg-slate-200 rounded" />
-                    <div className="h-2 w-20 bg-slate-200 rounded" />
-                  </div>
-                </div>
-                <div className="h-4 w-16 bg-slate-200 rounded" />
-                <div className="h-4 w-24 bg-slate-200 rounded" />
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Right */}
         <div className="flex flex-col gap-1 w-full">
-          <div className="h-[180px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+          <div className="h-full min-h-[180px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
             <div className="h-4 w-48 bg-slate-200 rounded" />
             <div className="flex gap-5 items-center">
               <div className="h-24 w-24 bg-slate-200 rounded-full" />
@@ -631,18 +636,28 @@ function ReportSkeleton() {
               </div>
             </div>
           </div>
-          <div className="h-[200px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+        </div>
+      </div>
+
+      <div className="w-full mt-1">
+        <div className="h-[400px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-100">
             <div className="h-4 w-48 bg-slate-200 rounded" />
-            {[1, 2].map((i) => (
-              <div key={i} className="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg">
-                <div className="flex gap-2.5 items-center">
-                  <div className="h-6 w-6 bg-slate-200 rounded-full" />
-                  <div className="h-3 w-24 bg-slate-200 rounded" />
-                </div>
-                <div className="h-4 w-10 bg-slate-200 rounded" />
-              </div>
-            ))}
+            <div className="h-8 w-48 bg-slate-200 rounded" />
           </div>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="flex justify-between items-center py-2 border-b border-slate-50">
+              <div className="flex gap-3 items-center">
+                <div className="h-8 w-8 bg-slate-200 rounded-full" />
+                <div className="flex flex-col gap-1.5">
+                  <div className="h-3 w-32 bg-slate-200 rounded" />
+                  <div className="h-2 w-20 bg-slate-200 rounded" />
+                </div>
+              </div>
+              <div className="h-4 w-16 bg-slate-200 rounded" />
+              <div className="h-4 w-24 bg-slate-200 rounded" />
+            </div>
+          ))}
         </div>
       </div>
     </div>
