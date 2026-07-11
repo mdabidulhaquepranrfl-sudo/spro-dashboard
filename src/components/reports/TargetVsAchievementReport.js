@@ -25,10 +25,17 @@ const initials = (name) => {
 };
 
 /* ─── status helper ─────────────────────────────────────────────── */
-const getStatusConfig = (gapAmount) => {
-  if (gapAmount <= 0) return { label: 'Ahead', bg: 'bg-emerald-100', text: 'text-emerald-600', bar: 'bg-emerald-500' };
-  if (gapAmount <= 5000) return { label: 'On Track', bg: 'bg-emerald-100', text: 'text-emerald-600', bar: 'bg-emerald-500' };
-  if (gapAmount <= 30000) return { label: 'At Risk', bg: 'bg-amber-100', text: 'text-amber-600', bar: 'bg-amber-500' };
+/* ─── status helper ─────────────────────────────────────────────── */
+const getStatusConfig = (achievementPercent) => {
+  if (achievementPercent >= 100) {
+    return { label: 'Ahead', bg: 'bg-emerald-100', text: 'text-emerald-600', bar: 'bg-emerald-500' };
+  }
+  if (achievementPercent >= 70) {
+    return { label: 'On Track', bg: 'bg-emerald-100', text: 'text-emerald-600', bar: 'bg-emerald-500' };
+  }
+  if (achievementPercent >= 50) {
+    return { label: 'At Risk', bg: 'bg-amber-100', text: 'text-amber-600', bar: 'bg-amber-500' };
+  }
   return { label: 'Behind', bg: 'bg-red-100', text: 'text-red-500', bar: 'bg-red-500' };
 };
 
@@ -106,6 +113,10 @@ export default function TargetVsAchievementReport() {
   const gapPct = monthlyTarget > 0 ? (monthlyGap / monthlyTarget) * 100 : 0;
   const isBehind = monthlyGap > 0;
   const dailyIsBehind = todayGap > 0;
+
+  const todayAchievedPct = todayTarget > 0 ? Math.min((todayAchievement / todayTarget) * 100, 100) : 0;
+  const todayGapPct = todayTarget > 0 ? (Math.max(0, todayGap) / todayTarget) * 100 : 0;
+  const todayExpectedPct = todayTarget > 0 ? 100 : 0;
 
   /* ─── table rows ─────────────────────────────────────────────── */
   const filteredRows = useMemo(() => {
@@ -217,8 +228,7 @@ export default function TargetVsAchievementReport() {
         <div className="flex flex-col gap-1 w-full mt-1">
 
           {/* ── Alert row: Daily + Monthly ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 w-full">
-            {/* Daily alert */}
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 w-full">
             <div className={`w-full px-4 py-3 bg-white rounded-xl shadow-sm border-l-2 ${dailyIsBehind ? 'border-red-500' : 'border-emerald-500'} flex items-start gap-4`}>
               <div className={`h-10 w-10 flex-shrink-0 ${dailyIsBehind ? 'bg-red-500/10' : 'bg-emerald-500/10'} rounded-full flex items-center justify-center`}>
                 <i className={`bx ${dailyIsBehind ? 'bx-trending-down text-red-500' : 'bx-trending-up text-emerald-500'} text-xl`} />
@@ -237,7 +247,6 @@ export default function TargetVsAchievementReport() {
               </div>
             </div>
 
-            {/* Monthly alert */}
             <div className={`w-full px-4 py-3 bg-white rounded-xl shadow-sm border-l-2 ${isBehind ? 'border-red-500' : 'border-emerald-500'} flex items-start gap-4`}>
               <div className={`h-10 w-10 flex-shrink-0 ${isBehind ? 'bg-red-500/10' : 'bg-emerald-500/10'} rounded-full flex items-center justify-center`}>
                 {isBehind ? <div className="w-4 h-2.5 bg-red-500 rounded-sm" /> : <i className="bx bx-check text-emerald-500 text-xl" />}
@@ -255,16 +264,26 @@ export default function TargetVsAchievementReport() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          {/* ── Monthly stat cards ── */}
-          <div className="grid grid-cols-2 xl:grid-cols-2 xl:grid-cols-2 gap-1 bg-white py-2">
+          {/* ── Monthly & Today's stat cards ── */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 bg-white py-2">
             {/* Monthly */}
-            <div className="w-full rounded-2xl border border-slate-200 p-2">
+            <div className="w-full rounded-2xl border border-slate-200 p-2 flex flex-col gap-2">
+              <RadialProgressCard
+                title="Target vs Achieved Progress"
+                achievedPct={achievedPct}
+                gapPct={gapPct}
+                expectedPct={expectedPct}
+                isBehind={isBehind}
+                gapAmount={monthlyGap}
+                currency={currency}
+                fmt={fmt}
+              />
               <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">
                 Monthly Overview
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4  gap-1 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-1 w-full">
                 <StatCard label="Target" icon={<div className="h-3.5 w-3.5 rounded-full outline outline-2 outline-offset-[-1px] outline-slate-500" />} value={`${currency} ${fmt(monthlyTarget)}`} valueClass="text-slate-900" />
                 <StatCard label="Achieved" icon={<div className="h-2 w-3 outline outline-2 outline-offset-[-1px] outline-emerald-500" />} value={`${currency} ${fmt(monthlyOrder)}`} valueClass="text-emerald-500" />
                 <StatCard label="Achievement Rate" icon={<div className="h-3.5 w-3.5 rounded-sm outline outline-2 outline-offset-[-1px] outline-amber-500" />} value={`${achievementPercent.toFixed(1)}%`} valueClass="text-amber-500" />
@@ -273,7 +292,17 @@ export default function TargetVsAchievementReport() {
             </div>
 
             {/* Today's */}
-            <div className="w-full rounded-2xl border border-slate-200 p-2">
+            <div className="w-full rounded-2xl border border-slate-200 p-2 flex flex-col gap-2">
+              <RadialProgressCard
+                title="Today's Progress"
+                achievedPct={todayAchievedPct}
+                gapPct={todayGapPct}
+                expectedPct={todayExpectedPct}
+                isBehind={dailyIsBehind}
+                gapAmount={Math.max(0, todayGap)}
+                currency={currency}
+                fmt={fmt}
+              />
               <div className="px-1 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">
                 Today's Overview
               </div>
@@ -285,91 +314,43 @@ export default function TargetVsAchievementReport() {
               </div>
             </div>
           </div>
-
-          {/* ── Bottom: Left + Right ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-1 w-full">
-
-            {/* LEFT */}
-            <div className="flex flex-col gap-1 w-full min-w-0">
-
-              {/* Progress bar */}
-              <div className="w-full px-4 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-3 h-full">
-                <div className="text-slate-900 text-sm font-semibold">Target vs Achieved Progress</div>
-                <div className="w-full flex flex-col gap-2">
-                  <div className="w-full h-6 bg-slate-50 rounded-sm flex overflow-hidden">
-                    <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${achievedPct}%` }} />
-                    {isBehind && (
-                      <div className="h-full opacity-60 bg-amber-500 transition-all duration-500" style={{ width: `${Math.max(0, Math.min(gapPct, 100 - achievedPct))}%` }} />
-                    )}
+          {/* ── Top & Bottom Performers ── */}
+          <div className="w-full px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-1">
+            <div className="text-slate-900 text-sm font-semibold">Top &amp; Bottom Performers</div>
+            <div className="w-full flex flex-col sm:flex-row gap-2.5">
+              {topPerformer && (
+                <div className="flex-1 px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="h-6 w-6 flex-shrink-0 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">
+                      {initials(topPerformer.sales_representative?.name)}
+                    </div>
+                    <div className="text-slate-900 text-xs font-medium truncate">{topPerformer.sales_representative?.name}</div>
                   </div>
-                  <div className="w-full flex justify-between items-start flex-wrap gap-2">
-                    <div className="flex items-start gap-4">
-                      <div className="flex items-center gap-1.5">
-                        <div className="h-2 w-2 bg-emerald-500 rounded-full" />
-                        <div className="text-slate-500 text-xs font-normal">{achievedPct.toFixed(1)}% Achieved</div>
-                      </div>
-                      {isBehind && (
-                        <div className="flex items-center gap-1.5">
-                          <div className="h-2 w-2 bg-amber-500 rounded-full" />
-                          <div className="text-slate-500 text-xs font-normal">{gapPct.toFixed(1)}% Pending Expected</div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                      <div className="text-slate-900 text-xs font-semibold">{expectedPct.toFixed(1)}% Expected</div>
-                      {isBehind && (
-                        <div className="px-2 py-1 bg-red-500 rounded-sm flex items-center justify-center">
-                          <div className="text-white text-[10px] font-bold">-{currency} {fmt(monthlyGap)} GAP</div>
-                        </div>
-                      )}
-                    </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <i className="bx bx-up-arrow-alt text-emerald-500" />
+                    <div className="text-emerald-500 text-xs font-bold">{topPerformer.progress?.achievement_percent.toFixed(1)}%</div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* RIGHT */}
-            <div className="flex flex-col gap-1 w-full">
-
-              {/* Top & Bottom Performers */}
-              <div className="w-full px-5 py-3 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-2.5 h-full">
-                <div className="text-slate-900 text-sm font-semibold">Top &amp; Bottom Performers</div>
-                <div className="w-full flex flex-col gap-2.5">
-                  {topPerformer && (
-                    <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="h-6 w-6 flex-shrink-0 bg-emerald-100 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">
-                          {initials(topPerformer.sales_representative?.name)}
-                        </div>
-                        <div className="text-slate-900 text-xs font-medium truncate">{topPerformer.sales_representative?.name}</div>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <i className="bx bx-up-arrow-alt text-emerald-500" />
-                        <div className="text-emerald-500 text-xs font-bold">{topPerformer.progress?.achievement_percent.toFixed(1)}%</div>
-                      </div>
+              )}
+              {bottomPerformer && bottomPerformer.sales_representative?.id !== topPerformer?.sales_representative?.id && (
+                <div className="flex-1 px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="h-6 w-6 flex-shrink-0 bg-red-200 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">
+                      {initials(bottomPerformer.sales_representative?.name)}
                     </div>
-                  )}
-                  {bottomPerformer && bottomPerformer.sales_representative?.id !== topPerformer?.sales_representative?.id && (
-                    <div className="w-full px-3 py-2 bg-slate-50 rounded-lg flex justify-between items-center">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="h-6 w-6 flex-shrink-0 bg-red-200 rounded-full flex items-center justify-center text-slate-900 text-[10px] font-semibold">
-                          {initials(bottomPerformer.sales_representative?.name)}
-                        </div>
-                        <div className="text-slate-900 text-xs font-medium truncate">{bottomPerformer.sales_representative?.name}</div>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <i className="bx bx-down-arrow-alt text-red-500" />
-                        <div className="text-red-500 text-xs font-bold">{bottomPerformer.progress?.achievement_percent.toFixed(1)}%</div>
-                      </div>
-                    </div>
-                  )}
+                    <div className="text-slate-900 text-xs font-medium truncate">{bottomPerformer.sales_representative?.name}</div>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <i className="bx bx-down-arrow-alt text-red-500" />
+                    <div className="text-red-500 text-xs font-bold">{bottomPerformer.progress?.achievement_percent.toFixed(1)}%</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
           {/* Representative table */}
-          <div className="w-full bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col mt-2">
+          <div className="w-full bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col">
 
             {/* Common Header for both Desktop and Mobile */}
             <div className="w-full px-4 py-3 flex flex-wrap justify-between items-center gap-3 border-b border-slate-200">
@@ -415,7 +396,7 @@ export default function TargetVsAchievementReport() {
                   const sr = row.sales_representative;
                   const amt = row.amounts;
                   const prog = row.progress;
-                  const st = getStatusConfig(prog.gap_amount);
+                  const st = getStatusConfig(prog.achievement_percent);
 
                   return (
                     <div key={sr.id} className="w-full px-5 py-3 border-b border-slate-200 last:border-0 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_1.5fr] gap-2 items-center hover:bg-slate-50 transition">
@@ -458,7 +439,7 @@ export default function TargetVsAchievementReport() {
                 const sr = row.sales_representative;
                 const amt = row.amounts;
                 const prog = row.progress;
-                const st = getStatusConfig(prog.gap_amount);
+                const st = getStatusConfig(prog.achievement_percent);
 
                 return (
                   <div key={sr.id} className="self-stretch p-3 bg-white border-b border-slate-200 last:border-0 flex flex-col justify-start items-start gap-3">
@@ -468,7 +449,7 @@ export default function TargetVsAchievementReport() {
                           <div className="text-slate-950 text-sm font-semibold font-['Inter'] leading-4">{initials(sr.name)}</div>
                         </div>
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-1 min-w-0">
-                          <div className="justify-start text-slate-900 text-sm font-semibold font-['Inter'] truncate w-full">{sr.name}</div>
+                          <div className="w-full break-words text-sm font-semibold text-slate-900">{sr.name}</div>
                           <div className="self-stretch inline-flex justify-start items-center gap-2">
                             <div className="flex-1 flex justify-start items-center gap-2">
                               <div className={`justify-start ${prog.gap_amount > 0 ? 'text-red-500' : 'text-emerald-500'} text-xs font-medium font-['Inter'] leading-4`}>
@@ -535,6 +516,85 @@ export default function TargetVsAchievementReport() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Radial Progress Card ─────────────────────────────────────── */
+function RadialProgressCard({ title, achievedPct, gapPct, expectedPct, isBehind, gapAmount, currency, fmt }) {
+  const r = 36;
+  const circ = 2 * Math.PI * r;
+  const achievedDash = (achievedPct / 100) * circ;
+  const gapDash = (Math.max(0, Math.min(gapPct, 100 - achievedPct)) / 100) * circ;
+
+  return (
+    <div className="w-full px-5 py-4 bg-white rounded-xl shadow-sm outline outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col gap-1 mt-1">
+      {title && <div className="text-slate-900 text-sm font-semibold">{title}</div>}
+      <div className="w-full flex flex-col sm:flex-row items-center gap-6 mt-1">
+        {/* Radial Chart */}
+        <div className="relative w-32 h-32 flex items-center justify-center flex-shrink-0">
+          <svg className="w-full h-full -rotate-90 drop-shadow-sm" viewBox="0 0 100 100">
+            {/* Background track */}
+            <circle cx="50" cy="50" r={r} fill="none" stroke="#f1f5f9" strokeWidth="12" />
+            {/* Gap (Pending Expected) */}
+            {isBehind && (
+              <circle
+                cx="50" cy="50" r={r} fill="none" stroke="#f59e0b" strokeWidth="12" strokeOpacity="0.8"
+                strokeDasharray={`${gapDash} ${circ}`}
+                strokeDashoffset="0"
+                transform={`rotate(${(achievedPct / 100) * 360} 50 50)`}
+              />
+            )}
+            {/* Achieved */}
+            <circle
+              cx="50" cy="50" r={r} fill="none" stroke="#10b981" strokeWidth="12"
+              strokeDasharray={`${achievedDash} ${circ}`}
+              strokeDashoffset="0"
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className="absolute flex flex-col items-center justify-center">
+            <span className="text-2xl font-bold text-slate-800">{achievedPct.toFixed(0)}%</span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Achieved</span>
+          </div>
+        </div>
+
+        {/* Legends */}
+        <div className="flex-1 flex flex-col w-full gap-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="h-3 w-3 bg-emerald-500 rounded-full shadow-sm" />
+              <div className="text-slate-600 text-sm font-medium">Achieved</div>
+            </div>
+            <div className="text-slate-900 text-sm font-bold">{achievedPct.toFixed(1)}%</div>
+          </div>
+
+          {isBehind && (
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="h-3 w-3 bg-amber-500 rounded-full shadow-sm opacity-80" />
+                <div className="text-slate-600 text-sm font-medium">Pending Expected</div>
+              </div>
+              <div className="text-slate-900 text-sm font-bold">{gapPct.toFixed(1)}%</div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-100 mt-1">
+            <div className="flex items-center gap-2.5">
+              <div className="h-3 w-3 bg-slate-200 rounded-full outline outline-1 outline-slate-300" />
+              <div className="text-slate-700 text-sm font-semibold">Expected</div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="text-slate-900 text-sm font-bold">{expectedPct.toFixed(1)}%</div>
+              {isBehind && (
+                <div className="px-1.5 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[10px] font-bold">
+                  -{currency}{fmt(gapAmount)} GAP
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -640,24 +700,38 @@ function ReportSkeleton() {
       </div>
 
       <div className="w-full mt-1">
-        <div className="h-[400px] bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-4">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-            <div className="h-4 w-48 bg-slate-200 rounded" />
-            <div className="h-8 w-48 bg-slate-200 rounded" />
+        <div className="h-[400px] rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          {/* Header */}
+          <div className="flex flex-col gap-3 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="h-4 w-40 rounded bg-slate-200 sm:w-48" />
+            <div className="h-8 w-full rounded bg-slate-200 sm:w-48" />
           </div>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex justify-between items-center py-2 border-b border-slate-50">
-              <div className="flex gap-3 items-center">
-                <div className="h-8 w-8 bg-slate-200 rounded-full" />
-                <div className="flex flex-col gap-1.5">
-                  <div className="h-3 w-32 bg-slate-200 rounded" />
-                  <div className="h-2 w-20 bg-slate-200 rounded" />
+
+          {/* Rows */}
+          <div className="mt-3 flex flex-col">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between gap-3 border-b border-slate-50 py-3 last:border-0"
+              >
+                {/* Left */}
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="h-8 w-8 flex-shrink-0 rounded-full bg-slate-200" />
+
+                  <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <div className="h-3 w-full max-w-32 rounded bg-slate-200" />
+                    <div className="h-2 w-20 rounded bg-slate-200" />
+                  </div>
+                </div>
+
+                {/* Right */}
+                <div className="flex flex-shrink-0 items-center gap-3">
+                  <div className="h-4 w-12 rounded bg-slate-200 sm:w-16" />
+                  <div className="h-4 w-16 rounded bg-slate-200 sm:w-24" />
                 </div>
               </div>
-              <div className="h-4 w-16 bg-slate-200 rounded" />
-              <div className="h-4 w-24 bg-slate-200 rounded" />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
